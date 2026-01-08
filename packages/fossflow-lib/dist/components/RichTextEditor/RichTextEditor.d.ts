@@ -6,5 +6,5 @@ interface Props {
     height?: number;
     styles?: React.CSSProperties;
 }
-export declare const MarkdownEditor: ({ value, onChange, readOnly, height, styles }: Props) => import("react/jsx-runtime").JSX.Element;
+export declare const RichTextEditor: ({ value, onChange, readOnly, height, styles }: Props) => import("react/jsx-runtime").JSX.Element;
 export {};

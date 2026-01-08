@@ -4,6 +4,11 @@
  <a href="README.md">English</a> | <a href="docs/README.cn.md">简体中文</a> | <a href="docs/README.es.md">Español</a> | <a href="docs/README.pt.md">Português</a> | <a href="docs/README.fr.md">Français</a> | <a href="docs/README.hi.md">हिन्दी</a> | <a href="docs/README.bn.md">বাংলা</a> | <a href="docs/README.ru.md">Русский</a>
 </p>
 
+
+<p align="center">
+<a href="https://trendshift.io/repositories/15118" target="_blank"><img src="https://trendshift.io/api/badge/repositories/15118" alt="stan-smith%2FFossFLOW | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+</p>
+
 <b>Hey!</b> Stan here, if you've used FossFLOW and it's helped you, <b>I'd really appreciate if you could donate something small :)</b> I work full time, and finding the time to work on this project is challenging enough.
 If you've had a feature that I've implemented for you, or fixed a bug it'd be great if you could :) if not, that's not a problem, this software will always remain free!
 
@@ -29,9 +34,7 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 ![Screenshot_20250630_160954](https://github.com/user-attachments/assets/e7f254ad-625f-4b8a-8efc-5293b5be9d55)
 
 - **📝 [FOSSFLOW_TODO.md](https://github.com/stan-smith/FossFLOW/blob/master/FOSSFLOW_TODO.md)** - Current issues and roadmap with codebase mappings, most gripes are with the isoflow library itself.
-- **🤝 [CONTRIBUTORS.md](https://github.com/stan-smith/FossFLOW/blob/master/CONTRIBUTORS.md)** - How to contribute to the project.
-
-## Recent Updates (October 2025)
+- **🤝 [CONTRIBUTING.md](https://github.com/stan-smith/FossFLOW/blob/master/CONTRIBUTING.md)** - How to contribute to the project.
 
 ### Performance updates
  - **Reduced frame refresh delay, should look much smoother now**
@@ -47,56 +50,6 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 - **Drag Mode Option** - Original drag-and-drop still available via settings
 - **Mode Selection** - Switch between click and drag modes in Settings → Connectors tab
 - **Better Reliability** - Click mode provides more predictable connection creation
-
-### Custom Icon Import
-- **Import Your Own Icons** - Upload custom icons (PNG, JPG, SVG) to use in your diagrams
-- **Automatic Scaling** - Icons are automatically scaled to consistent sizes for professional appearance
-- **Isometric/Flat Toggle** - Choose whether imported icons appear as 3D isometric or flat 2D
-- **Smart Persistence** - Custom icons are saved with diagrams and work across all storage methods
-- **Icon Resources** - Find free icons at:
-  - [Iconify Icon Sets](https://icon-sets.iconify.design/) - Thousands of free SVG icons
-  - [Flaticon Isometric Icons](https://www.flaticon.com/free-icons/isometric) - High-quality isometric icon packs
-
-### Server Storage Support
-- **Persistent Storage** - Diagrams saved to server filesystem, persist across browser sessions
-- **Multi-device Access** - Access your diagrams from any device when using Docker deployment
-- **Automatic Detection** - UI automatically shows server storage when available
-- **Overwrite Protection** - Confirmation dialog when saving with duplicate names
-- **Docker Integration** - Server storage enabled by default in Docker deployments
-
-### Enhanced Interaction Features
-- **Configurable Hotkeys** - Three profiles (QWERTY, SMNRCT, None) for tool selection with visual indicators
-- **Advanced Pan Controls** - Multiple pan methods including empty area drag, middle/right click, modifier keys (Ctrl/Alt), and keyboard navigation (Arrow/WASD/IJKL)
-- **Toggle Connector Arrows** - Option to show/hide arrows on individual connectors
-- **Persistent Tool Selection** - Connector tool remains active after creating connections
-- **Settings Dialog** - Centralized configuration for hotkeys and pan controls
-
-### Docker & CI/CD Improvements
-- **Automated Docker Builds** - GitHub Actions workflow for automatic Docker Hub deployment on commits
-- **Multi-architecture Support** - Docker images for both `linux/amd64` and `linux/arm64`
-- **Pre-built Images** - Available at `stnsmith/fossflow:latest`
-
-### Monorepo Architecture
-- **Single repository** for both library and application
-- **NPM Workspaces** for streamlined dependency management
-- **Unified build process** with `npm run build` at the root
-
-### UI Fixes
-- Fixed Quill editor toolbar icons display issue
-- Resolved React key warnings in context menus
-- Improved markdown editor styling
-
-## Features
-
-- 🎨 **Isometric Diagramming** - Create stunning 3D-style technical diagrams
-- 💾 **Auto-Save** - Your work is automatically saved every 5 seconds
-- 📱 **PWA Support** - Install as a native app on Mac and Linux
-- 🔒 **Privacy-First** - All data stored locally in your browser
-- 📤 **Import/Export** - Share diagrams as JSON files
-- 🎯 **Session Storage** - Quick save without dialogs
-- 🌐 **Offline Support** - Work without internet connection
-- 🗄️ **Server Storage** - Optional persistent storage when using Docker (enabled by default)
-- 🌍 **Multilingual** - Full support for 8 languages: English, 简体中文, Español, Português, Français, हिन्दी, বাংলা, Русский
 
 
 ## 🐳 Quick Deploy with Docker
@@ -140,7 +93,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 This is a monorepo containing two packages:
 
 - `packages/fossflow-lib` - React component library for drawing network diagrams (built with Webpack)
-- `packages/fossflow-app` - Progressive Web App for creating isometric diagrams (built with RSBuild)
+- `packages/fossflow-app` - Progressive Web App which wraps the lib and presents it (built with RSBuild)
 
 ### Development Commands
 
@@ -194,13 +147,13 @@ npm run publish:lib  # Publish library to npm
 
 ## Contributing
 
-We welcome contributions! Please see [CONTRIBUTORS.md](CONTRIBUTORS.md) for guidelines.
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## Documentation
 
 - [FOSSFLOW_ENCYCLOPEDIA.md](FOSSFLOW_ENCYCLOPEDIA.md) - Comprehensive guide to the codebase
 - [FOSSFLOW_TODO.md](FOSSFLOW_TODO.md) - Current issues and roadmap
-- [CONTRIBUTORS.md](CONTRIBUTORS.md) - Contributing guidelines
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Contributing guidelines
 
 ## License
 

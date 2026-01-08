@@ -15,7 +15,11 @@ import {
   Alert,
   Checkbox,
   FormControlLabel,
-  Typography
+  Typography,
+  Slider,
+  Select,
+  MenuItem,
+  FormControl
 } from '@mui/material';
 import { useModelStore } from 'src/stores/modelStore';
 import {
@@ -66,6 +70,18 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
   const [cropArea, setCropArea] = useState<CropArea | null>(null);
   const [isInCropMode, setIsInCropMode] = useState(false);
 
+  // Scale/DPI state
+  const [exportScale, setExportScale] = useState<number>(2);
+  const [scaleMode, setScaleMode] = useState<'preset' | 'custom'>('preset');
+
+  // DPI presets
+  const dpiPresets = [
+    { label: '1x (72 DPI)', value: 1 },
+    { label: '2x (144 DPI)', value: 2 },
+    { label: '3x (216 DPI)', value: 3 },
+    { label: '4x (288 DPI)', value: 4 }
+  ];
+
   // Use original bounds for the base image
   const bounds = useMemo(() => {
     return getUnprojectedBounds();
@@ -78,19 +94,26 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     });
   }, [uiStateActions]);
 
+  const [transparentBackground, setTransparentBackground] = useState(false);
+
+  const [backgroundColor, setBackgroundColor] = useState<string>(
+    customVars.customPalette.diagramBg
+  );
+
   const exportImage = useCallback(() => {
     if (!containerRef.current || isExporting.current) {
       return;
     }
 
     isExporting.current = true;
-    
+
+    // Base size without scale (scale is applied via CSS transform)
     const containerSize = {
-      width: bounds.width * quality,
-      height: bounds.height * quality
+      width: bounds.width,
+      height: bounds.height
     };
-    
-    exportAsImage(containerRef.current as HTMLDivElement, containerSize)
+
+    exportAsImage(containerRef.current as HTMLDivElement, containerSize, exportScale, transparentBackground ? 'transparent' : backgroundColor)
       .then((data) => {
         setImageData(data);
         isExporting.current = false;
@@ -100,7 +123,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
         setExportError(true);
         isExporting.current = false;
       });
-  }, [bounds, quality]);
+  }, [bounds, exportScale, transparentBackground, backgroundColor]);
 
   // Crop the image based on selected area
   const cropImage = useCallback((cropArea: CropArea, sourceImage: string) => {
@@ -231,6 +254,17 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
+      // Draw checkerboard if transparent background
+      if (transparentBackground) {
+        const squareSize = 10;
+        for (let y = 0; y < canvas.height; y += squareSize) {
+          for (let x = 0; x < canvas.width; x += squareSize) {
+            ctx.fillStyle = (x / squareSize + y / squareSize) % 2 === 0 ? '#f0f0f0' : 'transparent';
+            ctx.fillRect(x, y, squareSize, squareSize);
+          }
+        }
+      }
+      
       // Draw the image scaled to fit canvas
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       
@@ -289,7 +323,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     };
     
     img.src = imageData;
-  }, [imageData, isInCropMode, cropArea]);
+  }, [imageData, isInCropMode, cropArea, transparentBackground]);
 
   const [showGrid, setShowGrid] = useState(false);
   const handleShowGridChange = (checked: boolean) => {
@@ -301,9 +335,15 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     setExpandLabels(checked);
   };
 
-  const [backgroundColor, setBackgroundColor] = useState<string>(
-    customVars.customPalette.diagramBg
-  );
+  const handleTransparentBackgroundChange = (checked: boolean) => {
+    setTransparentBackground(checked);
+    if (checked) {
+      setBackgroundColor('transparent');
+    } else {
+      setBackgroundColor(customVars.customPalette.diagramBg);
+    }
+  };
+
   const handleBackgroundColorChange = (color: string) => {
     setBackgroundColor(color);
   };
@@ -348,7 +388,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
       }, 200);
       return () => clearTimeout(timer);
     }
-  }, [showGrid, backgroundColor, expandLabels, exportImage, cropToContent]);
+  }, [showGrid, backgroundColor, expandLabels, exportImage, cropToContent, exportScale, transparentBackground]);
 
   useEffect(() => {
     if (!imageData) {
@@ -405,8 +445,8 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                     left: 0
                   }}
                   style={{
-                    width: bounds.width * quality,
-                    height: bounds.height * quality
+                    width: bounds.width,
+                    height: bounds.height
                   }}
                 >
                   <Isoflow
@@ -474,7 +514,10 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                     sx={{
                       maxWidth: '100%',
                       maxHeight: '300px',
-                      objectFit: 'contain'
+                      objectFit: 'contain',
+                      backgroundImage: transparentBackground ? 'linear-gradient(45deg, #f0f0f0 25%, transparent 25%), linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f0f0f0 75%), linear-gradient(-45deg, transparent 75%, #f0f0f0 75%)' : undefined,
+                      backgroundSize: transparentBackground ? '20px 20px' : undefined,
+                      backgroundPosition: transparentBackground ? '0 0, 0 10px, 10px -10px, -10px 0px' : undefined
                     }}
                     src={displayImage}
                     alt="preview"
@@ -530,9 +573,75 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                     <ColorPicker
                       value={backgroundColor}
                       onChange={handleBackgroundColorChange}
+                      disabled={transparentBackground}
                     />
                   }
                 />
+
+                <FormControlLabel
+                  label="Transparent background"
+                  control={
+                    <Checkbox
+                      size="small"
+                      checked={transparentBackground}
+                      onChange={(event) => {
+                        handleTransparentBackgroundChange(event.target.checked);
+                      }}
+                    />
+                  }
+                />
+
+                <Box sx={{ mt: 2, mb: 1 }}>
+                  <Typography variant="caption" component="div" sx={{ mb: 1 }}>
+                    Export Quality (DPI)
+                  </Typography>
+
+                  <FormControl fullWidth size="small" sx={{ mb: 1 }}>
+                    <Select
+                      value={scaleMode === 'preset' ? exportScale : 'custom'}
+                      onChange={(event) => {
+                        const value = event.target.value;
+                        if (value === 'custom') {
+                          setScaleMode('custom');
+                        } else {
+                          setScaleMode('preset');
+                          setExportScale(Number(value));
+                        }
+                      }}
+                    >
+                      {dpiPresets.map((preset) => (
+                        <MenuItem key={preset.value} value={preset.value}>
+                          {preset.label}
+                        </MenuItem>
+                      ))}
+                      <MenuItem value="custom">Custom</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  {scaleMode === 'custom' && (
+                    <Box sx={{ px: 1 }}>
+                      <Typography variant="caption" gutterBottom>
+                        Scale: {exportScale.toFixed(1)}x ({(exportScale * 72).toFixed(0)} DPI)
+                      </Typography>
+                      <Slider
+                        value={exportScale}
+                        onChange={(_, value) => setExportScale(value as number)}
+                        min={1}
+                        max={5}
+                        step={0.1}
+                        marks={[
+                          { value: 1, label: '1x' },
+                          { value: 2, label: '2x' },
+                          { value: 3, label: '3x' },
+                          { value: 4, label: '4x' },
+                          { value: 5, label: '5x' }
+                        ]}
+                        valueLabelDisplay="auto"
+                        valueLabelFormat={(value) => `${value.toFixed(1)}x`}
+                      />
+                    </Box>
+                  )}
+                </Box>
               </Box>
 
               {/* Crop controls */}
