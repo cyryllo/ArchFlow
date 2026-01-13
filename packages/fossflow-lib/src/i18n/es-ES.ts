@@ -111,6 +111,10 @@ const locale: LocaleProps = {
     instructionDrag: "arrastra",
     instructionEnd: "para cambiarlo!"
   },
+  connectorEmptySpaceTooltip: {
+    message: "Para conectar este conector a un nodo,",
+    instruction: "haz clic izquierdo en el extremo del conector y arrástralo al nodo deseado."
+  },
   settings: {
     zoom: {
       description: "Configura el comportamiento del zoom al usar la rueda del ratón.",
@@ -187,3 +191,4 @@ const locale: LocaleProps = {
 };
 
 export default locale;
+
