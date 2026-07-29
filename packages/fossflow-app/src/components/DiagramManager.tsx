@@ -18,7 +18,7 @@ export const DiagramManager: React.FC<Props> = ({
   const [diagrams, setDiagrams] = useState<DiagramInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isServerStorage, setIsServerStorage] = useState(false);
+  const [storageKind, setStorageKind] = useState<'server' | 'electron' | 'session'>('session');
   const [saveName, setSaveName] = useState('');
   const [showSaveDialog, setShowSaveDialog] = useState(false);
 
@@ -34,11 +34,9 @@ export const DiagramManager: React.FC<Props> = ({
       console.log('DiagramManager: Initializing storage...');
       // Initialize storage if not already done
       await storageManager.initialize();
-      const isServer = storageManager.isServerStorage();
-      setIsServerStorage(isServer);
-      console.log(
-        `DiagramManager: Using ${isServer ? 'server' : 'session'} storage`
-      );
+      const kind = storageManager.getStorageKind();
+      setStorageKind(kind);
+      console.log(`DiagramManager: Using ${kind} storage`);
 
       // Load diagram list
       const storage = storageManager.getStorage();
@@ -191,13 +189,20 @@ export const DiagramManager: React.FC<Props> = ({
 
         <div className="storage-info">
           <span
-            className={`storage-badge ${isServerStorage ? 'server' : 'local'}`}
+            className={`storage-badge ${storageKind === 'session' ? 'local' : 'server'}`}
           >
-            {isServerStorage ? '🌐 Server Storage' : '💾 Local Storage'}
+            {storageKind === 'server' && '🌐 Server Storage'}
+            {storageKind === 'electron' && '📁 Local Files'}
+            {storageKind === 'session' && '💾 Local Storage'}
           </span>
-          {isServerStorage && (
+          {storageKind === 'server' && (
             <span className="storage-note">
               Diagrams are saved on the server and available across all devices
+            </span>
+          )}
+          {storageKind === 'electron' && (
+            <span className="storage-note">
+              Diagrams are saved as files in your Documents/ArchFlow folder
             </span>
           )}
         </div>

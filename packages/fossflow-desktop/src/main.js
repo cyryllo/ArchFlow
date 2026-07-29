@@ -1,7 +1,8 @@
 const path = require('path');
 const fs = require('fs');
+const fsPromises = require('fs/promises');
 const { pathToFileURL } = require('url');
-const { app, BrowserWindow, dialog, protocol, net, Menu } = require('electron');
+const { app, BrowserWindow, dialog, protocol, net, Menu, ipcMain } = require('electron');
 
 Menu.setApplicationMenu(null);
 
@@ -26,6 +27,68 @@ function serveAppBundle() {
     }
 
     return net.fetch(pathToFileURL(filePath).toString());
+  });
+}
+
+function registerStorageHandlers() {
+  const storageDir = path.join(app.getPath('documents'), 'ArchFlow');
+  fs.mkdirSync(storageDir, { recursive: true });
+
+  const diagramPath = (id) => path.join(storageDir, `${id}.json`);
+
+  ipcMain.handle('storage:list', async () => {
+    const files = await fsPromises.readdir(storageDir);
+    const diagrams = [];
+
+    for (const file of files) {
+      if (!file.endsWith('.json')) continue;
+
+      try {
+        const filePath = path.join(storageDir, file);
+        const stats = await fsPromises.stat(filePath);
+        const content = await fsPromises.readFile(filePath, 'utf-8');
+        const data = JSON.parse(content);
+
+        diagrams.push({
+          id: file.replace(/\.json$/, ''),
+          name: data.name || data.title || 'Untitled Diagram',
+          lastModified: stats.mtime,
+          size: stats.size
+        });
+      } catch (error) {
+        console.error(`Error reading diagram file ${file}:`, error.message);
+      }
+    }
+
+    return diagrams;
+  });
+
+  ipcMain.handle('storage:load', async (event, id) => {
+    const content = await fsPromises.readFile(diagramPath(id), 'utf-8');
+    return JSON.parse(content);
+  });
+
+  ipcMain.handle('storage:save', async (event, id, data) => {
+    const payload = { ...data, id, lastModified: new Date().toISOString() };
+    await fsPromises.writeFile(diagramPath(id), JSON.stringify(payload, null, 2));
+    return { success: true, id };
+  });
+
+  ipcMain.handle('storage:delete', async (event, id) => {
+    await fsPromises.unlink(diagramPath(id));
+    return { success: true };
+  });
+
+  ipcMain.handle('storage:create', async (event, data) => {
+    const id = data.id || `diagram_${Date.now()}`;
+    const payload = {
+      ...data,
+      id,
+      created: new Date().toISOString(),
+      lastModified: new Date().toISOString()
+    };
+    await fsPromises.writeFile(diagramPath(id), JSON.stringify(payload, null, 2));
+    return id;
   });
 }
 
@@ -76,6 +139,7 @@ function createWindow() {
 
 app.whenReady().then(() => {
   serveAppBundle();
+  registerStorageHandlers();
   createWindow();
 
   app.on('activate', () => {

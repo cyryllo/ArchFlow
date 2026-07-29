@@ -1,6 +1,6 @@
 {
   "name": "fossflow-monorepo",
-  "version": "1.8.0",
+  "version": "0.4.2",
   "private": true,
   "description": "Monorepo for ArchFlow diagram editor and library (fork of FossFLOW, originally Isoflow)",
   "workspaces": [

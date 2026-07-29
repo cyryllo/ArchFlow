@@ -6,7 +6,7 @@
         "importFile": "Import File",
         "exportFile": "Export File",
         "quickSaveSession": "Quick Save (Session)",
-        "serverStorage": "Server Storage"
+        "serverStorage": "App Storage"
     },
     "status": {
         "current": "Current",

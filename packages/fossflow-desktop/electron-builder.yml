@@ -22,3 +22,7 @@ linux:
     - deb
   icon: build/icon.png
   category: Graphics
+  executableName: archflow
+deb:
+  packageName: archflow
+  artifactName: "${productName}-${version}-${arch}.${ext}"

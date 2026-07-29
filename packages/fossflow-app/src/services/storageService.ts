@@ -208,20 +208,59 @@ class SessionStorage implements StorageService {
   }
 }
 
+// Electron Storage Implementation - real files on disk via IPC to the main process
+class ElectronStorage implements StorageService {
+  private get api() {
+    return (window as any).electronAPI;
+  }
+
+  async isAvailable(): Promise<boolean> {
+    return typeof window !== 'undefined' && !!this.api;
+  }
+
+  async listDiagrams(): Promise<DiagramInfo[]> {
+    const diagrams = await this.api.listDiagrams();
+    return diagrams.map((d: any) => ({
+      ...d,
+      lastModified: new Date(d.lastModified)
+    }));
+  }
+
+  async loadDiagram(id: string): Promise<Model> {
+    return this.api.loadDiagram(id);
+  }
+
+  async saveDiagram(id: string, data: Model): Promise<void> {
+    await this.api.saveDiagram(id, data);
+  }
+
+  async deleteDiagram(id: string): Promise<void> {
+    await this.api.deleteDiagram(id);
+  }
+
+  async createDiagram(data: Model): Promise<string> {
+    return this.api.createDiagram(data);
+  }
+}
+
 // Storage Manager - decides which storage to use
 class StorageManager {
   private serverStorage: ServerStorage;
+  private electronStorage: ElectronStorage;
   private sessionStorage: SessionStorage;
   private activeStorage: StorageService | null = null;
 
   constructor() {
     this.serverStorage = new ServerStorage();
+    this.electronStorage = new ElectronStorage();
     this.sessionStorage = new SessionStorage();
   }
 
   async initialize(): Promise<StorageService> {
-    // Try server storage first
-    if (await this.serverStorage.isAvailable()) {
+    if (await this.electronStorage.isAvailable()) {
+      console.log('Using Electron storage (local files)');
+      this.activeStorage = this.electronStorage;
+    } else if (await this.serverStorage.isAvailable()) {
       console.log('Using server storage');
       this.activeStorage = this.serverStorage;
     } else {
@@ -238,8 +277,17 @@ class StorageManager {
     return this.activeStorage;
   }
 
+  getStorageKind(): 'server' | 'electron' | 'session' {
+    if (this.activeStorage === this.electronStorage) return 'electron';
+    if (this.activeStorage === this.serverStorage) return 'server';
+    return 'session';
+  }
+
   isServerStorage(): boolean {
-    return this.activeStorage === this.serverStorage;
+    return (
+      this.activeStorage === this.serverStorage ||
+      this.activeStorage === this.electronStorage
+    );
   }
 }
 

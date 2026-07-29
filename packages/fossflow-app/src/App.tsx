@@ -64,6 +64,7 @@ function EditorPage() {
   const [showStorageManager, setShowStorageManager] = useState(false);
   const [showDiagramManager, setShowDiagramManager] = useState(false);
   const [serverStorageAvailable, setServerStorageAvailable] = useState(false);
+  const [storageKind, setStorageKind] = useState<'server' | 'electron' | 'session'>('session');
   const isReadonlyUrl =
     window.location.pathname.startsWith('/display/') && readonlyDiagramId;
 
@@ -117,6 +118,7 @@ function EditorPage() {
       .initialize()
       .then(() => {
         setServerStorageAvailable(storageManager.isServerStorage());
+        setStorageKind(storageManager.getStorageKind());
       })
       .catch(console.error);
   }, []);
@@ -700,23 +702,27 @@ function EditorPage() {
                 }}
                 style={{ backgroundColor: '#2196F3', color: 'white' }}
               >
-                🌐 {t('nav.serverStorage')}
+                {storageKind === 'electron' ? '📁' : '🌐'} {t('nav.serverStorage')}
               </button>
             )}
-            <button
-              onClick={() => {
-                return setShowSaveDialog(true);
-              }}
-            >
-              {t('nav.saveSessionOnly')}
-            </button>
-            <button
-              onClick={() => {
-                return setShowLoadDialog(true);
-              }}
-            >
-              {t('nav.loadSessionOnly')}
-            </button>
+            {!serverStorageAvailable && (
+              <>
+                <button
+                  onClick={() => {
+                    return setShowSaveDialog(true);
+                  }}
+                >
+                  {t('nav.saveSessionOnly')}
+                </button>
+                <button
+                  onClick={() => {
+                    return setShowLoadDialog(true);
+                  }}
+                >
+                  {t('nav.loadSessionOnly')}
+                </button>
+              </>
+            )}
             <button
               onClick={() => {
                 return setShowExportDialog(true);
@@ -725,26 +731,28 @@ function EditorPage() {
             >
               💾 {t('nav.exportFile')}
             </button>
-            <button
-              onClick={() => {
-                if (currentDiagram && hasUnsavedChanges) {
-                  saveDiagram();
-                }
-              }}
-              disabled={!currentDiagram || !hasUnsavedChanges}
-              style={{
-                backgroundColor:
-                  currentDiagram && hasUnsavedChanges ? '#ffc107' : '#6c757d',
-                opacity: currentDiagram && hasUnsavedChanges ? 1 : 0.5,
-                cursor:
-                  currentDiagram && hasUnsavedChanges
-                    ? 'pointer'
-                    : 'not-allowed'
-              }}
-              title="Save to current session only"
-            >
-              {t('nav.quickSaveSession')}
-            </button>
+            {!serverStorageAvailable && (
+              <button
+                onClick={() => {
+                  if (currentDiagram && hasUnsavedChanges) {
+                    saveDiagram();
+                  }
+                }}
+                disabled={!currentDiagram || !hasUnsavedChanges}
+                style={{
+                  backgroundColor:
+                    currentDiagram && hasUnsavedChanges ? '#ffc107' : '#6c757d',
+                  opacity: currentDiagram && hasUnsavedChanges ? 1 : 0.5,
+                  cursor:
+                    currentDiagram && hasUnsavedChanges
+                      ? 'pointer'
+                      : 'not-allowed'
+                }}
+                title="Save to current session only"
+              >
+                {t('nav.quickSaveSession')}
+              </button>
+            )}
           </>
         )}
         {isReadonlyUrl && (
@@ -776,11 +784,13 @@ function EditorPage() {
                   • {t('status.modified')}
                 </span>
               )}
-              <span
-                style={{ fontSize: '12px', color: '#666', marginLeft: '10px' }}
-              >
-                ({t('status.sessionStorageNote')})
-              </span>
+              {!serverStorageAvailable && (
+                <span
+                  style={{ fontSize: '12px', color: '#666', marginLeft: '10px' }}
+                >
+                  ({t('status.sessionStorageNote')})
+                </span>
+              )}
             </>
           )}
         </span>
