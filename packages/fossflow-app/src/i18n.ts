@@ -33,40 +33,8 @@ export const supportedLanguages = [
     value: 'en-US'
   },
   {
-    label: '中文',
-    value: 'zh-CN'
-  },
-  {
-    label: 'Español',
-    value: 'es-ES'
-  },
-  {
-    label: 'Português',
-    value: 'pt-BR'
-  },
-  {
-    label: 'Français',
-    value: 'fr-FR'
-  },
-  {
-    label: 'हिन्दी',
-    value: 'hi-IN'
-  },
-  {
-    label: 'বাংলা',
-    value: 'bn-BD'
-  },
-  {
-    label: 'Русский',
-    value: 'ru-RU'
-  },
-  {
-    label: 'Italian',
-    value: 'it-IT'
-  },
-  {
-    label: 'Bahasa Indonesia',
-    value: 'id-ID'
+    label: 'Polski',
+    value: 'pl-PL'
   }
 ];
 

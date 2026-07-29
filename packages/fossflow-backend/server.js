@@ -238,7 +238,7 @@ if (STORAGE_ENABLED) {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`FossFLOW Backend Server running on port ${PORT}`);
+  console.log(`ArchFlow Backend Server running on port ${PORT}`);
   console.log(`Server storage: ${STORAGE_ENABLED ? 'ENABLED' : 'DISABLED'}`);
   if (STORAGE_ENABLED) {
     console.log(`Storage path: ${STORAGE_PATH}`);

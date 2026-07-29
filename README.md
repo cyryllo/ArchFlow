@@ -1,52 +1,29 @@
-# FossFLOW - Isometric Diagramming Tool <img width="30" height="30" alt="fossflow" src="https://github.com/user-attachments/assets/56d78887-601c-4336-ab87-76f8ee4cde96" />
+# ArchFlow - Isometric Diagramming Tool <img width="30" height="30" alt="archflow" src="https://github.com/user-attachments/assets/56d78887-601c-4336-ab87-76f8ee4cde96" />
 
 <p align="center">
- <a href="README.md">English</a> | <a href="docs/README.cn.md">简体中文</a> | <a href="docs/README.es.md">Español</a> | <a href="docs/README.pt.md">Português</a> | <a href="docs/README.fr.md">Français</a> | <a href="docs/README.hi.md">हिन्दी</a> | <a href="docs/README.bn.md">বাংলা</a> | <a href="docs/README.ru.md">Русский</a> | <a href="docs/README.id.md">Bahasa Indonesia</a>
+ <a href="README.md">English</a> | <a href="docs/README.pl.md">Polski</a>
 </p>
 
-
-<p align="center">
-<a href="https://trendshift.io/repositories/15118" target="_blank"><img src="https://trendshift.io/api/badge/repositories/15118" alt="stan-smith%2FFossFLOW | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-</p>
-
-<b>Hey!</b> Stan here, if you've used FossFLOW and it's helped you, <b>I'd really appreciate if you could donate something small :)</b> I work full time, and finding the time to work on this project is challenging enough.
-If you've had a feature that I've implemented for you, or fixed a bug it'd be great if you could :) if not, that's not a problem, this software will always remain free!
-
-
-<b>Also!</b> If you haven't yet, please check out the underlying library this is built on by <a href="https://github.com/markmanx/isoflow">@markmanx</a> I truly stand on the shoulders of a giant here 🫡
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/P5P61KBXA3)
-
-<a href="https://www.buymeacoffee.com/stan.smith" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
-
-Thanks,
-
--Stan
-
-## Try it online
-<p align="center">
-Go to  <b> --> https://stan-smith.github.io/FossFLOW/ <-- </b>
-</p>
-<p align="center">
-
- <a href="https://github.com/stan-smith/SlingShot">
-  Check out my latest project: <b>SlingShot</b> - Dead easy video streaming over QUIC
- </a>
-</p>
+**ArchFlow** is a fork of <a href="https://github.com/stan-smith/FossFLOW">FossFLOW</a> by Stan Smith, which is itself a fork/rewrite of <a href="https://github.com/markmanx/isoflow">Isoflow</a> by @markmanx — this project stands on both of their shoulders. If either project has helped you, please check them out and consider supporting their work.
 
 ------------------------------------------------------------------------------------------------------------------------------
-FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beautiful isometric diagrams. Built with React and the <a href="https://github.com/markmanx/isoflow">Isoflow</a> (Now forked and published to NPM as fossflow) library, it runs entirely in your browser with offline support.
+ArchFlow is a powerful, open-source web app for creating beautiful isometric diagrams. Built with React and the <a href="https://github.com/markmanx/isoflow">Isoflow</a> (forked and published to NPM as `fossflow`) library, it runs entirely in your browser. A native desktop version (Electron) is also available in `packages/fossflow-desktop`.
 
 ![Screenshot_20250630_160954](https://github.com/user-attachments/assets/e7f254ad-625f-4b8a-8efc-5293b5be9d55)
 
-- **📝 [FOSSFLOW_TODO.md](https://github.com/stan-smith/FossFLOW/blob/master/FOSSFLOW_TODO.md)** - Current issues and roadmap with codebase mappings, most gripes are with the isoflow library itself.
-- **🤝 [CONTRIBUTING.md](https://github.com/stan-smith/FossFLOW/blob/master/CONTRIBUTING.md)** - How to contribute to the project.
+- **📝 [ARCHFLOW_TODO.md](https://github.com/cyryllo/ArchFlow/blob/master/ARCHFLOW_TODO.md)** - Current issues and roadmap with codebase mappings, most gripes are with the isoflow library itself.
+- **🤝 [CONTRIBUTING.md](https://github.com/cyryllo/ArchFlow/blob/master/CONTRIBUTING.md)** - How to contribute to the project.
+
+## Try it online
+<p align="center">
+Go to  <b> --> https://cyryllo.github.io/ArchFlow/ <-- </b>
+</p>
 
 ### Performance updates
  - **Reduced frame refresh delay, should look much smoother now**
 
 ### Multilingual Support
-- **9 Languages Supported** - Full interface translation in English, Chinese (Simplified), Spanish, Portuguese (Brazilian), French, Hindi, Bengali, Russian, and Indonesian
+- **2 Languages Supported** - Full interface translation in English and Polish
 - **Language Selector** - Easy-to-use language switcher in the app header
 - **Complete Translation** - All menus, dialogs, settings, tooltips, and help content translated
 - **Locale-Aware** - Automatically detects and remembers your language preference
@@ -64,23 +41,24 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 # Using Docker Compose (recommended - includes persistent storage)
 docker compose up
 
-# Or run directly from Docker Hub with persistent storage
-docker run -p 80:80 -v $(pwd)/diagrams:/data/diagrams stnsmith/fossflow:latest
+# Or build and run the image locally
+docker build -t archflow:local .
+docker run -p 80:80 -v $(pwd)/diagrams:/data/diagrams archflow:local
 ```
 
 Server storage is enabled by default in Docker. Your diagrams will be saved to `./diagrams` on the host.
 
 To disable server storage, set `ENABLE_SERVER_STORAGE=false`:
 ```bash
-docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false stnsmith/fossflow:latest
+docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false archflow:local
 ```
 
 ## Quick Start (Local Development)
 
 ```bash
 # Clone the repository
-git clone https://github.com/stan-smith/FossFLOW
-cd FossFLOW
+git clone https://github.com/cyryllo/ArchFlow
+cd ArchFlow
 
 # Install dependencies
 npm install
@@ -157,8 +135,8 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 
 ## Documentation
 
-- [FOSSFLOW_ENCYCLOPEDIA.md](FOSSFLOW_ENCYCLOPEDIA.md) - Comprehensive guide to the codebase
-- [FOSSFLOW_TODO.md](FOSSFLOW_TODO.md) - Current issues and roadmap
+- [ARCHFLOW_ENCYCLOPEDIA.md](ARCHFLOW_ENCYCLOPEDIA.md) - Comprehensive guide to the codebase
+- [ARCHFLOW_TODO.md](ARCHFLOW_TODO.md) - Current issues and roadmap
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Contributing guidelines
 
 ## License

@@ -29,7 +29,7 @@ export const usePersistedDiagram = (icons: any[]) => {
       console.error(`Failed to save to localStorage (${key}):`, e);
       if (e instanceof DOMException && e.name === 'QuotaExceededError') {
         // Try to clear some space
-        const keysToCheck = ['fossflow-last-opened-data', 'fossflow-temp-data'];
+        const keysToCheck = ['archflow-last-opened-data', 'archflow-temp-data'];
         keysToCheck.forEach(k => {
           if (k !== key) {
             localStorage.removeItem(k);

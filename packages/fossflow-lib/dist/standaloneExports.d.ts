@@ -5,5 +5,5 @@ export * from './schemas';
 export type { IsoflowProps, InitialData } from './types';
 export * from './types/model';
 export { default as enUS } from './i18n/en-US';
-export { default as zhCN } from './i18n/zh-CN';
+export { default as plPL } from './i18n/pl-PL';
 export { default as allLocales } from './i18n';

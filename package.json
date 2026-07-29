@@ -2,7 +2,7 @@
   "name": "fossflow-monorepo",
   "version": "1.8.0",
   "private": true,
-  "description": "Monorepo for FossFLOW diagram editor and library",
+  "description": "Monorepo for ArchFlow diagram editor and library (fork of FossFLOW, originally Isoflow)",
   "workspaces": [
     "packages/*"
   ],
@@ -14,11 +14,13 @@
     "build": "npm run build:lib && npm run build:app",
     "build:lib": "npm run build --workspace=packages/fossflow-lib",
     "build:app": "npm run build --workspace=packages/fossflow-app",
+    "dev:desktop": "npm run build:lib && npm run build:app && npm run dev --workspace=packages/fossflow-desktop",
+    "build:desktop": "npm run build:lib && npm run build:app && npm run dist --workspace=packages/fossflow-desktop",
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "clean": "npm run clean --workspaces --if-present && rm -rf node_modules",
     "publish:lib": "npm run build:lib && npm publish --workspace=packages/fossflow-lib",
-    "docker:build": "docker build -t fossflow:local .",
+    "docker:build": "docker build -t archflow:local .",
     "docker:run": "docker compose -f compose.dev.yml up",
     "update-version": "node scripts/update-version.js",
     "semantic-release": "semantic-release"

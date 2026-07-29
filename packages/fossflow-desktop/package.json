@@ -1,0 +1,16 @@
+{
+  "name": "fossflow-desktop",
+  "version": "1.8.0",
+  "private": true,
+  "description": "Desktop (Electron) distribution of ArchFlow",
+  "main": "src/main.js",
+  "scripts": {
+    "stage": "node scripts/stage-resources.js",
+    "dev": "npm run stage && electron .",
+    "dist": "npm run stage && electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^32.0.0",
+    "electron-builder": "^25.0.0"
+  }
+}

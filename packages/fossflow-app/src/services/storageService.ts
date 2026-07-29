@@ -146,8 +146,8 @@ class ServerStorage implements StorageService {
 
 // Session Storage Implementation (existing functionality)
 class SessionStorage implements StorageService {
-  private readonly KEY_PREFIX = 'fossflow_diagram_';
-  private readonly LIST_KEY = 'fossflow_diagrams';
+  private readonly KEY_PREFIX = 'archflow_diagram_';
+  private readonly LIST_KEY = 'archflow_diagrams';
 
   async isAvailable(): Promise<boolean> {
     return true; // Session storage is always available

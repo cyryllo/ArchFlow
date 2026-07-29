@@ -8,7 +8,7 @@ SELENIUM_CONTAINER="fossflow-selenium"
 APP_PORT=3000
 SELENIUM_PORT=4444
 
-echo "FossFLOW E2E Test Runner"
+echo "ArchFlow E2E Test Runner"
 
 
 # Check if Docker is available
@@ -54,9 +54,9 @@ else
     echo "Selenium container is already running"
 fi
 
-# Check if FossFLOW is running
+# Check if ArchFlow is running
 if ! curl -sf http://localhost:$APP_PORT > /dev/null; then
-    echo "⚠️  FossFLOW app is not running on port $APP_PORT"
+    echo "⚠️  ArchFlow app is not running on port $APP_PORT"
     echo "Please start it with: npm run dev"
     echo ""
     read -p "Start the app now in another terminal and press Enter to continue..."
@@ -64,12 +64,12 @@ fi
 
 # Verify app is accessible
 if ! curl -sf http://localhost:$APP_PORT > /dev/null; then
-    echo "❌ FossFLOW app is still not accessible on http://localhost:$APP_PORT"
+    echo "❌ ArchFlow app is still not accessible on http://localhost:$APP_PORT"
     docker stop $SELENIUM_CONTAINER 2>/dev/null || true
     exit 1
 fi
 
-echo "✅ FossFLOW app is accessible"
+echo "✅ ArchFlow app is accessible"
 echo ""
 
 # Install Python dependencies if needed

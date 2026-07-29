@@ -1,7 +1,7 @@
 {
-  "short_name": "FossFLOW",
-  "name": "FossFLOW - Isometric Diagramming Tool",
-  "description": "Create beautiful isometric diagrams with FossFLOW",
+  "short_name": "ArchFlow",
+  "name": "ArchFlow - Isometric Diagramming Tool",
+  "description": "Create beautiful isometric diagrams with ArchFlow",
   "icons": [
     {
       "src": "favicon.ico",

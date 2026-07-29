@@ -81,7 +81,7 @@ function EditorPage() {
 
   const [diagramData, setDiagramData] = useState<DiagramData>(() => {
     // Initialize with last opened data if available
-    const lastOpenedData = localStorage.getItem('fossflow-last-opened-data');
+    const lastOpenedData = localStorage.getItem('archflow-last-opened-data');
     if (lastOpenedData) {
       try {
         const data = JSON.parse(lastOpenedData);
@@ -170,13 +170,13 @@ function EditorPage() {
 
   // Load diagrams from localStorage on component mount
   useEffect(() => {
-    const savedDiagrams = localStorage.getItem('fossflow-diagrams');
+    const savedDiagrams = localStorage.getItem('archflow-diagrams');
     if (savedDiagrams) {
       setDiagrams(JSON.parse(savedDiagrams));
     }
 
     // Load last opened diagram metadata (data is already loaded in state initialization)
-    const lastOpenedId = localStorage.getItem('fossflow-last-opened');
+    const lastOpenedId = localStorage.getItem('archflow-last-opened');
 
     if (lastOpenedId && savedDiagrams) {
       try {
@@ -210,7 +210,7 @@ function EditorPage() {
         };
       });
       localStorage.setItem(
-        'fossflow-diagrams',
+        'archflow-diagrams',
         JSON.stringify(diagramsToStore)
       );
     } catch (e) {
@@ -301,9 +301,9 @@ function EditorPage() {
 
     // Save as last opened
     try {
-      localStorage.setItem('fossflow-last-opened', newDiagram.id);
+      localStorage.setItem('archflow-last-opened', newDiagram.id);
       localStorage.setItem(
-        'fossflow-last-opened-data',
+        'archflow-last-opened-data',
         JSON.stringify(newDiagram.data)
       );
     } catch (e) {
@@ -352,9 +352,9 @@ function EditorPage() {
 
     // Save as last opened (without icons)
     try {
-      localStorage.setItem('fossflow-last-opened', diagram.id);
+      localStorage.setItem('archflow-last-opened', diagram.id);
       localStorage.setItem(
-        'fossflow-last-opened-data',
+        'archflow-last-opened-data',
         JSON.stringify(diagram.data)
       );
     } catch (e) {
@@ -400,8 +400,8 @@ function EditorPage() {
       setHasUnsavedChanges(false);
 
       // Clear last opened
-      localStorage.removeItem('fossflow-last-opened');
-      localStorage.removeItem('fossflow-last-opened-data');
+      localStorage.removeItem('archflow-last-opened');
+      localStorage.removeItem('archflow-last-opened-data');
     }
   };
 
@@ -623,7 +623,7 @@ function EditorPage() {
       // Update last opened data
       try {
         localStorage.setItem(
-          'fossflow-last-opened-data',
+          'archflow-last-opened-data',
           JSON.stringify(savedData)
         );
         setLastAutoSave(new Date());

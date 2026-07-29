@@ -5,7 +5,7 @@ import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useScene } from 'src/hooks/useScene';
 import { useTranslation } from 'src/stores/localeStore';
 
-const STORAGE_KEY = 'fossflow_connector_reroute_hint_dismissed';
+const STORAGE_KEY = 'archflow_connector_reroute_hint_dismissed';
 
 export const ConnectorRerouteTooltip = () => {
   const { t } = useTranslation('connectorRerouteTooltip');

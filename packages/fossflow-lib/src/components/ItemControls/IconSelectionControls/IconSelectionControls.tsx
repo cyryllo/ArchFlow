@@ -30,7 +30,7 @@ export const IconSelectionControls = () => {
   const [iconScale, setIconScale] = useState(100);
   const [showAlert, setShowAlert] = useState(() => {
     // Check localStorage to see if user has dismissed the alert
-    return localStorage.getItem('fossflow-show-drag-hint') !== 'false';
+    return localStorage.getItem('archflow-show-drag-hint') !== 'false';
   });
 
 
@@ -53,7 +53,7 @@ export const IconSelectionControls = () => {
 
   const dismissAlert = useCallback(() => {
     setShowAlert(false);
-    localStorage.setItem('fossflow-show-drag-hint', 'false');
+    localStorage.setItem('archflow-show-drag-hint', 'false');
   }, []);
 
   const handleFileSelect = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {

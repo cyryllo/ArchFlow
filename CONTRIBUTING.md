@@ -1,6 +1,6 @@
-# Contributing to FossFLOW
+# Contributing to ArchFlow
 
-Thank you for your interest in contributing to FossFLOW! This guide will help you get started with contributing to the project.
+Thank you for your interest in contributing to ArchFlow! This guide will help you get started with contributing to the project.
 
 ## Table of Contents
 
@@ -41,8 +41,8 @@ By participating in this project, you agree to abide by our Code of Conduct:
 1. Fork the repository on GitHub
 2. Clone your fork:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/FossFLOW.git
-   cd FossFLOW
+   git clone https://github.com/YOUR_USERNAME/ArchFlow.git
+   cd ArchFlow
    ```
 3. Install dependencies:
    ```bash
@@ -91,7 +91,7 @@ Recommended extensions:
 This is a monorepo containing two packages:
 
 ```
-FossFLOW/
+ArchFlow/
 ├── packages/
 │   ├── fossflow-lib/     # React component library
 │   │   ├── src/
@@ -128,14 +128,14 @@ FossFLOW/
 
 ### Finding Issues to Work On
 
-1. Check the [Issues](https://github.com/stan-smith/FossFLOW/issues) page
+1. Check the [Issues](https://github.com/cyryllo/ArchFlow/issues) page
 2. Look for issues labeled:
    - `good first issue` - Great for newcomers
    - `help wanted` - Community help needed
    - `bug` - Bug fixes
    - `enhancement` - New features
 
-3. Check [FOSSFLOW_TODO.md](./FOSSFLOW_TODO.md) for prioritized tasks
+3. Check [ARCHFLOW_TODO.md](./ARCHFLOW_TODO.md) for prioritized tasks
 
 ### Types of Contributions
 
@@ -145,7 +145,7 @@ We welcome all types of contributions:
 - **Features**: Implement new functionality
 - **Documentation**: Improve docs, add examples
 - **Tests**: Increase test coverage
-- **UI/UX improvements**: Make FossFLOW better to use
+- **UI/UX improvements**: Make ArchFlow better to use
 - **Performance**: Optimize code for better performance
 
 ## Development Workflow
@@ -261,7 +261,7 @@ git commit -m "feat(connector)!: change default connector mode to click"
 
 #### Scopes (optional but recommended)
 
-Common scopes in FossFLOW:
+Common scopes in ArchFlow:
 - `connector`: Connector-related changes
 - `ui`: UI components and interactions
 - `storage`: Storage and persistence
@@ -367,7 +367,7 @@ describe('useIsoProjection', () => {
 
 1. **Update your fork**:
    ```bash
-   git remote add upstream https://github.com/stan-smith/FossFLOW.git
+   git remote add upstream https://github.com/cyryllo/ArchFlow.git
    git fetch upstream
    git checkout main
    git merge upstream/main
@@ -427,13 +427,13 @@ Add screenshots or GIFs here
 
 ```bash
 # Build multi-architecture image
-docker buildx build --platform linux/amd64,linux/arm64 -t fossflow:local .
+docker buildx build --platform linux/amd64,linux/arm64 -t archflow:local .
 
 # Run with Docker Compose
 docker compose up
 
-# Or pull from Docker Hub
-docker run -p 80:80 stnsmith/fossflow:latest
+# Or run the local image directly
+docker run -p 80:80 archflow:local
 ```
 
 ## Community
@@ -442,8 +442,8 @@ docker run -p 80:80 stnsmith/fossflow:latest
 
 - **GitHub Issues**: For bugs and feature requests
 - **Discussions**: For questions and ideas
-- **Code Encyclopedia**: See [FOSSFLOW_ENCYCLOPEDIA.md](./FOSSFLOW_ENCYCLOPEDIA.md)
-- **TODO List**: See [FOSSFLOW_TODO.md](./FOSSFLOW_TODO.md)
+- **Code Encyclopedia**: See [ARCHFLOW_ENCYCLOPEDIA.md](./ARCHFLOW_ENCYCLOPEDIA.md)
+- **TODO List**: See [ARCHFLOW_TODO.md](./ARCHFLOW_TODO.md)
 
 ### Communication Guidelines
 
@@ -461,10 +461,8 @@ Contributors will be recognized in:
 
 ## License
 
-By contributing to FossFLOW, you agree that your contributions will be licensed under the project's license.
+By contributing to ArchFlow, you agree that your contributions will be licensed under the project's license.
 
 ---
 
-Thank you for contributing to FossFLOW! Your efforts help make this project better for everyone. If you have any questions, don't hesitate to ask in the issues or discussions.
-
--S
+Thank you for contributing to ArchFlow! Your efforts help make this project better for everyone. If you have any questions, don't hesitate to ask in the issues or discussions.

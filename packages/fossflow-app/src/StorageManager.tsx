@@ -28,7 +28,7 @@ export const StorageManager: React.FC<{ onClose: () => void }> = ({ onClose }) =
         const size = new Blob([value]).size;
         totalSize += size;
         
-        if (key.startsWith('fossflow-')) {
+        if (key.startsWith('archflow-')) {
           diagramsSize += size;
         } else {
           otherSize += size;
@@ -55,7 +55,7 @@ export const StorageManager: React.FC<{ onClose: () => void }> = ({ onClose }) =
     if (window.confirm('This will remove all saved diagrams. Are you sure?')) {
       const keysToRemove = [];
       for (const key in localStorage) {
-        if (key.startsWith('fossflow-')) {
+        if (key.startsWith('archflow-')) {
           keysToRemove.push(key);
         }
       }
@@ -67,7 +67,7 @@ export const StorageManager: React.FC<{ onClose: () => void }> = ({ onClose }) =
   };
 
   const exportAllDiagrams = () => {
-    const diagrams = localStorage.getItem('fossflow-diagrams');
+    const diagrams = localStorage.getItem('archflow-diagrams');
     if (diagrams) {
       const blob = new Blob([diagrams], { type: 'application/json' });
       const url = URL.createObjectURL(blob);

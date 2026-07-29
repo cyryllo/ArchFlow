@@ -2,8 +2,6 @@
 src/
 webpack/
 docs/
-.circleci/
-.codesandbox/
 .vscode/
 
 # Config files
