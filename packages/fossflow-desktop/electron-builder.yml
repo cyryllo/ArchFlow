@@ -1,5 +1,7 @@
 appId: com.archflow.desktop
 productName: ArchFlow
+electronVersion: 32.3.3
+npmRebuild: false
 directories:
   output: dist
 files:
