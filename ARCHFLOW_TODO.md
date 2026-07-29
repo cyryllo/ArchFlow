@@ -48,3 +48,14 @@ Known issues found while developing ArchFlow. The original FossFLOW/Isoflow issu
 - Add translation keys for context menu items and wire `ContextMenuManager.tsx` to `useTranslation`
 - For the Electron dialog (main process, no React/i18next available there): pass the current language from the renderer to main via IPC (or read it from a stored setting) and maintain a small PL/EN string table in `main.js`
 - Wire `DiagramManager.tsx` to `useTranslation('app')` like the rest of `App.tsx` already does, adding the missing keys to `en-US.json`/`pl-PL.json`
+
+### 5. Saved files are named by internal ID, not by the diagram's name
+**Priority**: MEDIUM (UX - files on disk are not human-navigable)
+**Problem**: Diagrams saved via App Storage are written to disk as `<id>.json` (e.g. `diagram_1785361543071.json`), where `id` is a timestamp-based identifier generated at creation time - not the name the user typed in the Save dialog (e.g. "Moj diagram"). The given name only lives inside the file's `name`/`title` field, not in the filename itself, making the folder hard to browse outside the app.
+**Relevant Codebase Areas**:
+- `packages/fossflow-desktop/src/main.js` - `registerStorageHandlers()`, `diagramPath(id)` and the `storage:create` handler's `id = data.id || \`diagram_${Date.now()}\`` generation
+- `packages/fossflow-backend/server.js` - same pattern server-side (`POST /api/diagrams`, `id = req.body.id || \`diagram_${Date.now()}\``), should stay consistent with the desktop behavior
+**Fix Strategy**:
+- Derive the filename from the (sanitized) diagram name instead of a generated id - strip characters invalid in filenames, trim, and handle name collisions (e.g. append " (2)")
+- On rename (saving an existing diagram under a new name), rename the file on disk to match rather than only updating the `name` field inside it
+- Decide whether the in-app `id` used for tracking (`currentDiagramId`, list keys, etc.) becomes the sanitized filename itself, or stays a separate identifier with a lookup table - simplest is likely to make them the same, same as the id currently doubles as the filename stem
