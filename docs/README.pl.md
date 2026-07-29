@@ -14,11 +14,6 @@ ArchFlow to potężna, open-source'owa aplikacja webowa do tworzenia pięknych d
 - **📝 [ARCHFLOW_TODO.md](https://github.com/cyryllo/ArchFlow/blob/master/ARCHFLOW_TODO.md)** - Bieżące problemy i plan rozwoju wraz z mapowaniem kodu, większość uwag dotyczy samej biblioteki isoflow.
 - **🤝 [CONTRIBUTING.md](https://github.com/cyryllo/ArchFlow/blob/master/CONTRIBUTING.md)** - Jak włączyć się w rozwój projektu.
 
-## Wypróbuj online
-<p align="center">
-Wejdź na  <b> --> https://cyryllo.github.io/ArchFlow/ <-- </b>
-</p>
-
 ### Wielojęzyczność
 - **2 obsługiwane języki** - Pełne tłumaczenie interfejsu na angielski i polski
 - **Selektor języka** - Łatwy w użyciu przełącznik języka w nagłówku aplikacji
@@ -48,6 +43,20 @@ Aby wyłączyć zapis po stronie serwera, ustaw `ENABLE_SERVER_STORAGE=false`:
 ```bash
 docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false archflow:local
 ```
+
+## 🖥️ Aplikacja okienkowa (Electron)
+
+Dostępna jest też natywna wersja okienkowa dla Windows, macOS i Linuksa — opakowuje tę samą aplikację webową w natywne okno, z natywnymi oknami dialogowymi "Zapisz jako"/"Otwórz" zamiast pobierania plików przez przeglądarkę.
+
+```bash
+# Uruchom w trybie dev (otwiera natywne okno)
+npm run dev:desktop
+
+# Zbuduj instalatory (Windows .exe, macOS .dmg, Linux AppImage/.deb)
+npm run build:desktop
+```
+
+Instalatory trafiają do `packages/fossflow-desktop/dist/`. Oba polecenia same budują najpierw bibliotekę i aplikację webową, więc nie trzeba robić tego osobno.
 
 ## Szybki start (lokalny development)
 

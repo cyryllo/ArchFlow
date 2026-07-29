@@ -1,7 +1,9 @@
 const path = require('path');
 const fs = require('fs');
 const { pathToFileURL } = require('url');
-const { app, BrowserWindow, dialog, protocol, net } = require('electron');
+const { app, BrowserWindow, dialog, protocol, net, Menu } = require('electron');
+
+Menu.setApplicationMenu(null);
 
 const APP_BUILD_DIR = path.join(__dirname, '../resources/app-build');
 const APP_SCHEME = 'app';

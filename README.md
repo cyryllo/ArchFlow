@@ -14,11 +14,6 @@ ArchFlow is a powerful, open-source web app for creating beautiful isometric dia
 - **📝 [ARCHFLOW_TODO.md](https://github.com/cyryllo/ArchFlow/blob/master/ARCHFLOW_TODO.md)** - Current issues and roadmap with codebase mappings, most gripes are with the isoflow library itself.
 - **🤝 [CONTRIBUTING.md](https://github.com/cyryllo/ArchFlow/blob/master/CONTRIBUTING.md)** - How to contribute to the project.
 
-## Try it online
-<p align="center">
-Go to  <b> --> https://cyryllo.github.io/ArchFlow/ <-- </b>
-</p>
-
 ### Performance updates
  - **Reduced frame refresh delay, should look much smoother now**
 
@@ -53,6 +48,20 @@ To disable server storage, set `ENABLE_SERVER_STORAGE=false`:
 docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false archflow:local
 ```
 
+## 🖥️ Desktop App (Electron)
+
+A native desktop version is also available for Windows, macOS, and Linux — it wraps the same web app in a native window, with native "Save As"/"Open" dialogs instead of browser downloads.
+
+```bash
+# Run in dev mode (opens a native window)
+npm run dev:desktop
+
+# Build installers (Windows .exe, macOS .dmg, Linux AppImage/.deb)
+npm run build:desktop
+```
+
+Installers are written to `packages/fossflow-desktop/dist/`. Both commands build the library and web app internally first, so there's no separate build step needed.
+
 ## Quick Start (Local Development)
 
 ```bash
@@ -74,10 +83,12 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Monorepo Structure
 
-This is a monorepo containing two packages:
+This is a monorepo containing several packages:
 
 - `packages/fossflow-lib` - React component library for drawing network diagrams (built with Webpack)
 - `packages/fossflow-app` - Progressive Web App which wraps the lib and presents it (built with RSBuild)
+- `packages/fossflow-backend` - Optional backend server for persistent diagram storage
+- `packages/fossflow-desktop` - Native desktop app (Electron)
 
 ### Development Commands
 
@@ -90,6 +101,10 @@ npm run dev:lib      # Watch mode for library development
 npm run build        # Build both library and app
 npm run build:lib    # Build library only
 npm run build:app    # Build app only
+
+# Desktop app (Electron)
+npm run dev:desktop   # Run desktop app in dev mode
+npm run build:desktop # Build desktop installers
 
 # Testing & Linting
 npm test             # Run unit tests

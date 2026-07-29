@@ -18,12 +18,6 @@ import { useModelStore } from 'src/stores/modelStore';
 import { ExportImageDialog } from '../ExportImageDialog/ExportImageDialog';
 import { HelpDialog } from '../HelpDialog/HelpDialog';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
-import { ConnectorHintTooltip } from '../ConnectorHintTooltip/ConnectorHintTooltip';
-import { ConnectorEmptySpaceTooltip } from '../ConnectorEmptySpaceTooltip/ConnectorEmptySpaceTooltip';
-import { ConnectorRerouteTooltip } from '../ConnectorRerouteTooltip/ConnectorRerouteTooltip';
-import { ImportHintTooltip } from '../ImportHintTooltip/ImportHintTooltip';
-import { LassoHintTooltip } from '../LassoHintTooltip/LassoHintTooltip';
-import { LazyLoadingWelcomeNotification } from '../LazyLoadingWelcomeNotification/LazyLoadingWelcomeNotification';
 import { CoordsUtils, getTilePosition } from 'src/utils';
 
 const ToolsEnum = {
@@ -254,16 +248,6 @@ export const UiOverlay = () => {
       {dialog === DialogTypeEnum.HELP && <HelpDialog />}
 
       {dialog === DialogTypeEnum.SETTINGS && <SettingsDialog iconPackManager={iconPackManager || undefined} />}
-
-      {/* Show hint tooltips only in editable mode */}
-      {editorMode === EditorModeEnum.EDITABLE && <ConnectorHintTooltip toolMenuRef={toolMenuRef} />}
-      {editorMode === EditorModeEnum.EDITABLE && <ConnectorEmptySpaceTooltip />}
-      {editorMode === EditorModeEnum.EDITABLE && <ConnectorRerouteTooltip />}
-      {editorMode === EditorModeEnum.EDITABLE && <ImportHintTooltip />}
-      {editorMode === EditorModeEnum.EDITABLE && <LassoHintTooltip toolMenuRef={toolMenuRef} />}
-
-      {/* Show lazy loading welcome notification if icon pack manager is provided */}
-      {iconPackManager && <LazyLoadingWelcomeNotification />}
 
       <SceneLayer>
         {contextMenu && (

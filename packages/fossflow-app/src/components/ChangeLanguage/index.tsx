@@ -35,7 +35,7 @@ const ChangeLanguage = () => {
         className="language-display"
         onMouseEnter={() => setIsOpen(true)}
       >
-        A/文
+        PL/EN
       </div>
       {isOpen && (
         <div className="language-dropdown">
