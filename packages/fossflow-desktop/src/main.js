@@ -42,6 +42,21 @@ function createWindow() {
     }
   });
 
+  win.webContents.on('will-prevent-unload', (event) => {
+    const choice = dialog.showMessageBoxSync(win, {
+      type: 'question',
+      buttons: ['Close', 'Cancel'],
+      defaultId: 1,
+      cancelId: 1,
+      title: 'Unsaved changes',
+      message: 'You have unsaved changes. Close anyway?'
+    });
+
+    if (choice === 0) {
+      event.preventDefault();
+    }
+  });
+
   win.webContents.session.on('will-download', (event, item) => {
     const savePath = dialog.showSaveDialogSync(win, {
       defaultPath: path.join(app.getPath('documents'), item.getFilename())
