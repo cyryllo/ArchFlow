@@ -4,14 +4,18 @@ import './DiagramManager.css';
 
 interface Props {
   onLoadDiagram: (id: string, data: any) => void;
+  onSaved: (id: string, name: string, data: any) => void;
   currentDiagramId?: string;
+  currentDiagramName?: string;
   currentDiagramData?: any;
   onClose: () => void;
 }
 
 export const DiagramManager: React.FC<Props> = ({
   onLoadDiagram,
+  onSaved,
   currentDiagramId,
+  currentDiagramName,
   currentDiagramData,
   onClose
 }) => {
@@ -161,17 +165,20 @@ export const DiagramManager: React.FC<Props> = ({
       }).length;
       console.log(`DiagramManager: Including ${importedCount} imported icons`);
 
+      let savedId: string;
       if (currentDiagramId) {
         // Update existing
         await storage.saveDiagram(currentDiagramId, dataToSave);
+        savedId = currentDiagramId;
       } else {
         // Create new
-        await storage.createDiagram(dataToSave);
+        savedId = await storage.createDiagram(dataToSave);
       }
 
       setShowSaveDialog(false);
       setSaveName('');
       await loadDiagrams(); // Refresh list
+      onSaved(savedId, dataToSave.name, dataToSave);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save diagram');
     }
@@ -213,7 +220,7 @@ export const DiagramManager: React.FC<Props> = ({
           <button
             className="action-button primary"
             onClick={() => {
-              setSaveName(currentDiagramData?.name || 'Untitled Diagram');
+              setSaveName(currentDiagramName || currentDiagramData?.name || currentDiagramData?.title || 'Untitled Diagram');
               setShowSaveDialog(true);
             }}
           >

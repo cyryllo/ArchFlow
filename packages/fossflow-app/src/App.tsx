@@ -581,6 +581,18 @@ function EditorPage() {
     );
   };
 
+  const handleDiagramManagerSaved = (id: string, name: string, data: any) => {
+    setCurrentDiagram({
+      id,
+      name,
+      data,
+      createdAt: currentDiagram?.id === id ? currentDiagram.createdAt : new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    });
+    setDiagramName(name);
+    setHasUnsavedChanges(false);
+  };
+
   // i18n
   const { t, i18n } = useTranslation('app');
   
@@ -981,7 +993,9 @@ function EditorPage() {
       {showDiagramManager && (
         <DiagramManager
           onLoadDiagram={handleDiagramManagerLoad}
+          onSaved={handleDiagramManagerSaved}
           currentDiagramId={currentDiagram?.id}
+          currentDiagramName={currentDiagram?.name || diagramName}
           currentDiagramData={currentModel || diagramData}
           onClose={() => {
             return setShowDiagramManager(false);

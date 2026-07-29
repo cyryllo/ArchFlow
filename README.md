@@ -39,9 +39,9 @@ docker build -t archflow:local .
 docker run -p 80:80 -v $(pwd)/diagrams:/data/diagrams archflow:local
 ```
 
-Server storage is enabled by default in Docker. Your diagrams will be saved to `./diagrams` on the host.
+Server storage is enabled by default in Docker. Your diagrams are saved as JSON files to `./diagrams` on the host (mounted to `/data/diagrams` inside the container). When this is active, the app detects it automatically and switches to the persistent "App Storage" diagram list — the session-only Save/Load/Quick-save buttons disappear, since there's no need for them anymore.
 
-To disable server storage, set `ENABLE_SERVER_STORAGE=false`:
+To disable server storage and fall back to browser-only (session) storage, set `ENABLE_SERVER_STORAGE=false`:
 ```bash
 docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false archflow:local
 ```
@@ -59,6 +59,8 @@ npm run build:desktop
 ```
 
 Installers are written to `packages/fossflow-desktop/dist/`. Both commands build the library and web app internally first, so there's no separate build step needed.
+
+Diagrams are saved as real files on disk, automatically — no location prompt, no browser storage involved. The desktop app creates an `ArchFlow` folder inside your OS's Documents directory (`~/Documents/ArchFlow`, or the localized equivalent, e.g. `~/Dokumenty/ArchFlow` on a Polish system) the first time it runs, and every diagram you save through the "📁 App Storage" list becomes a `.json` file there. As with Docker, the session-only Save/Load/Quick-save buttons are hidden in the desktop app, since real persistent storage is always available.
 
 ## Quick Start (Local Development)
 
@@ -132,15 +134,22 @@ npm run publish:lib  # Publish library to npm
    - Switch modes in Settings → Connectors tab
 
 3. **Save Your Work**:
-   - **Quick Save** - Saves to browser session
-   - **Export** - Download as JSON file
-   - **Import** - Load from JSON file
+   - **🌐/📁 App Storage** (Docker with server storage enabled, or the desktop app) - persistent, named diagrams you can list, load, and delete; saved as real files (`./diagrams` on the Docker host, `~/Documents/ArchFlow` on desktop)
+   - **Save / Load / Quick Save (Session)** - only shown when no persistent storage is available (plain web hosting, or Docker with server storage disabled); saves to the browser's storage only
+   - **Export** - Download the current diagram as a JSON file, always available regardless of platform
+   - **Import** - Load a diagram from a JSON file, always available
 
 ### Storage Options
 
-- **Session Storage**: Temporary saves cleared when browser closes
-- **Export/Import**: Permanent storage as JSON files
-- **Auto-Save**: Automatically saves changes every 5 seconds to session
+Which options you see depends on where ArchFlow is running:
+
+| Where | What you get |
+|---|---|
+| Desktop app | **📁 App Storage** (files in `~/Documents/ArchFlow`) + Export/Import. No session buttons. |
+| Docker, server storage enabled (default) | **🌐 App Storage** (files in `./diagrams` on the host) + Export/Import. No session buttons. |
+| Plain web hosting / Docker with server storage disabled | Session Save/Load/Quick Save (browser storage only, cleared if you clear browser data) + Export/Import |
+
+- **Auto-Save**: The last-opened diagram is automatically restored on reload/relaunch (browser `localStorage` / desktop app profile), independent of which storage option above you're using.
 
 ## Contributing
 

@@ -37,9 +37,9 @@ docker build -t archflow:local .
 docker run -p 80:80 -v $(pwd)/diagrams:/data/diagrams archflow:local
 ```
 
-Zapis po stronie serwera jest domyślnie włączony w Dockerze. Diagramy będą zapisywane w `./diagrams` na hoście.
+Zapis po stronie serwera jest domyślnie włączony w Dockerze. Diagramy są zapisywane jako pliki JSON w `./diagrams` na hoście (montowane jako `/data/diagrams` w kontenerze). Gdy to działa, aplikacja wykrywa to automatycznie i przełącza się na trwałą listę diagramów "Dysk aplikacji" — przyciski Zapisz/Wczytaj/Szybki zapis (sesja) znikają, bo nie są już potrzebne.
 
-Aby wyłączyć zapis po stronie serwera, ustaw `ENABLE_SERVER_STORAGE=false`:
+Aby wyłączyć zapis po stronie serwera i wrócić do zapisu tylko w przeglądarce (sesja), ustaw `ENABLE_SERVER_STORAGE=false`:
 ```bash
 docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false archflow:local
 ```
@@ -57,6 +57,8 @@ npm run build:desktop
 ```
 
 Instalatory trafiają do `packages/fossflow-desktop/dist/`. Oba polecenia same budują najpierw bibliotekę i aplikację webową, więc nie trzeba robić tego osobno.
+
+Diagramy są zapisywane jako prawdziwe pliki na dysku, automatycznie — bez pytania o lokalizację, bez pamięci przeglądarki. Aplikacja desktopowa przy pierwszym uruchomieniu tworzy katalog `ArchFlow` w katalogu Dokumentów systemu (`~/Documents/ArchFlow`, a na spolszczonym systemie `~/Dokumenty/ArchFlow`), i każdy diagram zapisany przez listę "📁 Dysk aplikacji" trafia tam jako plik `.json`. Tak samo jak w Dockerze, przyciski Zapisz/Wczytaj/Szybki zapis (sesja) są ukryte w aplikacji desktopowej, bo zawsze dostępny jest trwały zapis.
 
 ## Szybki start (lokalny development)
 
@@ -128,15 +130,22 @@ npm run publish:lib  # Opublikuj bibliotekę na npm
    - Przełączaj tryby w Ustawienia → zakładka Połączenia
 
 3. **Zapisywanie pracy**:
-   - **Szybki zapis** - zapisuje w sesji przeglądarki
-   - **Eksport** - pobierz jako plik JSON
-   - **Import** - wczytaj z pliku JSON
+   - **🌐/📁 Dysk aplikacji** (Docker z włączonym zapisem serwerowym, albo aplikacja desktopowa) - trwałe, nazwane diagramy, które można wylistować, wczytać i usunąć; zapisywane jako prawdziwe pliki (`./diagrams` na hoście w Dockerze, `~/Documents/ArchFlow` na desktopie)
+   - **Zapisz / Wczytaj / Szybki zapis (Sesja)** - pokazuje się tylko gdy nie ma trwałego zapisu (zwykły hosting webowy, albo Docker z wyłączonym zapisem serwerowym); zapisuje tylko w pamięci przeglądarki
+   - **Eksport** - pobierz bieżący diagram jako plik JSON, zawsze dostępne niezależnie od platformy
+   - **Import** - wczytaj diagram z pliku JSON, zawsze dostępne
 
 ### Opcje przechowywania
 
-- **Pamięć sesji**: zapis tymczasowy, kasowany po zamknięciu przeglądarki
-- **Eksport/Import**: trwały zapis jako pliki JSON
-- **Autozapis**: automatyczny zapis zmian co 5 sekund do sesji
+To, co widzisz, zależy od tego, gdzie działa ArchFlow:
+
+| Gdzie | Co dostajesz |
+|---|---|
+| Aplikacja desktopowa | **📁 Dysk aplikacji** (pliki w `~/Documents/ArchFlow`) + Eksport/Import. Brak przycisków sesji. |
+| Docker z włączonym zapisem serwerowym (domyślnie) | **📁 Dysk aplikacji** (pliki w `./diagrams` na hoście) + Eksport/Import. Brak przycisków sesji. |
+| Zwykły hosting webowy / Docker z wyłączonym zapisem serwerowym | Zapisz/Wczytaj/Szybki zapis (tylko pamięć przeglądarki, znika po wyczyszczeniu danych przeglądarki) + Eksport/Import |
+
+- **Autozapis**: ostatnio otwarty diagram jest automatycznie przywracany po odświeżeniu/ponownym uruchomieniu (`localStorage` przeglądarki / profil aplikacji desktopowej), niezależnie od tego, z której opcji przechowywania powyżej korzystasz.
 
 ## Współtworzenie
 
