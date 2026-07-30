@@ -1,4 +1,4 @@
-# ArchFlow - Isometric Diagramming Tool <img width="30" height="30" alt="archflow" src="https://github.com/user-attachments/assets/56d78887-601c-4336-ab87-76f8ee4cde96" />
+# ArchFlow - Isometric Diagramming Tool
 
 <p align="center">
  <a href="README.md">English</a> | <a href="docs/README.pl.md">Polski</a>
