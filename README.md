@@ -1,7 +1,16 @@
-# ArchFlow - Isometric Diagramming Tool
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/logo-dark.svg">
+    <img alt="ArchFlow" src="docs/brand/logo.svg" width="440">
+  </picture>
+</p>
 
 <p align="center">
  <a href="README.md">English</a> | <a href="docs/README.pl.md">Polski</a>
+</p>
+
+<p align="center">
+  <img alt="ArchFlow" src="docs/brand/og-cover.png" width="100%">
 </p>
 
 **ArchFlow** is a fork of <a href="https://github.com/stan-smith/FossFLOW">FossFLOW</a> by Stan Smith, which is itself a fork/rewrite of <a href="https://github.com/markmanx/isoflow">Isoflow</a> by @markmanx — this project stands on both of their shoulders. If either project has helped you, please check them out and consider supporting their work.
