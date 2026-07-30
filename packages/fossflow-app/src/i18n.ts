@@ -27,6 +27,17 @@ i18n
     }
   });
 
+// Let the Electron main process know the current language, so native dialogs
+// (which have no access to i18next) can show text in the right language.
+const notifyElectronOfLanguage = (lng: string) => {
+  (window as any).electronAPI?.setLanguage?.(lng);
+};
+
+i18n.on('languageChanged', notifyElectronOfLanguage);
+i18n.on('initialized', () => {
+  notifyElectronOfLanguage(i18n.language);
+});
+
 export const supportedLanguages = [
   {
     label: 'English',

@@ -10,8 +10,6 @@ export interface LocaleProps {
         exampleText: string;
     };
     mainMenu: {
-        undo: string;
-        redo: string;
         open: string;
         exportJson: string;
         exportCompactJson: string;
@@ -19,6 +17,29 @@ export interface LocaleProps {
         clearCanvas: string;
         settings: string;
         gitHub: string;
+        menuButton: string;
+    };
+    zoomControls: {
+        zoomOut: string;
+        zoomIn: string;
+        fitToScreen: string;
+        help: string;
+    };
+    contextMenu: {
+        addNode: string;
+        addRectangle: string;
+    };
+    toolMenu: {
+        undo: string;
+        redo: string;
+        select: string;
+        lassoSelect: string;
+        freehandLasso: string;
+        pan: string;
+        addItem: string;
+        rectangle: string;
+        connector: string;
+        text: string;
     };
     helpDialog: {
         title: string;

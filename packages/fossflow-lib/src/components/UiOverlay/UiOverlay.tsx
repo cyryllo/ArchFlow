@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { Box, useTheme, Typography, Stack } from '@mui/material';
-import { ChevronRight } from '@mui/icons-material';
+import { Box, useTheme } from '@mui/material';
 import { EditorModeEnum, DialogTypeEnum } from 'src/types';
 import { UiElement } from 'components/UiElement/UiElement';
 import { SceneLayer } from 'src/components/SceneLayer/SceneLayer';
@@ -13,8 +12,6 @@ import { ZoomControls } from 'src/components/ZoomControls/ZoomControls';
 import { DebugUtils } from 'src/components/DebugUtils/DebugUtils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { ContextMenuManager } from 'src/components/ContextMenu/ContextMenuManager';
-import { useScene } from 'src/hooks/useScene';
-import { useModelStore } from 'src/stores/modelStore';
 import { ExportImageDialog } from '../ExportImageDialog/ExportImageDialog';
 import { HelpDialog } from '../HelpDialog/HelpDialog';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
@@ -24,8 +21,7 @@ const ToolsEnum = {
   MAIN_MENU: 'MAIN_MENU',
   ZOOM_CONTROLS: 'ZOOM_CONTROLS',
   TOOL_MENU: 'TOOL_MENU',
-  ITEM_CONTROLS: 'ITEM_CONTROLS',
-  VIEW_TITLE: 'VIEW_TITLE'
+  ITEM_CONTROLS: 'ITEM_CONTROLS'
 } as const;
 
 interface EditorModeMapping {
@@ -37,10 +33,9 @@ const EDITOR_MODE_MAPPING: EditorModeMapping = {
     'ITEM_CONTROLS',
     'ZOOM_CONTROLS',
     'TOOL_MENU',
-    'MAIN_MENU',
-    'VIEW_TITLE'
+    'MAIN_MENU'
   ],
-  [EditorModeEnum.EXPLORABLE_READONLY]: ['ZOOM_CONTROLS', 'VIEW_TITLE'],
+  [EditorModeEnum.EXPLORABLE_READONLY]: ['ZOOM_CONTROLS'],
   [EditorModeEnum.NON_INTERACTIVE]: []
 };
 
@@ -79,7 +74,6 @@ export const UiOverlay = () => {
   const itemControls = useUiStateStore((state) => {
     return state.itemControls;
   });
-  const { currentView } = useScene();
   const editorMode = useUiStateStore((state) => {
     return state.editorMode;
   });
@@ -89,9 +83,6 @@ export const UiOverlay = () => {
   const rendererEl = useUiStateStore((state) => {
     return state.rendererEl;
   });
-  const title = useModelStore((state) => {
-    return state.title;
-  });
   const iconPackManager = useUiStateStore((state) => {
     return state.iconPackManager;
   });
@@ -99,6 +90,11 @@ export const UiOverlay = () => {
     return state.contextMenu;
   });
   const { size: rendererSize } = useResizeObserver(rendererEl);
+
+  // The main menu/zoom/tool rows sit right under the host app's own toolbar,
+  // so they use a smaller top offset than appPadding.y (which is also used
+  // for spacing that isn't adjacent to the app toolbar, e.g. ITEM_CONTROLS).
+  const topRowY = 12;
 
   return (
     <>
@@ -123,7 +119,7 @@ export const UiOverlay = () => {
             }}
             style={{
               left: appPadding.x,
-              top: appPadding.y * 2 + spacing(2),
+              top: topRowY + theme.customVars.toolMenu.height + spacing(2),
               maxHeight: rendererSize.height - appPadding.y * 6
             }}
           >
@@ -140,76 +136,30 @@ export const UiOverlay = () => {
             }}
             style={{
               left: rendererSize.width - appPadding.x,
-              top: appPadding.y
+              top: topRowY
             }}
           >
             <ToolMenu />
           </Box>
         )}
 
-        {availableTools.includes('ZOOM_CONTROLS') && (
-          <Box
-            sx={{
-              position: 'absolute',
-              transformOrigin: 'bottom left'
-            }}
-            style={{
-              top: rendererSize.height - appPadding.y * 2,
-              left: appPadding.x
-            }}
-          >
-            <ZoomControls />
-          </Box>
-        )}
-
-        {availableTools.includes('MAIN_MENU') && (
-          <Box
-            sx={{
-              position: 'absolute'
-            }}
-            style={{
-              top: appPadding.y,
-              left: appPadding.x
-            }}
-          >
-            <MainMenu />
-          </Box>
-        )}
-
-        {availableTools.includes('VIEW_TITLE') && (
+        {(availableTools.includes('MAIN_MENU') ||
+          availableTools.includes('ZOOM_CONTROLS')) && (
           <Box
             sx={{
               position: 'absolute',
               display: 'flex',
-              justifyContent: 'center',
-              transform: 'translateX(-50%)',
-              pointerEvents: 'none'
+              flexDirection: 'row',
+              alignItems: 'center'
             }}
             style={{
-              left: rendererSize.width / 2,
-              top: rendererSize.height - appPadding.y * 2,
-              width: rendererSize.width - 500,
-              height: appPadding.y
+              top: topRowY,
+              left: appPadding.x,
+              gap: spacing(1)
             }}
           >
-            <UiElement
-              sx={{
-                display: 'inline-flex',
-                px: 2,
-                alignItems: 'center',
-                height: '100%'
-              }}
-            >
-              <Stack direction="row" alignItems="center">
-                <Typography fontWeight={600} color="text.secondary">
-                  {title}
-                </Typography>
-                <ChevronRight />
-                <Typography fontWeight={600} color="text.secondary">
-                  {currentView.name}
-                </Typography>
-              </Stack>
-            </UiElement>
+            {availableTools.includes('MAIN_MENU') && <MainMenu />}
+            {availableTools.includes('ZOOM_CONTROLS') && <ZoomControls />}
           </Box>
         )}
 

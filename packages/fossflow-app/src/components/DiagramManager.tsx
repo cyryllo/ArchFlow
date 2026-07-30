@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { storageManager, DiagramInfo } from '../services/storageService';
 import './DiagramManager.css';
 
@@ -19,6 +20,7 @@ export const DiagramManager: React.FC<Props> = ({
   currentDiagramData,
   onClose
 }) => {
+  const { t } = useTranslation('app');
   const [diagrams, setDiagrams] = useState<DiagramInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,7 +52,7 @@ export const DiagramManager: React.FC<Props> = ({
       setDiagrams(list);
     } catch (err) {
       const errorMsg =
-        err instanceof Error ? err.message : 'Failed to load diagrams';
+        err instanceof Error ? err.message : t('diagramManager.failedList');
       console.error('DiagramManager error:', err);
       setError(errorMsg);
     } finally {
@@ -78,14 +80,14 @@ export const DiagramManager: React.FC<Props> = ({
       onClose();
     } catch (err) {
       console.error(`DiagramManager: Failed to load diagram ${id}:`, err);
-      setError(err instanceof Error ? err.message : 'Failed to load diagram');
+      setError(err instanceof Error ? err.message : t('diagramManager.failedLoad'));
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this diagram?')) {
+    if (!window.confirm(t('diagramManager.confirmDelete'))) {
       return;
     }
 
@@ -94,16 +96,17 @@ export const DiagramManager: React.FC<Props> = ({
       await storage.deleteDiagram(id);
       await loadDiagrams(); // Refresh list
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete diagram');
+      setError(err instanceof Error ? err.message : t('diagramManager.failedDelete'));
     }
   };
 
   const handleCopyShareLink = (id: string) => {
     const shareUrl = `${window.location.origin}/display/${id}`;
+    const message = t('diagramManager.shareLinkCopied', { url: shareUrl });
     navigator.clipboard
       .writeText(shareUrl)
       .then(() => {
-        alert(`Share link copied to clipboard:\n${shareUrl}`);
+        alert(message);
       })
       .catch(() => {
         const textArea = document.createElement('textarea');
@@ -112,13 +115,13 @@ export const DiagramManager: React.FC<Props> = ({
         textArea.select();
         document.execCommand('copy');
         document.body.removeChild(textArea);
-        alert(`Share link copied to clipboard:\n${shareUrl}`);
+        alert(message);
       });
   };
 
   const handleSave = async () => {
     if (!saveName.trim()) {
-      setError('Please enter a diagram name');
+      setError(t('diagramManager.enterName'));
       return;
     }
 
@@ -132,7 +135,7 @@ export const DiagramManager: React.FC<Props> = ({
 
       if (existingDiagram) {
         const confirmOverwrite = window.confirm(
-          `A diagram named "${saveName}" already exists. This will overwrite it. Are you sure you want to continue?`
+          t('diagramManager.confirmOverwrite', { name: saveName })
         );
         if (!confirmOverwrite) {
           return;
@@ -167,9 +170,8 @@ export const DiagramManager: React.FC<Props> = ({
 
       let savedId: string;
       if (currentDiagramId) {
-        // Update existing
-        await storage.saveDiagram(currentDiagramId, dataToSave);
-        savedId = currentDiagramId;
+        // Update existing (may come back with a different id if the file was renamed)
+        savedId = await storage.saveDiagram(currentDiagramId, dataToSave);
       } else {
         // Create new
         savedId = await storage.createDiagram(dataToSave);
@@ -180,7 +182,7 @@ export const DiagramManager: React.FC<Props> = ({
       await loadDiagrams(); // Refresh list
       onSaved(savedId, dataToSave.name, dataToSave);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save diagram');
+      setError(err instanceof Error ? err.message : t('diagramManager.failedSave'));
     }
   };
 
@@ -188,7 +190,7 @@ export const DiagramManager: React.FC<Props> = ({
     <div className="diagram-manager-overlay">
       <div className="diagram-manager">
         <div className="diagram-manager-header">
-          <h2>Diagram Manager</h2>
+          <h2>{t('diagramManager.title')}</h2>
           <button className="close-button" onClick={onClose}>
             ×
           </button>
@@ -198,18 +200,18 @@ export const DiagramManager: React.FC<Props> = ({
           <span
             className={`storage-badge ${storageKind === 'session' ? 'local' : 'server'}`}
           >
-            {storageKind === 'server' && '🌐 Server Storage'}
-            {storageKind === 'electron' && '📁 Local Files'}
-            {storageKind === 'session' && '💾 Local Storage'}
+            {storageKind === 'server' && `🌐 ${t('diagramManager.storageServer')}`}
+            {storageKind === 'electron' && `📁 ${t('diagramManager.storageLocalFiles')}`}
+            {storageKind === 'session' && `💾 ${t('diagramManager.storageLocal')}`}
           </span>
           {storageKind === 'server' && (
             <span className="storage-note">
-              Diagrams are saved on the server and available across all devices
+              {t('diagramManager.storageServerNote')}
             </span>
           )}
           {storageKind === 'electron' && (
             <span className="storage-note">
-              Diagrams are saved as files in your Documents/ArchFlow folder
+              {t('diagramManager.storageLocalFilesNote')}
             </span>
           )}
         </div>
@@ -220,22 +222,22 @@ export const DiagramManager: React.FC<Props> = ({
           <button
             className="action-button primary"
             onClick={() => {
-              setSaveName(currentDiagramName || currentDiagramData?.name || currentDiagramData?.title || 'Untitled Diagram');
+              setSaveName(currentDiagramName || currentDiagramData?.name || currentDiagramData?.title || t('status.untitled'));
               setShowSaveDialog(true);
             }}
           >
-            💾 Save Current Diagram
+            💾 {t('diagramManager.saveCurrent')}
           </button>
         </div>
 
         {loading ? (
-          <div className="loading">Loading diagrams...</div>
+          <div className="loading">{t('diagramManager.loading')}</div>
         ) : (
           <div className="diagram-list">
             {diagrams.length === 0 ? (
               <div className="empty-state">
-                <p>No saved diagrams</p>
-                <p className="hint">Save your current diagram to get started</p>
+                <p>{t('diagramManager.noSavedDiagrams')}</p>
+                <p className="hint">{t('diagramManager.noSavedDiagramsHint')}</p>
               </div>
             ) : (
               diagrams.map((diagram) => {
@@ -244,7 +246,7 @@ export const DiagramManager: React.FC<Props> = ({
                     <div className="diagram-info">
                       <h3>{diagram.name}</h3>
                       <span className="diagram-meta">
-                        Last modified: {diagram.lastModified.toLocaleString()}
+                        {t('diagramManager.lastModified')}: {diagram.lastModified.toLocaleString()}
                         {diagram.size &&
                           ` • ${(diagram.size / 1024).toFixed(1)} KB`}
                       </span>
@@ -257,16 +259,16 @@ export const DiagramManager: React.FC<Props> = ({
                         }}
                         disabled={loading}
                       >
-                        {loading ? 'Loading...' : 'Load'}
+                        {loading ? t('diagramManager.btnLoading') : t('diagramManager.btnLoad')}
                       </button>
                       <button
                         className="action-button share"
                         onClick={() => {
                           return handleCopyShareLink(diagram.id);
                         }}
-                        title="Copy shareable link"
+                        title={t('diagramManager.btnShareTitle') as string}
                       >
-                        Share
+                        {t('diagramManager.btnShare')}
                       </button>
                       <button
                         className="action-button danger"
@@ -275,7 +277,7 @@ export const DiagramManager: React.FC<Props> = ({
                         }}
                         disabled={loading}
                       >
-                        Delete
+                        {t('diagramManager.btnDelete')}
                       </button>
                     </div>
                   </div>
@@ -288,10 +290,10 @@ export const DiagramManager: React.FC<Props> = ({
         {/* Save Dialog */}
         {showSaveDialog && (
           <div className="save-dialog">
-            <h3>Save Diagram</h3>
+            <h3>{t('diagramManager.saveDialogTitle')}</h3>
             <input
               type="text"
-              placeholder="Diagram name"
+              placeholder={t('diagramManager.namePlaceholder') as string}
               value={saveName}
               onChange={(e) => {
                 return setSaveName(e.target.value);
@@ -302,13 +304,13 @@ export const DiagramManager: React.FC<Props> = ({
               autoFocus
             />
             <div className="dialog-buttons">
-              <button onClick={handleSave}>Save</button>
+              <button onClick={handleSave}>{t('diagramManager.btnSave')}</button>
               <button
                 onClick={() => {
                   return setShowSaveDialog(false);
                 }}
               >
-                Cancel
+                {t('diagramManager.btnCancel')}
               </button>
             </div>
           </div>

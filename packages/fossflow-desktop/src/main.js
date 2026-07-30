@@ -9,6 +9,31 @@ Menu.setApplicationMenu(null);
 const APP_BUILD_DIR = path.join(__dirname, '../resources/app-build');
 const APP_SCHEME = 'app';
 
+// Native dialogs (main process) have no access to the renderer's i18next -
+// the renderer tells us which language it's in via IPC, and we keep a small
+// string table here for the couple of dialogs the main process shows.
+const DIALOG_STRINGS = {
+  'en-US': {
+    unsavedTitle: 'Unsaved changes',
+    unsavedMessage: 'You have unsaved changes. Close anyway?',
+    close: 'Close',
+    cancel: 'Cancel'
+  },
+  'pl-PL': {
+    unsavedTitle: 'Niezapisane zmiany',
+    unsavedMessage: 'Masz niezapisane zmiany. Czy na pewno chcesz zamknąć?',
+    close: 'Zamknij',
+    cancel: 'Anuluj'
+  }
+};
+let currentLanguage = 'en-US';
+
+ipcMain.on('language-changed', (event, lang) => {
+  if (DIALOG_STRINGS[lang]) {
+    currentLanguage = lang;
+  }
+});
+
 protocol.registerSchemesAsPrivileged([
   {
     scheme: APP_SCHEME,
@@ -30,11 +55,48 @@ function serveAppBundle() {
   });
 }
 
+// Turn a diagram name into a filesystem-safe filename stem: strips characters
+// invalid on Windows/Linux/macOS, collapses whitespace, and caps the length.
+function sanitizeFilename(name) {
+  const cleaned = (name || 'Untitled Diagram')
+    .replace(/[\\/?%*:|"<>\x00-\x1f]/g, '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .slice(0, 150);
+  return cleaned || 'Untitled Diagram';
+}
+
+async function fileExists(filePath) {
+  try {
+    await fsPromises.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function registerStorageHandlers() {
   const storageDir = path.join(app.getPath('documents'), 'ArchFlow');
   fs.mkdirSync(storageDir, { recursive: true });
 
   const diagramPath = (id) => path.join(storageDir, `${id}.json`);
+
+  // Picks a filename stem for `name`, appending " (2)", " (3)", ... if it
+  // collides with a different diagram. `keepId`, if given, is treated as
+  // "this is the diagram being saved" - reusing its own current name is not
+  // a collision.
+  const uniqueDiagramId = async (name, keepId) => {
+    const base = sanitizeFilename(name);
+    if (base === keepId) return base;
+
+    let candidate = base;
+    let n = 2;
+    while (candidate !== keepId && (await fileExists(diagramPath(candidate)))) {
+      candidate = `${base} (${n})`;
+      n += 1;
+    }
+    return candidate;
+  };
 
   ipcMain.handle('storage:list', async () => {
     const files = await fsPromises.readdir(storageDir);
@@ -69,9 +131,15 @@ function registerStorageHandlers() {
   });
 
   ipcMain.handle('storage:save', async (event, id, data) => {
-    const payload = { ...data, id, lastModified: new Date().toISOString() };
-    await fsPromises.writeFile(diagramPath(id), JSON.stringify(payload, null, 2));
-    return { success: true, id };
+    const newId = await uniqueDiagramId(data.name || data.title, id);
+    const payload = { ...data, id: newId, lastModified: new Date().toISOString() };
+    await fsPromises.writeFile(diagramPath(newId), JSON.stringify(payload, null, 2));
+
+    if (newId !== id) {
+      await fsPromises.unlink(diagramPath(id)).catch(() => {});
+    }
+
+    return { success: true, id: newId };
   });
 
   ipcMain.handle('storage:delete', async (event, id) => {
@@ -80,7 +148,7 @@ function registerStorageHandlers() {
   });
 
   ipcMain.handle('storage:create', async (event, data) => {
-    const id = data.id || `diagram_${Date.now()}`;
+    const id = await uniqueDiagramId(data.name || data.title);
     const payload = {
       ...data,
       id,
@@ -106,13 +174,14 @@ function createWindow() {
   });
 
   win.webContents.on('will-prevent-unload', (event) => {
+    const strings = DIALOG_STRINGS[currentLanguage] || DIALOG_STRINGS['en-US'];
     const choice = dialog.showMessageBoxSync(win, {
       type: 'question',
-      buttons: ['Close', 'Cancel'],
+      buttons: [strings.close, strings.cancel],
       defaultId: 1,
       cancelId: 1,
-      title: 'Unsaved changes',
-      message: 'You have unsaved changes. Close anyway?'
+      title: strings.unsavedTitle,
+      message: strings.unsavedMessage
     });
 
     if (choice === 0) {

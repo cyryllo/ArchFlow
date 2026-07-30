@@ -5,15 +5,36 @@ const locale: LocaleProps = {
     exampleText: "This is an example text"
   },
   mainMenu: {
-    undo: "Undo",
-    redo: "Redo", 
     open: "Open",
     exportJson: "Export as JSON",
     exportCompactJson: "Export as Compact JSON",
     exportImage: "Export as image",
     clearCanvas: "Clear the canvas",
     settings: "Settings",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    menuButton: "Main menu"
+  },
+  zoomControls: {
+    zoomOut: "Zoom out",
+    zoomIn: "Zoom in",
+    fitToScreen: "Fit to screen",
+    help: "Help"
+  },
+  contextMenu: {
+    addNode: "Add Node",
+    addRectangle: "Add Rectangle"
+  },
+  toolMenu: {
+    undo: "Undo",
+    redo: "Redo",
+    select: "Select",
+    lassoSelect: "Lasso select",
+    freehandLasso: "Freehand lasso",
+    pan: "Pan",
+    addItem: "Add item",
+    rectangle: "Rectangle",
+    connector: "Connector",
+    text: "Text"
   },
   helpDialog: {
     title: "Keyboard Shortcuts & Help",

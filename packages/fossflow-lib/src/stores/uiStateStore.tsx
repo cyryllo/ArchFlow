@@ -50,6 +50,10 @@ const initialState = () => {
           set({ mainMenuOptions });
         },
         setEditorMode: (mode) => {
+          // Guard against redundant calls resetting the user's current interaction
+          // mode (e.g. back to CURSOR) just because a parent re-rendered and passed
+          // an equal-but-newly-created editorMode/mainMenuOptions prop.
+          if (get().editorMode === mode) return;
           set({ editorMode: mode, mode: getStartingMode(mode) });
         },
         setIconCategoriesState: (iconCategoriesState) => {

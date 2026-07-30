@@ -22,6 +22,7 @@ import {
   FormControl
 } from '@mui/material';
 import { useModelStore } from 'src/stores/modelStore';
+import { shallow } from 'zustand/shallow';
 import {
   exportAsImage,
   downloadFile as downloadFileUtil,
@@ -63,7 +64,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
   const uiStateActions = useUiStateStore((state) => state.actions);
   const model = useModelStore((state): Omit<ModelStore, 'actions'> => {
     return modelFromModelStore(state);
-  });
+  }, shallow);
 
   // Crop states
   const [cropToContent, setCropToContent] = useState(false);

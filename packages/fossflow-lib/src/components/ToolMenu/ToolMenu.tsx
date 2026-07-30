@@ -21,8 +21,10 @@ import { useHistory } from 'src/hooks/useHistory';
 import { TEXTBOX_DEFAULTS } from 'src/config';
 import { generateId } from 'src/utils';
 import { HOTKEY_PROFILES } from 'src/config/hotkeys';
+import { useTranslation } from 'src/stores/localeStore';
 
 export const ToolMenu = () => {
+  const { t } = useTranslation('toolMenu');
   const { createTextBox } = useScene();
   const { undo, redo, canUndo, canRedo } = useHistory();
   const mode = useUiStateStore((state) => {
@@ -69,13 +71,13 @@ export const ToolMenu = () => {
       <Stack direction="row" spacing={0.5} alignItems="center">
         {/* Undo/Redo Section */}
         <IconButton
-          name="Undo (Ctrl+Z)"
+          name={`${t('undo')} (Ctrl+Z)`}
           Icon={<UndoIcon />}
           onClick={handleUndo}
           disabled={!canUndo}
         />
         <IconButton
-          name="Redo (Ctrl+Y)"
+          name={`${t('redo')} (Ctrl+Y)`}
           Icon={<RedoIcon />}
           onClick={handleRedo}
           disabled={!canRedo}
@@ -83,7 +85,7 @@ export const ToolMenu = () => {
 
         {/* Main Tools */}
         <IconButton
-          name={`Select${hotkeys.select ? ` (${hotkeys.select.toUpperCase()})` : ''}`}
+          name={`${t('select')}${hotkeys.select ? ` (${hotkeys.select.toUpperCase()})` : ''}`}
           Icon={<NearMeIcon />}
           onClick={() => {
             uiStateStoreActions.setMode({
@@ -95,7 +97,7 @@ export const ToolMenu = () => {
           isActive={mode.type === 'CURSOR' || mode.type === 'DRAG_ITEMS'}
         />
         <IconButton
-          name={`Lasso select${hotkeys.lasso ? ` (${hotkeys.lasso.toUpperCase()})` : ''}`}
+          name={`${t('lassoSelect')}${hotkeys.lasso ? ` (${hotkeys.lasso.toUpperCase()})` : ''}`}
           Icon={<LassoIcon />}
           onClick={() => {
             uiStateStoreActions.setMode({
@@ -108,7 +110,7 @@ export const ToolMenu = () => {
           isActive={mode.type === 'LASSO'}
         />
         <IconButton
-          name={`Freehand lasso${hotkeys.freehandLasso ? ` (${hotkeys.freehandLasso.toUpperCase()})` : ''}`}
+          name={`${t('freehandLasso')}${hotkeys.freehandLasso ? ` (${hotkeys.freehandLasso.toUpperCase()})` : ''}`}
           Icon={<FreehandLassoIcon />}
           onClick={() => {
             uiStateStoreActions.setMode({
@@ -122,7 +124,7 @@ export const ToolMenu = () => {
           isActive={mode.type === 'FREEHAND_LASSO'}
         />
         <IconButton
-          name={`Pan${hotkeys.pan ? ` (${hotkeys.pan.toUpperCase()})` : ''}`}
+          name={`${t('pan')}${hotkeys.pan ? ` (${hotkeys.pan.toUpperCase()})` : ''}`}
           Icon={<PanToolIcon />}
           onClick={() => {
             uiStateStoreActions.setMode({
@@ -135,7 +137,7 @@ export const ToolMenu = () => {
           isActive={mode.type === 'PAN'}
         />
         <IconButton
-          name={`Add item${hotkeys.addItem ? ` (${hotkeys.addItem.toUpperCase()})` : ''}`}
+          name={`${t('addItem')}${hotkeys.addItem ? ` (${hotkeys.addItem.toUpperCase()})` : ''}`}
           Icon={<AddIcon />}
           onClick={() => {
             uiStateStoreActions.setItemControls({
@@ -150,7 +152,7 @@ export const ToolMenu = () => {
           isActive={mode.type === 'PLACE_ICON'}
         />
         <IconButton
-          name={`Rectangle${hotkeys.rectangle ? ` (${hotkeys.rectangle.toUpperCase()})` : ''}`}
+          name={`${t('rectangle')}${hotkeys.rectangle ? ` (${hotkeys.rectangle.toUpperCase()})` : ''}`}
           Icon={<CropSquareIcon />}
           onClick={() => {
             uiStateStoreActions.setMode({
@@ -162,7 +164,7 @@ export const ToolMenu = () => {
           isActive={mode.type === 'RECTANGLE.DRAW'}
         />
         <IconButton
-          name={`Connector${hotkeys.connector ? ` (${hotkeys.connector.toUpperCase()})` : ''}`}
+          name={`${t('connector')}${hotkeys.connector ? ` (${hotkeys.connector.toUpperCase()})` : ''}`}
           Icon={<ConnectorIcon />}
           onClick={() => {
             uiStateStoreActions.setMode({
@@ -174,7 +176,7 @@ export const ToolMenu = () => {
           isActive={mode.type === 'CONNECTOR'}
         />
         <IconButton
-          name={`Text${hotkeys.text ? ` (${hotkeys.text.toUpperCase()})` : ''}`}
+          name={`${t('text')}${hotkeys.text ? ` (${hotkeys.text.toUpperCase()})` : ''}`}
           Icon={<TitleIcon />}
           onClick={createTextBoxProxy}
           isActive={mode.type === 'TEXTBOX'}

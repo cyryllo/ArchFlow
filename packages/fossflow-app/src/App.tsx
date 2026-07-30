@@ -20,6 +20,10 @@ import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 // Load core isoflow icons (always loaded)
 const coreIcons = flattenCollections([isoflowIsopack]);
 
+// Stable reference - an inline array literal here would be recreated every
+// render, needlessly retriggering the effect in Isoflow that watches this prop.
+const MAIN_MENU_OPTIONS = ['ACTION.OPEN', 'EXPORT.JSON', 'EXPORT.PNG', 'ACTION.CLEAR_CANVAS', 'VERSION'] as const;
+
 interface SavedDiagram {
   id: string;
   name: string;
@@ -65,6 +69,17 @@ function EditorPage() {
   const [showDiagramManager, setShowDiagramManager] = useState(false);
   const [serverStorageAvailable, setServerStorageAvailable] = useState(false);
   const [storageKind, setStorageKind] = useState<'server' | 'electron' | 'session'>('session');
+  // The Isoflow canvas calls onModelUpdated continuously with a fresh object reference
+  // even when nothing changed (its model selector isn't memoized), so we can't trust every
+  // call to mean "the user edited something" - we compare serialized content instead.
+  // After any point we know the diagram is in sync (load/save), the *next* onModelUpdated
+  // call is treated as the new baseline rather than compared, since it may legitimately
+  // differ from whatever the ref held before (e.g. a freshly loaded diagram).
+  const lastModelSnapshotRef = useRef<string | null>(null);
+  const expectingSyncRef = useRef(false);
+  const markDiagramSynced = () => {
+    expectingSyncRef.current = true;
+  };
   const isReadonlyUrl =
     window.location.pathname.startsWith('/display/') && readonlyDiagramId;
 
@@ -299,6 +314,7 @@ function EditorPage() {
     setCurrentDiagram(newDiagram);
     setShowSaveDialog(false);
     setHasUnsavedChanges(false);
+    markDiagramSynced();
     setLastAutoSave(new Date());
 
     // Save as last opened
@@ -351,6 +367,7 @@ function EditorPage() {
     }); // Force re-render of FossFLOW
     setShowLoadDialog(false);
     setHasUnsavedChanges(false);
+    markDiagramSynced();
 
     // Save as last opened (without icons)
     try {
@@ -400,6 +417,7 @@ function EditorPage() {
         return prev + 1;
       }); // Force re-render of FossFLOW
       setHasUnsavedChanges(false);
+      markDiagramSynced();
 
       // Clear last opened
       localStorage.removeItem('archflow-last-opened');
@@ -424,9 +442,19 @@ function EditorPage() {
     setCurrentModel(updatedModel);
     setDiagramData(updatedModel);
 
-    if (!isReadonlyUrl) {
+    const snapshot = JSON.stringify(updatedModel);
+    if (expectingSyncRef.current) {
+      // First call after a known load/save point - establishes the new baseline,
+      // doesn't count as a user edit even if it differs from the previous snapshot.
+      expectingSyncRef.current = false;
+    } else if (
+      !isReadonlyUrl &&
+      lastModelSnapshotRef.current !== null &&
+      snapshot !== lastModelSnapshotRef.current
+    ) {
       setHasUnsavedChanges(true);
     }
+    lastModelSnapshotRef.current = snapshot;
   };
 
   const exportDiagram = () => {
@@ -481,6 +509,7 @@ function EditorPage() {
 
     setShowExportDialog(false);
     setHasUnsavedChanges(false); // Mark as saved after export
+    markDiagramSynced();
   };
 
   const handleDiagramManagerLoad = async (id: string, data: any) => {
@@ -566,6 +595,7 @@ function EditorPage() {
     setCurrentDiagram(newDiagram);
     setCurrentModel(mergedData);
     setHasUnsavedChanges(false);
+    markDiagramSynced();
 
     // Update diagramData and key together
     // This ensures Isoflow gets the correct data with the new key
@@ -591,6 +621,7 @@ function EditorPage() {
     });
     setDiagramName(name);
     setHasUnsavedChanges(false);
+    markDiagramSynced();
   };
 
   // i18n
@@ -642,6 +673,7 @@ function EditorPage() {
         );
         setLastAutoSave(new Date());
         setHasUnsavedChanges(false);
+        markDiagramSynced();
       } catch (e) {
         console.error('Auto-save failed:', e);
         if (e instanceof DOMException && e.name === 'QuotaExceededError') {
@@ -814,6 +846,7 @@ function EditorPage() {
           initialData={diagramData}
           onModelUpdated={handleModelUpdated}
           editorMode={isReadonlyUrl ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
+          mainMenuOptions={MAIN_MENU_OPTIONS}
           locale={currentLocale}
           iconPackManager={{
             lazyLoadingEnabled: iconPackManager.lazyLoadingEnabled,

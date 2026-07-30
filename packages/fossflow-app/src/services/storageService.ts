@@ -11,7 +11,7 @@ export interface StorageService {
   isAvailable(): Promise<boolean>;
   listDiagrams(): Promise<DiagramInfo[]>;
   loadDiagram(id: string): Promise<Model>;
-  saveDiagram(id: string, data: Model): Promise<void>;
+  saveDiagram(id: string, data: Model): Promise<string>;
   deleteDiagram(id: string): Promise<void>;
   createDiagram(data: Model): Promise<string>;
 }
@@ -102,7 +102,7 @@ class ServerStorage implements StorageService {
     }
   }
 
-  async saveDiagram(id: string, data: Model): Promise<void> {
+  async saveDiagram(id: string, data: Model): Promise<string> {
     console.log(`ServerStorage: Saving diagram ${id}`);
     try {
       const response = await fetch(`${this.baseUrl}/api/diagrams/${id}`, {
@@ -118,7 +118,9 @@ class ServerStorage implements StorageService {
         throw new Error(`Failed to save diagram: ${response.status}`);
       }
 
+      const result = await response.json();
       console.log(`ServerStorage: Successfully saved diagram ${id}`);
+      return result.id;
     } catch (error) {
       console.error(`ServerStorage: Error saving diagram ${id}:`, error);
       throw error;
@@ -170,9 +172,9 @@ class SessionStorage implements StorageService {
     return JSON.parse(data);
   }
 
-  async saveDiagram(id: string, data: Model): Promise<void> {
+  async saveDiagram(id: string, data: Model): Promise<string> {
     sessionStorage.setItem(`${this.KEY_PREFIX}${id}`, JSON.stringify(data));
-    
+
     // Update list
     const list = await this.listDiagrams();
     const existing = list.findIndex(d => d.id === id);
@@ -182,14 +184,15 @@ class SessionStorage implements StorageService {
       lastModified: new Date(),
       size: JSON.stringify(data).length
     };
-    
+
     if (existing >= 0) {
       list[existing] = info;
     } else {
       list.push(info);
     }
-    
+
     sessionStorage.setItem(this.LIST_KEY, JSON.stringify(list));
+    return id;
   }
 
   async deleteDiagram(id: string): Promise<void> {
@@ -230,8 +233,9 @@ class ElectronStorage implements StorageService {
     return this.api.loadDiagram(id);
   }
 
-  async saveDiagram(id: string, data: Model): Promise<void> {
-    await this.api.saveDiagram(id, data);
+  async saveDiagram(id: string, data: Model): Promise<string> {
+    const result = await this.api.saveDiagram(id, data);
+    return result.id;
   }
 
   async deleteDiagram(id: string): Promise<void> {

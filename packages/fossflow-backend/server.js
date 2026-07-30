@@ -32,6 +32,26 @@ app.get('/api/storage/status', (req, res) => {
   });
 });
 
+// Turn a diagram name into a filesystem-safe filename stem: strips characters
+// invalid on Windows/Linux/macOS, collapses whitespace, and caps the length.
+function sanitizeFilename(name) {
+  const cleaned = (name || 'Untitled Diagram')
+    .replace(/[\\/?%*:|"<>\x00-\x1f]/g, '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .slice(0, 150);
+  return cleaned || 'Untitled Diagram';
+}
+
+async function fileExists(filePath) {
+  try {
+    await fs.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // Only enable storage endpoints if storage is enabled
 if (STORAGE_ENABLED) {
   // Ensure storage directory exists
@@ -57,6 +77,25 @@ if (STORAGE_ENABLED) {
   ensureStorageDir().catch((err) => {
     console.error('Failed to initialize storage:', err);
   });
+
+  const diagramPath = (id) => path.join(STORAGE_PATH, `${id}.json`);
+
+  // Picks a filename stem for `name`, appending " (2)", " (3)", ... if it
+  // collides with a different diagram. `keepId`, if given, is treated as
+  // "this is the diagram being saved" - reusing its own current name is not
+  // a collision.
+  const uniqueDiagramId = async (name, keepId) => {
+    const base = sanitizeFilename(name);
+    if (base === keepId) return base;
+
+    let candidate = base;
+    let n = 2;
+    while (candidate !== keepId && (await fileExists(diagramPath(candidate)))) {
+      candidate = `${base} (${n})`;
+      n += 1;
+    }
+    return candidate;
+  };
 
   // List all diagrams
   app.get('/api/diagrams', async (req, res) => {
@@ -139,10 +178,11 @@ if (STORAGE_ENABLED) {
     console.log(`[PUT /api/diagrams/${diagramId}] Saving diagram...`);
 
     try {
-      const filePath = path.join(STORAGE_PATH, `${diagramId}.json`);
+      const newId = await uniqueDiagramId(req.body.name || req.body.title, diagramId);
+      const filePath = diagramPath(newId);
       const data = {
         ...req.body,
-        id: diagramId,
+        id: newId,
         lastModified: new Date().toISOString()
       };
 
@@ -154,13 +194,18 @@ if (STORAGE_ENABLED) {
       await fs.writeFile(filePath, JSON.stringify(data, null, 2));
       console.log(`[PUT /api/diagrams/${diagramId}] Successfully saved`);
 
+      if (newId !== diagramId) {
+        await fs.unlink(diagramPath(diagramId)).catch(() => {});
+        console.log(`[PUT /api/diagrams/${diagramId}] Renamed to ${newId}`);
+      }
+
       // Git backup if enabled
       if (ENABLE_GIT_BACKUP) {
         // TODO: Implement git commit
         console.log('[PUT] Git backup not yet implemented');
       }
 
-      res.json({ success: true, id: diagramId });
+      res.json({ success: true, id: newId });
     } catch (error) {
       console.error(`[PUT /api/diagrams/${diagramId}] Error saving diagram:`, error);
       res.status(500).json({ error: 'Failed to save diagram' });
@@ -187,17 +232,9 @@ if (STORAGE_ENABLED) {
   // Create a new diagram
   app.post('/api/diagrams', async (req, res) => {
     try {
-      const id = req.body.id || `diagram_${Date.now()}`;
-      const filePath = path.join(STORAGE_PATH, `${id}.json`);
-      
-      // Check if already exists
-      try {
-        await fs.access(filePath);
-        return res.status(409).json({ error: 'Diagram already exists' });
-      } catch {
-        // File doesn't exist, proceed
-      }
-      
+      const id = await uniqueDiagramId(req.body.name || req.body.title);
+      const filePath = diagramPath(id);
+
       const data = {
         ...req.body,
         id,

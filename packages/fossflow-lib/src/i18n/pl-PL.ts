@@ -5,15 +5,36 @@ const locale: LocaleProps = {
     exampleText: "To jest przykładowy tekst"
   },
   mainMenu: {
-    undo: "Cofnij",
-    redo: "Ponów", 
     open: "Otwórz",
     exportJson: "Eksportuj do JSON",
     exportCompactJson: "Eksportuj jako kompaktowy JSON",
     exportImage: "Eksportuj do obrazu",
     clearCanvas: "Wyczyść obszar roboczy",
     settings: "Ustawienia",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    menuButton: "Menu główne"
+  },
+  zoomControls: {
+    zoomOut: "Pomniejsz",
+    zoomIn: "Powiększ",
+    fitToScreen: "Dopasuj do ekranu",
+    help: "Pomoc"
+  },
+  contextMenu: {
+    addNode: "Dodaj węzeł",
+    addRectangle: "Dodaj prostokąt"
+  },
+  toolMenu: {
+    undo: "Cofnij",
+    redo: "Ponów",
+    select: "Zaznacz",
+    lassoSelect: "Zaznaczanie lasso",
+    freehandLasso: "Lasso odręczne",
+    pan: "Przesuwanie",
+    addItem: "Dodaj element",
+    rectangle: "Prostokąt",
+    connector: "Połączenie",
+    text: "Tekst"
   },
   helpDialog: {
     title: "Skróty klawiaturowe i Pomoc",
