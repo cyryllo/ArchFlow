@@ -1,5 +1,6 @@
 services:
   fossflow:
+    image: ghcr.io/cyryllo/archflow:${ARCHFLOW_VERSION:-latest}
     build: .
     ports:
       - 80:80
