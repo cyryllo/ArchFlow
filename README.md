@@ -10,6 +10,13 @@
 </p>
 
 <p align="center">
+  <b>See how it looks:</b>
+  <a href="https://cyryllo.github.io/ArchFlow/app/"><b>▶ Try the live demo</b></a> (runs in your browser, no install)
+  &nbsp;·&nbsp;
+  <a href="https://cyryllo.github.io/ArchFlow/">🌐 Project website</a>
+</p>
+
+<p align="center">
   <img alt="ArchFlow" src="docs/brand/og-cover.png" width="100%">
 </p>
 
