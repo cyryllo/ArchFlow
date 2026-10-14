@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ArchFlow – isometric architecture diagrams</title>
+  <meta name="description" content="ArchFlow is a free, open-source editor for isometric architecture and infrastructure diagrams. Use it in the browser, self-host it with Docker, or run it as a desktop app.">
+  <link rel="alternate" hreflang="en" href="https://cyryllo.github.io/ArchFlow/">
+  <link rel="alternate" hreflang="pl" href="https://cyryllo.github.io/ArchFlow/pl/">
+  <meta property="og:title" content="ArchFlow – isometric architecture diagrams">
+  <meta property="og:description" content="Free, open-source editor for isometric architecture diagrams. Browser, Docker or desktop.">
+  <meta property="og:image" content="https://cyryllo.github.io/ArchFlow/assets/brand/og-cover.png">
+  <meta property="og:url" content="https://cyryllo.github.io/ArchFlow/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/brand/favicon.ico" sizes="any">
+  <link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/brand/icon-256.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="./" aria-label="ArchFlow home">
+      <img class="logo-light" src="assets/brand/logo.svg" alt="ArchFlow">
+      <img class="logo-dark" src="assets/brand/logo-dark.svg" alt="ArchFlow">
+    </a>
+    <nav class="nav">
+      <a href="#features">Features</a>
+      <a href="#screenshots">Screenshots</a>
+      <a href="#docker">Docker</a>
+      <a href="#saving">Saving</a>
+      <a href="https://github.com/cyryllo/ArchFlow">GitHub</a>
+    </nav>
+    <div class="lang" aria-label="Language">
+      <span>EN</span>
+      <a href="pl/" hreflang="pl" lang="pl">PL</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow">Free &amp; open source · MIT</span>
+    <h1>Isometric architecture diagrams, <em>without the hassle</em></h1>
+    <p class="lead">ArchFlow is an editor for clear, good-looking isometric diagrams of systems, networks and cloud infrastructure. Use it in the browser, host it yourself with one Docker command, or run it as a desktop app.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="app/">▶ Try the demo</a>
+      <a class="btn" href="#docker">🐳 Run with Docker</a>
+      <a class="btn" href="https://github.com/cyryllo/ArchFlow">★ GitHub</a>
+    </div>
+    <div class="frame">
+      <div class="frame-bar" aria-hidden="true"><i></i><i></i><i></i></div>
+      <img src="assets/screenshots/en-editor.png" width="1440" height="860" alt="The ArchFlow editor showing an isometric diagram of an airport management system">
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <div class="section-head">
+      <h2>What you can do</h2>
+      <p>Everything you need to sketch an architecture, explain it to others and keep it up to date.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="icon">🧊</div>
+        <h3>Isometric canvas</h3>
+        <p>Drag and drop components onto an isometric grid, zoom, pan and fit the whole diagram to the screen.</p>
+      </div>
+      <div class="card">
+        <div class="icon">☁️</div>
+        <h3>Large icon library</h3>
+        <p>Built-in Isoflow icons plus AWS, Azure, Google Cloud and Kubernetes packs, loaded on demand to keep startup fast.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🖼️</div>
+        <h3>Your own icons</h3>
+        <p>Import any image (PNG, SVG, JPG) as an icon. It's saved inside the diagram, so it travels with the file.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🔗</div>
+        <h3>Connectors, zones, labels</h3>
+        <p>Connect items by clicking or dragging, group them in coloured zones, add text and rich-text descriptions.</p>
+      </div>
+      <div class="card">
+        <div class="icon">⚡</div>
+        <h3>Fast editing</h3>
+        <p>Undo/redo, rectangle and freehand lasso selection, and configurable keyboard shortcuts.</p>
+      </div>
+      <div class="card">
+        <div class="icon">📤</div>
+        <h3>Export anywhere</h3>
+        <p>Save as a portable JSON file or export a PNG image with your choice of resolution, background and cropping.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🗄️</div>
+        <h3>Self-hosted storage</h3>
+        <p>With Docker, diagrams are saved as files on your server, shared by the whole team, with read-only share links.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🖥️</div>
+        <h3>Desktop app</h3>
+        <p>An Electron app for Windows, macOS and Linux that saves diagrams straight to your Documents folder.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🌍</div>
+        <h3>English &amp; Polish</h3>
+        <p>The whole interface is translated, and your language choice is remembered.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="screenshots" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>A closer look</h2>
+    </div>
+    <div class="gallery">
+      <figure>
+        <div class="frame"><img src="assets/screenshots/en-app-storage.png" width="840" height="520" alt="Diagram Manager with a list of saved diagrams" loading="lazy"></div>
+        <figcaption><strong>App Storage.</strong> Save, load, share and delete diagrams kept on your server.</figcaption>
+      </figure>
+      <figure>
+        <div class="frame"><img src="assets/screenshots/en-export-image.png" width="930" height="730" alt="Export as image dialog with preview and options" loading="lazy"></div>
+        <figcaption><strong>Export as image.</strong> Preview, grid, expanded descriptions, cropping, background and DPI.</figcaption>
+      </figure>
+      <figure>
+        <div class="frame"><img src="assets/screenshots/en-main-menu.png" width="720" height="420" alt="Main menu with Open, Export and Settings" loading="lazy"></div>
+        <figcaption><strong>Main menu.</strong> Open files, export to JSON or PNG, clear the canvas, settings.</figcaption>
+      </figure>
+      <figure>
+        <div class="frame"><img src="assets/screenshots/en-export-file.png" width="640" height="260" alt="Export Diagram dialog" loading="lazy"></div>
+        <figcaption><strong>Export File.</strong> One click to download the diagram as a self-contained JSON file.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="docker">
+  <div class="container split">
+    <div>
+      <div class="section-head">
+        <h2>Run it on your server</h2>
+        <p>A ready-made image is published on GitHub Container Registry. You don't need to clone the repository, just download the compose file.</p>
+      </div>
+<pre class="code"><code>mkdir archflow &amp;&amp; cd archflow
+curl -O https://raw.githubusercontent.com/cyryllo/ArchFlow/master/compose.yml
+docker compose pull
+docker compose up -d</code></pre>
+      <p>Then open <code>http://localhost:9500</code>. Prefer plain <code>docker run</code>?</p>
+<pre class="code"><code>docker run -d --name archflow \
+  -p 9500:80 \
+  -v "$(pwd)/diagrams:/data/diagrams" \
+  --restart unless-stopped \
+  ghcr.io/cyryllo/archflow:latest</code></pre>
+    </div>
+    <div>
+      <ul class="checks">
+        <li><strong>Port 9500</strong> by default, so it doesn't clash with other services on 80 or 8080.</li>
+        <li><strong>Your data stays yours.</strong> Every diagram is a plain JSON file in <code>./diagrams</code>. Back up that folder and you're done.</li>
+        <li><strong>Starts in seconds, works offline.</strong> Everything is inside the image.</li>
+        <li><strong>Restarts on its own</strong> after a crash or a reboot.</li>
+        <li><strong>Easy updates:</strong> <code>docker compose pull &amp;&amp; docker compose up -d</code>. Diagrams are kept.</li>
+      </ul>
+      <p class="note"><strong>No logins.</strong> Anyone who can open the address can edit diagrams in App Storage. Keep it on a trusted network or behind a reverse proxy with authentication.</p>
+      <p><a href="https://github.com/cyryllo/ArchFlow#-quick-deploy-with-docker">Full Docker guide →</a></p>
+    </div>
+  </div>
+</section>
+
+<section id="saving" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>Two ways to keep your work</h2>
+      <p>Use one or both. They're independent.</p>
+    </div>
+    <div class="compare">
+      <div class="card">
+        <h3>💾 Files on your computer</h3>
+        <p>Download the diagram as a <code>.json</code> file and open it again later.</p>
+        <ul>
+          <li>Available everywhere, including this demo</li>
+          <li>Includes every icon, also your imported ones</li>
+          <li>Great for backups and sending diagrams to others</li>
+          <li>Also: export a PNG picture of the diagram</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🌐 App Storage</h3>
+        <p>ArchFlow keeps a list of named diagrams for you.</p>
+        <ul>
+          <li>Docker: files in <code>./diagrams</code> on your server, shared by the team</li>
+          <li>Desktop app: files in <code>Documents/ArchFlow</code></li>
+          <li>Read-only share links (Docker)</li>
+          <li>Saving is manual, a "Modified" marker shows unsaved changes</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note"><strong>Hosted as a plain website</strong> (like the demo), ArchFlow can only keep diagrams in your browser's storage. That's small and disappears when you clear browser data, so use <strong>Export File</strong> to keep your work.</p>
+  </div>
+</section>
+
+<section class="demo">
+  <div class="container">
+    <h2>Try it now</h2>
+    <p>The demo is the real ArchFlow, running entirely in your browser. Nothing is sent to a server. Diagrams are kept in your browser only, so export them to a file if you want to keep them.</p>
+    <div class="cta" style="justify-content:center;margin-bottom:0">
+      <a class="btn btn-primary" href="app/">▶ Open the demo</a>
+      <a class="btn" href="https://github.com/cyryllo/ArchFlow">View on GitHub</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>ArchFlow is a fork of <a href="https://github.com/stan-smith/FossFLOW">FossFLOW</a> by Stan Smith, itself built on <a href="https://github.com/markmanx/isoflow">Isoflow</a> by @markmanx. Released under the <a href="https://github.com/cyryllo/ArchFlow/blob/master/LICENSE">MIT license</a>.</p>
+    <nav>
+      <a href="https://github.com/cyryllo/ArchFlow">GitHub</a>
+      <a href="https://github.com/cyryllo/ArchFlow/releases">Releases</a>
+      <a href="https://github.com/cyryllo/ArchFlow/pkgs/container/archflow">Docker image</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>

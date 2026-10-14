@@ -15,6 +15,12 @@ permissions:
   contents: read
   packages: write
 
+# A tag push and the master test chain can trigger builds at the same time;
+# run them one after another so they don't fight over the build cache
+concurrency:
+  group: docker-image
+  cancel-in-progress: false
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ghcr.io/cyryllo/archflow
@@ -66,5 +72,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # A failed cache upload must not fail an otherwise good build
+          cache-to: type=gha,mode=max,ignore-error=true
           progress: plain

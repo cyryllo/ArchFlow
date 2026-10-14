@@ -1,0 +1,73 @@
+name: Deploy Project Site
+
+# Publishes https://cyryllo.github.io/ArchFlow/
+#   /      project site (site/, English)
+#   /pl/   project site (Polish)
+#   /app/  live demo of the editor (browser-only storage)
+on:
+  push:
+    branches: ["master"]
+    paths:
+      - 'site/**'
+      - 'docs/brand/**'
+      - 'docs/screenshots/**'
+      - 'packages/fossflow-app/**'
+      - 'packages/fossflow-lib/**'
+      - 'package-lock.json'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the demo app
+        run: npm run build:lib && npm run build:app
+        env:
+          PUBLIC_URL: /ArchFlow/app
+
+      - name: Assemble the site
+        run: |
+          mkdir -p _site/assets
+          cp -r site/. _site/
+          cp -r docs/brand _site/assets/brand
+          cp -r docs/screenshots _site/assets/screenshots
+          cp -r packages/fossflow-app/build _site/app
+          touch _site/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
