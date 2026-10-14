@@ -2,7 +2,7 @@
 
 /**
  * Updates version numbers across all packages in the monorepo
- * Used by semantic-release to sync versions
+ * Usage: npm run update-version <version>
  */
 
 const fs = require('fs');

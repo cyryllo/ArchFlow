@@ -217,7 +217,7 @@ npm run dev
 
 ### 4. Commit Your Changes
 
-**IMPORTANT**: We use [Conventional Commits](https://www.conventionalcommits.org/) with automated semantic versioning. Your commit messages directly control version bumps and changelog generation.
+We use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages. Versioning is manual: the patch version is bumped on each commit with `npm run update-version <version>`, which syncs all `package.json` files in the monorepo.
 
 #### Commit Format
 
@@ -240,23 +240,19 @@ git commit -m "feat(connector)!: change default connector mode to click"
 
 #### Commit Types
 
-**Version-bumping commits:**
-- `feat`: New feature (triggers MINOR version bump, e.g., 1.0.0 → 1.1.0)
-- `fix`: Bug fix (triggers PATCH version bump, e.g., 1.0.0 → 1.0.1)
-- `perf`: Performance improvement (triggers PATCH version bump)
-- `refactor`: Code refactoring (triggers PATCH version bump)
-
-**Non-version-bumping commits:**
-- `docs`: Documentation only changes (no version bump)
-- `style`: Code style changes - formatting, whitespace (no version bump)
-- `test`: Adding or updating tests (no version bump)
-- `chore`: Maintenance tasks, dependency updates (no version bump)
-- `build`: Build system changes (no version bump)
-- `ci`: CI/CD configuration changes (no version bump)
+- `feat`: New feature
+- `fix`: Bug fix
+- `perf`: Performance improvement
+- `refactor`: Code refactoring
+- `docs`: Documentation only changes
+- `style`: Code style changes - formatting, whitespace
+- `test`: Adding or updating tests
+- `chore`: Maintenance tasks, dependency updates
+- `build`: Build system changes
+- `ci`: CI/CD configuration changes
 
 **Breaking changes:**
 - Add `!` after type/scope OR add `BREAKING CHANGE:` in footer
-- Triggers MAJOR version bump (e.g., 1.0.0 → 2.0.0)
 - Example: `feat!: redesign node selection API`
 
 #### Scopes (optional but recommended)
@@ -280,13 +276,6 @@ git commit -m "feat: update node API
 
 BREAKING CHANGE: Node.position is now an object with x,y properties instead of array"
 ```
-
-#### Release Notes
-
-Your commits will automatically generate:
-- Version number based on commit types
-- Changelog with categorized changes
-- GitHub release notes
 
 ## Coding Standards
 

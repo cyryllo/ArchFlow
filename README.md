@@ -39,21 +39,91 @@ ArchFlow is a powerful, open-source web app for creating beautiful isometric dia
 
 ## 🐳 Quick Deploy with Docker
 
-```bash
-# Using Docker Compose (recommended - includes persistent storage)
-docker compose up
+A prebuilt image is published to GitHub Container Registry on every successful build of `master`:
 
-# Or build and run the image locally
-docker build -t archflow:local .
-docker run -p 80:80 -v $(pwd)/diagrams:/data/diagrams archflow:local
 ```
+ghcr.io/cyryllo/archflow
+```
+
+| Tag | Meaning |
+|---|---|
+| `latest` | Latest build of `master` |
+| `0.4.6` (any version) | A specific ArchFlow version, from `package.json` |
+| `sha-abc1234` | A specific commit |
+
+The image is currently built for `linux/amd64` only.
+
+### Option 1: Docker Compose (recommended)
+
+You don't need to clone the repository, just the compose file.
+
+```bash
+# 1. Create a folder for ArchFlow and download the compose file
+mkdir archflow && cd archflow
+curl -O https://raw.githubusercontent.com/cyryllo/ArchFlow/master/compose.yml
+
+# 2. Pull the image and start the container in the background
+docker compose pull
+docker compose up -d
+```
+
+Open **http://localhost** in your browser. Diagrams are saved as JSON files in `./diagrams`, next to `compose.yml`.
+
+Everyday commands, run from the same folder:
+
+```bash
+docker compose logs -f              # follow logs
+docker compose down                 # stop and remove the container (diagrams stay in ./diagrams)
+docker compose pull && docker compose up -d   # update to the newest image
+```
+
+To pin a specific version instead of `latest`, set `ARCHFLOW_VERSION`, either inline or in a `.env` file next to `compose.yml`:
+
+```bash
+ARCHFLOW_VERSION=0.4.6 docker compose up -d
+```
+
+To use a different host port than 80 (e.g. because something else already uses it), edit the `ports` line in `compose.yml`, e.g. `- 8080:80`, then open http://localhost:8080.
+
+### Option 2: `docker run`
+
+```bash
+docker run -d --name archflow \
+  -p 80:80 \
+  -v "$(pwd)/diagrams:/data/diagrams" \
+  --restart unless-stopped \
+  ghcr.io/cyryllo/archflow:latest
+```
+
+To update: `docker pull ghcr.io/cyryllo/archflow:latest`, then `docker rm -f archflow` and run the command above again. Your diagrams are kept in `./diagrams`.
+
+### Option 3: Build from source
+
+If you have cloned the repository, you can build the image yourself instead of pulling it:
+
+```bash
+docker compose up -d --build                     # build from the local source and start
+docker compose -f compose.dev.yml up --build     # dev variant: ports 3000 (app) and 3001 (API)
+```
+
+### Configuration
+
+| Variable | Default | Description |
+|---|---|---|
+| `ENABLE_SERVER_STORAGE` | `true` | Save diagrams as files on the server. Set to `false` for browser-only (session) storage. |
+| `STORAGE_PATH` | `/data/diagrams` | Where diagrams are stored inside the container. Mount a host folder or volume here. |
+| `ARCHFLOW_VERSION` | `latest` | Image tag used by `compose.yml`. |
 
 Server storage is enabled by default in Docker. Your diagrams are saved as JSON files to `./diagrams` on the host (mounted to `/data/diagrams` inside the container). When this is active, the app detects it automatically and switches to the persistent "App Storage" diagram list — the session-only Save/Load/Quick-save buttons disappear, since there's no need for them anymore.
 
 To disable server storage and fall back to browser-only (session) storage, set `ENABLE_SERVER_STORAGE=false`:
 ```bash
-docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false archflow:local
+ENABLE_SERVER_STORAGE=false docker compose up -d
+# or
+docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false ghcr.io/cyryllo/archflow:latest
 ```
+
+**Backups:** everything ArchFlow stores is in the `./diagrams` folder, so backing it up (or putting it under version control) is enough.
 
 ## 🖥️ Desktop App (Electron)
 
