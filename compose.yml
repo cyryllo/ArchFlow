@@ -2,8 +2,9 @@ services:
   fossflow:
     image: ghcr.io/cyryllo/archflow:${ARCHFLOW_VERSION:-latest}
     build: .
+    restart: unless-stopped
     ports:
-      - 80:80
+      - "9500:80"
     environment:
       - NODE_ENV=production
       - ENABLE_SERVER_STORAGE=${ENABLE_SERVER_STORAGE:-true}

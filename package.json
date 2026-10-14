@@ -1,6 +1,6 @@
 {
   "name": "fossflow-monorepo",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "private": true,
   "description": "Monorepo for ArchFlow diagram editor and library (fork of FossFLOW, originally Isoflow)",
   "workspaces": [
@@ -32,8 +32,8 @@
     "typescript": "^5.9.3"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
   },
   "dependencies": {
     "dom-to-image-more": "^3.7.1"

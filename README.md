@@ -18,6 +18,8 @@
 ------------------------------------------------------------------------------------------------------------------------------
 ArchFlow is a powerful, open-source web app for creating beautiful isometric diagrams. Built with React and the <a href="https://github.com/markmanx/isoflow">Isoflow</a> (forked and published to NPM as `fossflow`) library, it runs entirely in your browser. A native desktop version (Electron) is also available in `packages/fossflow-desktop`.
 
+![ArchFlow editor](docs/screenshots/en-editor.png)
+
 - **📝 [ARCHFLOW_TODO.md](https://github.com/cyryllo/ArchFlow/blob/master/ARCHFLOW_TODO.md)** - Current issues and roadmap with codebase mappings, most gripes are with the isoflow library itself.
 - **🤝 [CONTRIBUTING.md](https://github.com/cyryllo/ArchFlow/blob/master/CONTRIBUTING.md)** - How to contribute to the project.
 
@@ -48,10 +50,12 @@ ghcr.io/cyryllo/archflow
 | Tag | Meaning |
 |---|---|
 | `latest` | Latest build of `master` |
-| `0.4.6` (any version) | A specific ArchFlow version, from `package.json` |
+| `0.4.7` (any version) | A specific ArchFlow version, from `package.json` |
 | `sha-abc1234` | A specific commit |
 
 The image is currently built for `linux/amd64` only.
+
+ArchFlow listens on port **9500** in all examples below. Ports like 80 or 8080 are often already taken by other services, so 9500 is a safer default. You can change it, see [Changing the port](#changing-the-port).
 
 ### Option 1: Docker Compose (recommended)
 
@@ -67,12 +71,15 @@ docker compose pull
 docker compose up -d
 ```
 
-Open **http://localhost** in your browser. Diagrams are saved as JSON files in `./diagrams`, next to `compose.yml`.
+Open **http://localhost:9500** in your browser. Diagrams are saved as JSON files in `./diagrams`, next to `compose.yml`.
 
 Everyday commands, run from the same folder:
 
 ```bash
+docker compose ps                   # is it running?
 docker compose logs -f              # follow logs
+docker compose stop                 # stop (container is kept)
+docker compose start                # start it again
 docker compose down                 # stop and remove the container (diagrams stay in ./diagrams)
 docker compose pull && docker compose up -d   # update to the newest image
 ```
@@ -80,22 +87,38 @@ docker compose pull && docker compose up -d   # update to the newest image
 To pin a specific version instead of `latest`, set `ARCHFLOW_VERSION`, either inline or in a `.env` file next to `compose.yml`:
 
 ```bash
-ARCHFLOW_VERSION=0.4.6 docker compose up -d
+ARCHFLOW_VERSION=0.4.7 docker compose up -d
 ```
-
-To use a different host port than 80 (e.g. because something else already uses it), edit the `ports` line in `compose.yml`, e.g. `- 8080:80`, then open http://localhost:8080.
 
 ### Option 2: `docker run`
 
 ```bash
 docker run -d --name archflow \
-  -p 80:80 \
+  -p 9500:80 \
   -v "$(pwd)/diagrams:/data/diagrams" \
   --restart unless-stopped \
   ghcr.io/cyryllo/archflow:latest
 ```
 
+Everyday commands:
+
+```bash
+docker ps                        # is it running?
+docker logs -f archflow          # follow logs
+docker stop archflow             # stop the container
+docker start archflow            # start it again
+docker rm -f archflow            # remove the container (diagrams stay in ./diagrams)
+```
+
 To update: `docker pull ghcr.io/cyryllo/archflow:latest`, then `docker rm -f archflow` and run the command above again. Your diagrams are kept in `./diagrams`.
+
+If you prefer a named Docker volume over a host folder, use `-v archflow-diagrams:/data/diagrams` instead. The volume survives `docker rm`. To list or delete it:
+
+```bash
+docker volume ls                                                          # list volumes
+docker run --rm -v archflow-diagrams:/data alpine ls -la /data            # see what's inside
+docker volume rm archflow-diagrams                                        # delete it, with all diagrams in it
+```
 
 ### Option 3: Build from source
 
@@ -106,24 +129,46 @@ docker compose up -d --build                     # build from the local source a
 docker compose -f compose.dev.yml up --build     # dev variant: ports 3000 (app) and 3001 (API)
 ```
 
+### Changing the port
+
+The port is the number **before** the colon in the port mapping (`HOST:CONTAINER`). Inside the container ArchFlow always listens on `80`; only change the host side.
+
+- **Compose:** edit the `ports` line in `compose.yml`, e.g. `- "9600:80"`, then run `docker compose up -d`.
+- **`docker run`:** change `-p 9500:80` to e.g. `-p 9600:80`.
+
+To check whether a port is free on Linux: `ss -ltn | grep :9500` (no output means it's free).
+
+### How the container works
+
+Good to know before you run it on a server:
+
+- **One container, two processes.** nginx serves the web app on port `80` inside the container, and a small Node.js backend (port `3001`) stores diagrams. nginx forwards `/api/...` requests to the backend, so you only need to publish port 80 (mapped to 9500 on the host). Don't publish 3001.
+- **Where diagrams live.** The backend writes each diagram as a JSON file to `/data/diagrams` inside the container. The image doesn't declare a volume, so **if you don't mount anything there, diagrams live only inside the container**. They survive `stop`/`start`/restart, but are **lost on `docker rm`, `docker compose down`, or when updating to a new image**. Always mount a folder or a named volume (the examples above do).
+- **Host folder vs named volume.**
+  - Host folder (`./diagrams:/data/diagrams`): files are directly visible on your disk, easy to back up or copy. If the folder doesn't exist, Docker creates it for you on the first start.
+  - Named volume (`archflow-diagrams:/data/diagrams`): Docker manages the storage (under `/var/lib/docker/volumes/` on Linux). Not visible as a normal folder, but avoids the permission issue below.
+- **File ownership (Linux).** The container runs as `root`, so the `./diagrams` folder and the JSON files in it are owned by `root` on the host. To edit, move or delete them by hand, use `sudo` or take ownership: `sudo chown -R $USER: diagrams`. ArchFlow itself keeps working after that.
+- **Works offline.** Everything the app needs is inside the image, so the container starts in a few seconds and doesn't need internet access, only for pulling the image.
+- **Restarts.** Both examples use `restart: unless-stopped`: the container starts again after a crash or a reboot of the machine, unless you stopped it yourself.
+- **No logins.** ArchFlow has no user accounts. Anyone who can open the address can view, change and delete diagrams in App Storage. Run it on a trusted network, or put it behind a reverse proxy with authentication (e.g. basic auth) if it's reachable from the internet.
+- **Backups.** Everything ArchFlow stores is in `/data/diagrams` (your `./diagrams` folder), so backing up that folder is enough.
+
 ### Configuration
 
 | Variable | Default | Description |
 |---|---|---|
-| `ENABLE_SERVER_STORAGE` | `true` | Save diagrams as files on the server. Set to `false` for browser-only (session) storage. |
-| `STORAGE_PATH` | `/data/diagrams` | Where diagrams are stored inside the container. Mount a host folder or volume here. |
 | `ARCHFLOW_VERSION` | `latest` | Image tag used by `compose.yml`. |
-
-Server storage is enabled by default in Docker. Your diagrams are saved as JSON files to `./diagrams` on the host (mounted to `/data/diagrams` inside the container). When this is active, the app detects it automatically and switches to the persistent "App Storage" diagram list — the session-only Save/Load/Quick-save buttons disappear, since there's no need for them anymore.
+| `ENABLE_SERVER_STORAGE` | `true` | Save diagrams as files on the server (App Storage). Set to `false` for browser-only (session) storage. |
+| `STORAGE_PATH` | `/data/diagrams` | Where diagrams are stored inside the container. Mount a host folder or volume here. |
 
 To disable server storage and fall back to browser-only (session) storage, set `ENABLE_SERVER_STORAGE=false`:
 ```bash
 ENABLE_SERVER_STORAGE=false docker compose up -d
 # or
-docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false ghcr.io/cyryllo/archflow:latest
+docker run -d -p 9500:80 -e ENABLE_SERVER_STORAGE=false ghcr.io/cyryllo/archflow:latest
 ```
 
-**Backups:** everything ArchFlow stores is in the `./diagrams` folder, so backing it up (or putting it under version control) is enough.
+See [Saving and Opening Diagrams](#saving-and-opening-diagrams) for what changes in the app.
 
 ## 🖥️ Desktop App (Electron)
 
@@ -212,23 +257,74 @@ npm run publish:lib  # Publish library to npm
    - **Drag mode** (optional): Click and drag from first to second node
    - Switch modes in Settings → Connectors tab
 
-3. **Save Your Work**:
-   - **🌐/📁 App Storage** (Docker with server storage enabled, or the desktop app) - persistent, named diagrams you can list, load, and delete; saved as real files (`./diagrams` on the Docker host, `~/Documents/ArchFlow` on desktop)
-   - **Save / Load / Quick Save (Session)** - only shown when no persistent storage is available (plain web hosting, or Docker with server storage disabled); saves to the browser's storage only
-   - **Export** - Download the current diagram as a JSON file, always available regardless of platform
-   - **Import** - Load a diagram from a JSON file, always available
+3. **Save Your Work**: see [Saving and Opening Diagrams](#saving-and-opening-diagrams) below.
 
-### Storage Options
+## Saving and Opening Diagrams
 
-Which options you see depends on where ArchFlow is running:
+ArchFlow has **two independent ways** to keep your work. You can use both at the same time.
 
-| Where | What you get |
+| | 💾 Files on your computer | 🌐 / 📁 App Storage |
+|---|---|---|
+| What it is | You download a `.json` file and open it again later | Diagrams are kept by ArchFlow itself, in a list |
+| Where the data is | Wherever you save the downloaded file | Docker: `./diagrams` on the server. Desktop app: `~/Documents/ArchFlow` |
+| Available | Always, everywhere | Docker with server storage enabled (default) and the desktop app |
+| Good for | Backups, sending a diagram to someone, moving between ArchFlow installations | Everyday work, a shared list for the whole team |
+
+### 💾 Files on your computer: Export and Open
+
+<img alt="Export Diagram dialog" src="docs/screenshots/en-export-file.png" width="480">
+
+- **Export File** (toolbar button) downloads the current diagram as `<name>-<date>.json`. The file includes every icon the diagram uses, also custom imported ones, so it opens correctly in any other ArchFlow.
+- The **main menu** (☰, top left of the canvas) has more options:
+  - **Open**: load a diagram from a `.json` file. It replaces what's on the canvas.
+  - **Export as JSON** / **Export as Compact JSON**: download the diagram as JSON (the compact variant is a smaller file).
+  - **Export as image**: save a PNG picture of the diagram.
+  - **Clear the canvas**: remove everything from the current diagram.
+
+<img alt="Main menu" src="docs/screenshots/en-main-menu.png" width="560">
+
+**Export as image** shows a preview and lets you choose whether to show the grid, expand item descriptions, crop to the content, the background color (or transparent), and the resolution (DPI). Use Chrome or Edge for this; Firefox has known issues with image export.
+
+<img alt="Export as image dialog" src="docs/screenshots/en-export-image.png" width="640">
+
+### 🌐 / 📁 App Storage
+
+<img alt="Diagram Manager" src="docs/screenshots/en-app-storage.png" width="640">
+
+The **App Storage** button opens the Diagram Manager, with the list of saved diagrams:
+
+- **Save Current Diagram**: saves the diagram under a name. If a diagram with that name already exists, ArchFlow asks before overwriting it. Each diagram becomes a file named after it, e.g. `./diagrams/Airport system.json`.
+- **Load**: opens a saved diagram.
+- **Share**: copies a link like `http://your-server:9500/display/<name>`, which opens the diagram in **read-only** mode. Anyone who can reach your server can open it (Docker only).
+- **Delete**: removes the diagram (and its file) for good, after a confirmation.
+
+Important:
+
+- **Saving is manual.** Changes are written to App Storage only when you click *Save Current Diagram*. The toolbar shows **• Modified** when there are changes that aren't saved yet, and the browser warns you if you try to close the tab.
+- **In Docker, App Storage is shared.** Everyone who opens the same ArchFlow address sees and edits the same list. There are no user accounts.
+- The icon tells you where diagrams go: 🌐 means the Docker server, 📁 means files on your computer (desktop app).
+
+### Session storage (browser only)
+
+When App Storage isn't available (ArchFlow hosted as a plain static website, or Docker with `ENABLE_SERVER_STORAGE=false`), the toolbar shows **Save (Session Only)**, **Load (Session Only)** and **Quick Save (Session)** instead. These keep diagrams in your browser's storage:
+
+- they are only in this browser, on this computer,
+- they disappear when you clear the browser's data,
+- browser storage is small (a few MB), so big diagrams may not fit.
+
+Use **Export File** regularly in this mode, it's the only way to keep your work safe.
+
+### Automatic restore
+
+Independently of the above, the browser remembers the diagram you were working on and opens it again after a page reload. This is a convenience, **not a backup**: it lives only in your browser and is replaced as soon as you open another diagram.
+
+### Which options do I get?
+
+| Where ArchFlow runs | What you get |
 |---|---|
-| Desktop app | **📁 App Storage** (files in `~/Documents/ArchFlow`) + Export/Import. No session buttons. |
-| Docker, server storage enabled (default) | **🌐 App Storage** (files in `./diagrams` on the host) + Export/Import. No session buttons. |
-| Plain web hosting / Docker with server storage disabled | Session Save/Load/Quick Save (browser storage only, cleared if you clear browser data) + Export/Import |
-
-- **Auto-Save**: The last-opened diagram is automatically restored on reload/relaunch (browser `localStorage` / desktop app profile), independent of which storage option above you're using.
+| Desktop app | **📁 App Storage** (files in `~/Documents/ArchFlow`) + Export/Open. No session buttons. |
+| Docker, server storage enabled (default) | **🌐 App Storage** (files in `./diagrams` on the host) + Export/Open. No session buttons. |
+| Plain web hosting / Docker with server storage disabled | Session Save/Load/Quick Save (browser only) + Export/Open |
 
 ## Contributing
 

@@ -1,6 +1,6 @@
 {
   "name": "fossflow-backend",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "Optional backend server for ArchFlow persistent storage",
   "main": "server.js",
   "type": "module",

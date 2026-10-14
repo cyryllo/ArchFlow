@@ -30,6 +30,12 @@ RUN apk add --no-cache nginx
 # Copy backend code
 COPY --from=build /app/packages/fossflow-backend /app/packages/fossflow-backend
 
+# Install backend production dependencies at build time, so the container
+# starts immediately and works without internet access
+RUN cd /app/packages/fossflow-backend \
+    && npm install --omit=dev --no-audit --no-fund \
+    && npm cache clean --force
+
 # Copy the built React app to Nginx's web server directory
 COPY --from=build /app/packages/fossflow-app/build /usr/share/nginx/html
 
