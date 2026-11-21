@@ -376,6 +376,7 @@ export interface IsoflowProps {
     iconPackManager?: IconPackManagerProps;
     onExportJson?: () => void;
     menuItems?: HostMenuItem[];
+    iconCategoryLabels?: Record<string, string>;
 }
 export type HostMenuGroup = 'file' | 'export' | 'app';
 export interface HostMenuItem {

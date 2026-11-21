@@ -202,6 +202,7 @@ export interface UiState {
   iconPackManager: IconPackManagerProps | null;
   exportJsonHandler: (() => void) | null;
   hostMenuItems: HostMenuItem[];
+  iconCategoryLabels: Record<string, string>;
   clipboard: ClipboardData | null;
 }
 
@@ -232,6 +233,7 @@ export interface UiStateActions {
   setIconPackManager: (iconPackManager: IconPackManagerProps | null) => void;
   setExportJsonHandler: (handler: (() => void) | null) => void;
   setHostMenuItems: (items: HostMenuItem[]) => void;
+  setIconCategoryLabels: (labels: Record<string, string>) => void;
   setClipboard: (clipboard: ClipboardData | null) => void;
 }
 

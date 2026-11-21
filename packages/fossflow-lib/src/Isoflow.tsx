@@ -28,7 +28,8 @@ const App = ({
   locale = enUS,
   iconPackManager,
   onExportJson,
-  menuItems
+  menuItems,
+  iconCategoryLabels
 }: IsoflowProps) => {
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
@@ -82,6 +83,10 @@ const App = ({
   useEffect(() => {
     uiStateActions.setHostMenuItems(menuItems ?? []);
   }, [menuItems, uiStateActions]);
+
+  useEffect(() => {
+    uiStateActions.setIconCategoryLabels(iconCategoryLabels ?? {});
+  }, [iconCategoryLabels, uiStateActions]);
 
   if (!initialDataManager.isReady) return null;
 

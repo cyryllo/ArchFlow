@@ -89,6 +89,25 @@ export const MainMenu = () => {
           modelData = transformFromCompactFormat(rawData);
         }
 
+        // Icons the editor already has (the built-in set) replace same-id
+        // icons from the file, so old files get the current drawings;
+        // icons the editor doesn't know (imported ones) are kept
+        const currentIcons = model.icons ?? [];
+        const currentIds = new Set(
+          currentIcons.map((icon) => {
+            return icon.id;
+          })
+        );
+        modelData = {
+          ...modelData,
+          icons: [
+            ...currentIcons,
+            ...(modelData.icons ?? []).filter((icon: { id: string }) => {
+              return !currentIds.has(icon.id);
+            })
+          ]
+        };
+
         load(modelData);
         clearHistory(); // Clear history when loading new model
       };
@@ -99,7 +118,7 @@ export const MainMenu = () => {
 
     await fileInput.click();
     uiStateActions.setIsMainMenuOpen(false);
-  }, [uiStateActions, load, clearHistory]);
+  }, [uiStateActions, load, clearHistory, model.icons]);
 
   const onExportAsJSON = useCallback(async () => {
     uiStateActions.setIsMainMenuOpen(false);

@@ -43,6 +43,7 @@ const initialState = () => {
       iconPackManager: null, // Will be set by Isoflow if provided
       exportJsonHandler: null, // Will be set by Isoflow if provided
       hostMenuItems: [],
+      iconCategoryLabels: {},
       clipboard: null,
 
       actions: {
@@ -138,6 +139,9 @@ const initialState = () => {
         },
         setHostMenuItems: (hostMenuItems) => {
           set({ hostMenuItems });
+        },
+        setIconCategoryLabels: (iconCategoryLabels) => {
+          set({ iconCategoryLabels });
         },
         setClipboard: (clipboard) => {
           set({ clipboard });

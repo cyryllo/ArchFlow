@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Isoflow, UiIcon } from 'fossflow';
 import type { HostMenuItem } from 'fossflow';
-import { flattenCollections } from '@isoflow/isopacks/dist/utils';
-import isoflowIsopack from '@isoflow/isopacks/dist/isoflow';
+import {
+  getArchflowIcons,
+  localizeIcons,
+  withCurrentBuiltInIcons,
+  getIconCategoryLabels
+} from './icons';
 import { useTranslation } from 'react-i18next';
 import {
   DiagramData,
@@ -19,7 +23,8 @@ import './App.css';
 import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 
 // Load core isoflow icons (always loaded)
-const coreIcons = flattenCollections([isoflowIsopack]);
+// Built-in diagram icons: the ArchFlow set (names are localised at render)
+const coreIcons = getArchflowIcons('en');
 
 // Stable reference - an inline array literal here would be recreated every
 // render, needlessly retriggering the effect in Isoflow that watches this prop.
@@ -556,37 +561,11 @@ function EditorPage() {
     // Auto-detect and load required icon packs
     await iconPackManager.loadPacksForDiagram(data.items || []);
 
-    // Strategy: Check if server has ALL icons (both default and imported)
-    // Server storage now saves ALL icons, so we should use them directly
-    // For backward compatibility with old saves, we detect and merge
-
-    let finalIcons;
-    const hasDefaultIcons = loadedIcons.some((icon: any) => {
-      return (
-        icon.collection === 'isoflow' ||
-        icon.collection === 'aws' ||
-        icon.collection === 'gcp'
-      );
-    });
-
-    if (hasDefaultIcons) {
-      // New format: Server saved ALL icons (default + imported)
-      // Use them directly to preserve any custom icon modifications
-      console.log(
-        `App: Using all ${loadedIcons.length} icons from server (includes defaults + imported)`
-      );
-      finalIcons = loadedIcons;
-    } else {
-      // Old format: Server only saved imported icons
-      // Merge imported icons with currently loaded icon packs
-      const importedIcons = loadedIcons.filter((icon: any) => {
-        return icon.collection === 'imported';
-      });
-      finalIcons = [...iconPackManager.loadedIcons, ...importedIcons];
-      console.log(
-        `App: Old format detected. Merged ${importedIcons.length} imported icons with ${iconPackManager.loadedIcons.length} defaults = ${finalIcons.length} total`
-      );
-    }
+    // Built-in icons saved with the diagram (old isoflow pack or an older
+    // ArchFlow set) are swapped for the current ones - same ids, new
+    // drawings. Imported and icon-pack icons from the file are kept.
+    const finalIcons = withCurrentBuiltInIcons(loadedIcons, iconPackManager.loadedIcons);
+    console.log(`App: Using ${finalIcons.length} icons (current built-in + kept from file)`);
 
     const mergedData: DiagramData = {
       ...data,
@@ -772,6 +751,14 @@ function EditorPage() {
     };
   }, [fossflowKey]);
 
+  // Icon names and picker categories follow the UI language
+  const editorInitialData = useMemo(() => {
+    return { ...diagramData, icons: localizeIcons(diagramData.icons || [], i18n.language) };
+  }, [diagramData, i18n.language]);
+  const iconCategoryLabels = useMemo(() => {
+    return getIconCategoryLabels(i18n.language);
+  }, [i18n.language]);
+
   // Keep the latest handlers for the stable ☰ menu callbacks below
   const handlersRef = useRef({ handleSave, openMyDiagrams, newDiagram });
   handlersRef.current = { handleSave, openMyDiagrams, newDiagram };
@@ -914,7 +901,8 @@ function EditorPage() {
       <div className="fossflow-container">
         <Isoflow
           key={`${fossflowKey}-${i18n.language}`}
-          initialData={diagramData}
+          initialData={editorInitialData}
+          iconCategoryLabels={iconCategoryLabels}
           onModelUpdated={onEditorModelUpdated}
           editorMode={isReadonlyUrl ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
           mainMenuOptions={MAIN_MENU_OPTIONS}

@@ -210,6 +210,12 @@ export const IconSelectionControls = () => {
             <Box sx={{ marginTop: '8px' }}>
               <Searchbox value={filter} onChange={setFilter} />
             </Box>
+            {/* How to place a node - at the top, where it's seen first */}
+            {showAlert && (
+              <Alert severity="info" onClose={dismissAlert} sx={{ py: 0 }}>
+                {t('placeHint')}
+              </Alert>
+            )}
           </Stack>
         </Section>
       }
@@ -266,16 +272,7 @@ export const IconSelectionControls = () => {
           style={{ display: 'none' }}
           onChange={handleFileSelect}
         />
-        
-        {showAlert && (
-          <Alert 
-            severity="info" 
-            onClose={dismissAlert}
-            sx={{ cursor: 'pointer', mt: 1 }}
-          >
-            {t('placeHint')}
-          </Alert>
-        )}
+
       </Section>
     </ControlsContainer>
   );

@@ -386,6 +386,8 @@ export interface IsoflowProps {
   onExportJson?: () => void;
   // Extra entries the host app adds to the ☰ menu (new diagram, save, ...)
   menuItems?: HostMenuItem[];
+  // Display names for icon collections in the icon picker (id -> label)
+  iconCategoryLabels?: Record<string, string>;
 }
 
 export type HostMenuGroup = 'file' | 'export' | 'app';

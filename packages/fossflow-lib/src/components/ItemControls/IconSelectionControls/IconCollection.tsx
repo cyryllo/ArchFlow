@@ -7,6 +7,7 @@ import {
 import { Icon as IconI } from 'src/types';
 import { Section } from 'src/components/ItemControls/components/Section';
 import { IconGrid } from './IconGrid';
+import { useUiStateStore } from 'src/stores/uiStateStore';
 
 interface Props {
   id?: string;
@@ -24,6 +25,9 @@ export const IconCollection = ({
   isExpanded: _isExpanded
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(_isExpanded);
+  const label = useUiStateStore((state) => {
+    return id ? state.iconCategoryLabels[id] ?? id : id;
+  });
 
   return (
     <Section sx={{ py: 0 }}>
@@ -47,7 +51,7 @@ export const IconCollection = ({
             textTransform="uppercase"
             fontWeight={600}
           >
-            {id}
+            {label}
           </Typography>
           {isExpanded ? (
             <ChevronUpIcon color="action" />
