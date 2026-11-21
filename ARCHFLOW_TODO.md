@@ -84,10 +84,14 @@ The property panels (node, connector, rectangle, text, icon picker), the export-
 
 ## 🔴 Known Issues
 
-### Stage 3: desktop builds (after the icon stage)
-**Wanted**: besides the Docker image, ship the app as a Linux **AppImage** and, if possible, a Windows **.exe** installer.
-**Starting point**: `packages/fossflow-desktop` is an Electron app (`npm run build:desktop` → `electron-builder`); `electron-builder.yml` already lists AppImage + deb (Linux), NSIS (Windows) and dmg (macOS) targets, but only `linux-unpacked` has been built so far. To do: build and test the AppImage, build the Windows installer (cross-build from Linux via wine or a CI job on a Windows runner), add a release workflow that attaches both to GitHub releases, document it.
+### Stage 3: desktop builds
+**Status**: Linux AppImage + .deb build locally (`npm run build:desktop`) and the AppImage was checked on a virtual display (new UI, disk storage). The Windows installer can't be built here (electron-builder needs wine to stamp the .exe), so `.github/workflows/desktop.yml` builds Linux (ubuntu runner) and Windows NSIS (windows runner) on every `v*.*.*` tag and attaches them to the GitHub release; it can also be run manually. Still to do: first CI run (needs a new tag - the workflow isn't in v0.6.0), try the .exe on Windows, describe downloads in README/site (stage 4).
+Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` before starting the AppImage, otherwise it starts as plain Node ("bad option").
 
 ### Stage 4: docs, website and user manual (after the icon stage)
 **Wanted**: update the README(s) and the project website (`site/`, PL + EN) to the new interface, and add a step-by-step **user manual in Polish and English with screenshots** (drawing, selecting and moving, connectors, right-click menu, ☰ menu, saving / My diagrams, export, settings, shortcuts).
+
+### Stage 5: more interface languages
+**Wanted**: besides Polish and English, translate the UI into the popular languages: Portuguese (Brazil, pt-BR), German (de-DE), Spanish (es-ES), Italian (it-IT), French (fr-FR), plus other widely used ones - e.g. Chinese (zh-CN), Japanese (ja-JP), Ukrainian (uk-UA), Russian (ru-RU), Dutch (nl-NL), Turkish (tr-TR), Korean (ko-KR), Czech (cs-CZ).
+**What it covers**: the library locale (`packages/fossflow-lib/src/i18n/*.ts`, typed by `LocaleProps`), the app strings (`packages/fossflow-app/src/i18n/*.json`), the language list (`supportedLanguages` in the app's `i18n.ts`; the ☰ menu "Language" entry should become a picker once there are more than two), icon names and categories in the generated icon set (`names` per language in `scripts/icons`), and the desktop app's native dialogs. The upstream project had some of these locales once (e.g. es-ES) - check git history for anything reusable, but all new UI strings need translating.
 

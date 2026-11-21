@@ -16,6 +16,15 @@ mac:
 win:
   target: nsis
   icon: build/icon.png
+nsis:
+  # Classic installer: lets the user pick the folder, adds shortcuts
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: ArchFlow
+  artifactName: "${productName}-Setup-${version}.${ext}"
 linux:
   target:
     - AppImage
@@ -23,6 +32,8 @@ linux:
   icon: build/icon.png
   category: Graphics
   executableName: archflow
+appImage:
+  artifactName: "${productName}-${version}-x86_64.${ext}"
 deb:
   packageName: archflow
   artifactName: "${productName}-${version}-${arch}.${ext}"
