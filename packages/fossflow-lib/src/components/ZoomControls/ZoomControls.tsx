@@ -1,20 +1,15 @@
 import React from 'react';
-import {
-  Add as ZoomInIcon,
-  Remove as ZoomOutIcon,
-  CropFreeOutlined as FitToScreenIcon,
-  Help as HelpIcon
-} from '@mui/icons-material';
 import { Stack, Box, Typography, Divider } from '@mui/material';
 import { toPx } from 'src/utils';
 import { UiElement } from 'src/components/UiElement/UiElement';
 import { IconButton } from 'src/components/IconButton/IconButton';
+import { UiIcon } from 'src/components/Icons/UiIcons';
 import { MAX_ZOOM, MIN_ZOOM } from 'src/config';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useDiagramUtils } from 'src/hooks/useDiagramUtils';
-import { DialogTypeEnum } from 'src/types/ui';
 import { useTranslation } from 'src/stores/localeStore';
 
+// Zoom out · level · zoom in · fit. Help lives in the ☰ menu (and F1).
 export const ZoomControls = () => {
   const { t } = useTranslation('zoomControls');
   const uiStateStoreActions = useUiStateStore((state) => {
@@ -26,53 +21,43 @@ export const ZoomControls = () => {
   const { fitToView } = useDiagramUtils();
 
   return (
-    <Stack direction="row" spacing={1} alignItems="center">
-      <UiElement>
-        <Stack direction="row">
-          <IconButton
-            name={t('zoomOut')}
-            Icon={<ZoomOutIcon />}
-            onClick={uiStateStoreActions.decrementZoom}
-            disabled={zoom >= MAX_ZOOM}
-          />
-          <Divider orientation="vertical" flexItem />
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              minWidth: toPx(60)
-            }}
-          >
-            <Typography variant="body2" color="text.secondary">
-              {Math.ceil(zoom * 100)}%
-            </Typography>
-          </Box>
-          <Divider orientation="vertical" flexItem />
-          <IconButton
-            name={t('zoomIn')}
-            Icon={<ZoomInIcon />}
-            onClick={uiStateStoreActions.incrementZoom}
-            disabled={zoom <= MIN_ZOOM}
-          />
-        </Stack>
-      </UiElement>
-      <UiElement>
+    <UiElement>
+      <Stack direction="row" alignItems="center">
         <IconButton
-          name={t('fitToScreen')}
-          Icon={<FitToScreenIcon />}
+          name={`${t('zoomOut')} (Ctrl −)`}
+          Icon={<UiIcon name="zoomOut" />}
+          onClick={uiStateStoreActions.decrementZoom}
+          disabled={zoom <= MIN_ZOOM}
+        />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minWidth: toPx(52)
+          }}
+        >
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontVariantNumeric: 'tabular-nums' }}
+          >
+            {Math.ceil(zoom * 100)}%
+          </Typography>
+        </Box>
+        <IconButton
+          name={`${t('zoomIn')} (Ctrl +)`}
+          Icon={<UiIcon name="zoomIn" />}
+          onClick={uiStateStoreActions.incrementZoom}
+          disabled={zoom >= MAX_ZOOM}
+        />
+        <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
+        <IconButton
+          name={`${t('fitToScreen')} (Shift+1)`}
+          Icon={<UiIcon name="fit" />}
           onClick={fitToView}
         />
-      </UiElement>
-      <UiElement>
-        <IconButton
-          name={`${t('help')} (F1)`}
-          Icon={<HelpIcon />}
-          onClick={() => {
-            return uiStateStoreActions.setDialog(DialogTypeEnum.HELP);
-          }}
-        />
-      </UiElement>
-    </Stack>
+      </Stack>
+    </UiElement>
   );
 };

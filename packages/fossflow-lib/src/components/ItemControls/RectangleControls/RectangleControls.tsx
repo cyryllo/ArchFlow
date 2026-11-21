@@ -10,12 +10,14 @@ import { Close as CloseIcon } from '@mui/icons-material';
 import { ControlsContainer } from '../components/ControlsContainer';
 import { Section } from '../components/Section';
 import { DeleteButton } from '../components/DeleteButton';
+import { useTranslation } from 'src/stores/localeStore';
 
 interface Props {
   id: string;
 }
 
 export const RectangleControls = ({ id }: Props) => {
+  const { t } = useTranslation('itemControls');
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
   });
@@ -33,7 +35,7 @@ export const RectangleControls = ({ id }: Props) => {
       <Box sx={{ position: 'relative' }}>
         {/* Close button */}
         <MUIIconButton
-          aria-label="Close"
+          aria-label={t('close')}
           onClick={() => {
             return uiStateActions.setItemControls(null);
           }}
@@ -47,7 +49,7 @@ export const RectangleControls = ({ id }: Props) => {
         >
           <CloseIcon />
         </MUIIconButton>
-        <Section title="Color">
+        <Section title={t('color')}>
           <FormControlLabel
             control={
               <Switch
@@ -60,7 +62,7 @@ export const RectangleControls = ({ id }: Props) => {
                 }}
               />
             }
-            label="Use Custom Color"
+            label={t('useCustomColor')}
             sx={{ mb: 2 }}
           />
           {useCustomColor ? (

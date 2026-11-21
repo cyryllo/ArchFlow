@@ -30,6 +30,12 @@ export const Pan: ModeActions = {
   mouseup: ({ uiState }) => {
     if (uiState.mode.type !== 'PAN') return;
     setWindowCursor('grab');
-    // Note: Mode switching is now handled by usePanHandlers
+
+    // A temporary pan (e.g. started by dragging empty space in select mode)
+    // hands control back to the tool that was active before it.
+    if (uiState.mode.returnTo) {
+      setWindowCursor('default');
+      uiState.actions.setMode(uiState.mode.returnTo);
+    }
   }
 };

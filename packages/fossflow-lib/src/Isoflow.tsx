@@ -27,6 +27,8 @@ const App = ({
   renderer,
   locale = enUS,
   iconPackManager,
+  onExportJson,
+  menuItems
 }: IsoflowProps) => {
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
@@ -72,6 +74,14 @@ const App = ({
   useEffect(() => {
     uiStateActions.setIconPackManager(iconPackManager || null);
   }, [iconPackManager, uiStateActions]);
+
+  useEffect(() => {
+    uiStateActions.setExportJsonHandler(onExportJson ?? null);
+  }, [onExportJson, uiStateActions]);
+
+  useEffect(() => {
+    uiStateActions.setHostMenuItems(menuItems ?? []);
+  }, [menuItems, uiStateActions]);
 
   if (!initialDataManager.isReady) return null;
 
@@ -132,4 +142,7 @@ const useIsoflow = () => {
 
 export { useIsoflow };
 export * from 'src/standaloneExports';
+export { UiIcon } from 'src/components/Icons/UiIcons';
+export type { UiIconName } from 'src/components/Icons/UiIcons';
+export type { HostMenuItem, HostMenuGroup, ClipboardData } from 'src/types';
 export default Isoflow;

@@ -5,7 +5,7 @@ import { HotkeyProfile } from '../config/hotkeys';
 import { PanSettings } from '../config/panSettings';
 import { ZoomSettings } from '../config/zoomSettings';
 import { LabelSettings } from '../config/labelSettings';
-import { IconPackManagerProps } from './isoflowProps';
+import { IconPackManagerProps, HostMenuItem, ClipboardData } from './isoflowProps';
 interface AddItemControls {
     type: 'ADD_ITEM';
 }
@@ -38,10 +38,12 @@ export interface DragItemsMode {
     showCursor: boolean;
     items: ItemReference[];
     isInitialMovement: Boolean;
+    keepSelection?: boolean;
 }
 export interface PanMode {
     type: 'PAN';
     showCursor: boolean;
+    returnTo?: Mode;
 }
 export interface PlaceIconMode {
     type: 'PLACE_ICON';
@@ -88,8 +90,13 @@ export interface LassoMode {
         startTile: Coords;
         endTile: Coords;
         items: ItemReference[];
+        sceneRect?: {
+            from: Coords;
+            to: Coords;
+        };
     } | null;
     isDragging: boolean;
+    fromCursor?: boolean;
 }
 export interface FreehandLassoMode {
     type: 'FREEHAND_LASSO';
@@ -146,6 +153,9 @@ export interface UiState {
     connectorInteractionMode: ConnectorInteractionMode;
     expandLabels: boolean;
     iconPackManager: IconPackManagerProps | null;
+    exportJsonHandler: (() => void) | null;
+    hostMenuItems: HostMenuItem[];
+    clipboard: ClipboardData | null;
 }
 export interface UiStateActions {
     setView: (view: string) => void;
@@ -172,6 +182,9 @@ export interface UiStateActions {
     setConnectorInteractionMode: (mode: ConnectorInteractionMode) => void;
     setExpandLabels: (expand: boolean) => void;
     setIconPackManager: (iconPackManager: IconPackManagerProps | null) => void;
+    setExportJsonHandler: (handler: (() => void) | null) => void;
+    setHostMenuItems: (items: HostMenuItem[]) => void;
+    setClipboard: (clipboard: ClipboardData | null) => void;
 }
 export type UiStateStore = UiState & {
     actions: UiStateActions;

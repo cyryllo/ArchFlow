@@ -83,6 +83,66 @@ export const HelpDialog = () => {
       action: t('contextMenuAction'),
       shortcut: t('contextMenuShortcut'),
       description: t('contextMenuDescription')
+    },
+    {
+      action: t('escapeAction'),
+      shortcut: t('escapeShortcut'),
+      description: t('escapeDescription')
+    },
+    {
+      action: t('deleteAction'),
+      shortcut: t('deleteShortcut'),
+      description: t('deleteDescription')
+    },
+    {
+      action: t('selectAllAction'),
+      shortcut: t('selectAllShortcut'),
+      description: t('selectAllDescription')
+    },
+    {
+      action: t('copyAction'),
+      shortcut: t('copyShortcut'),
+      description: t('copyDescription')
+    },
+    {
+      action: t('cutAction'),
+      shortcut: t('cutShortcut'),
+      description: t('cutDescription')
+    },
+    {
+      action: t('pasteAction'),
+      shortcut: t('pasteShortcut'),
+      description: t('pasteDescription')
+    },
+    {
+      action: t('duplicateAction'),
+      shortcut: t('duplicateShortcut'),
+      description: t('duplicateDescription')
+    },
+    {
+      action: t('moveAction'),
+      shortcut: t('moveShortcut'),
+      description: t('moveDescription')
+    },
+    {
+      action: t('spacePanAction'),
+      shortcut: t('spacePanShortcut'),
+      description: t('spacePanDescription')
+    },
+    {
+      action: t('fitAction'),
+      shortcut: t('fitShortcut'),
+      description: t('fitDescription')
+    },
+    {
+      action: t('renameAction'),
+      shortcut: t('renameShortcut'),
+      description: t('renameDescription')
+    },
+    {
+      action: t('reorderAction'),
+      shortcut: t('reorderShortcut'),
+      description: t('reorderDescription')
     }
   ];
 
@@ -116,6 +176,11 @@ export const HelpDialog = () => {
       action: t('addTextAction'),
       shortcut: t('addTextShortcut'),
       description: t('addTextDescription')
+    },
+    {
+      action: t('shiftClickAction'),
+      shortcut: t('shiftClickShortcut'),
+      description: t('shiftClickDescription')
     }
   ];
 

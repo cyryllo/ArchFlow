@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
-import { Isoflow } from 'fossflow';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { Isoflow, UiIcon } from 'fossflow';
+import type { HostMenuItem } from 'fossflow';
 import { flattenCollections } from '@isoflow/isopacks/dist/utils';
 import isoflowIsopack from '@isoflow/isopacks/dist/isoflow';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +12,7 @@ import {
 import { StorageManager } from './StorageManager';
 import { DiagramManager } from './components/DiagramManager';
 import { storageManager } from './services/storageService';
-import ChangeLanguage from './components/ChangeLanguage';
+import { supportedLanguages } from './i18n';
 import { allLocales } from 'fossflow';
 import { useIconPackManager, IconPackName } from './services/iconPackManager';
 import './App.css';
@@ -62,6 +63,14 @@ function EditorPage() {
   const [showLoadDialog, setShowLoadDialog] = useState(false);
   const [showExportDialog, setShowExportDialog] = useState(false);
   const [fossflowKey, setFossflowKey] = useState(0); // Key to force re-render of FossFLOW
+  // Bumped whenever a different diagram is put into the editor. Model updates
+  // still coming from the previous editor instance carry an older generation
+  // and are ignored - otherwise they overwrite the freshly loaded diagram
+  // (it then showed up empty, and saving stored that empty state).
+  const editorGenerationRef = useRef(0);
+  const beginEditorReload = () => {
+    editorGenerationRef.current += 1;
+  };
   const [currentModel, setCurrentModel] = useState<DiagramData | null>(null); // Store current model state
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [lastAutoSave, setLastAutoSave] = useState<Date | null>(null);
@@ -358,6 +367,7 @@ function EditorPage() {
       icons: mergedIcons
     };
 
+    beginEditorReload();
     setCurrentDiagram(diagram);
     setDiagramName(diagram.name);
     setDiagramData(dataWithIcons);
@@ -409,6 +419,7 @@ function EditorPage() {
         views: [],
         fitToScreen: true
       };
+      beginEditorReload();
       setCurrentDiagram(null);
       setDiagramName('');
       setDiagramData(emptyDiagram);
@@ -456,6 +467,12 @@ function EditorPage() {
     }
     lastModelSnapshotRef.current = snapshot;
   };
+
+  // "Export JSON" in the hamburger (☰) menu opens this app's export dialog,
+  // which also bundles imported icons and uses the diagram's name.
+  const openExportDialog = useCallback(() => {
+    setShowExportDialog(true);
+  }, []);
 
   const exportDiagram = () => {
     // Use the most recent model data - prefer currentModel as it gets updated by handleModelUpdated
@@ -591,6 +608,7 @@ function EditorPage() {
 
     // Use a single batch of state updates to minimize re-render issues
     // Update diagram data and increment key in the same render cycle
+    beginEditorReload();
     setDiagramName(newDiagram.name);
     setCurrentDiagram(newDiagram);
     setCurrentModel(mergedData);
@@ -704,6 +722,114 @@ function EditorPage() {
     };
   }, [hasUnsavedChanges]);
 
+  // "Save" (top bar, ☰ menu, Ctrl+S): quick-save the open diagram, or ask
+  // for a name when it has never been saved
+  const handleSave = async () => {
+    if (serverStorageAvailable) {
+      if (!currentDiagram) {
+        setShowDiagramManager(true);
+        return;
+      }
+      try {
+        const data = { ...(currentModel || diagramData), name: currentDiagram.name };
+        const savedId = await storageManager
+          .getStorage()
+          .saveDiagram(currentDiagram.id, data as any);
+        handleDiagramManagerSaved(savedId, currentDiagram.name, data);
+      } catch (err) {
+        console.error('Save failed:', err);
+        setShowDiagramManager(true);
+      }
+      return;
+    }
+    if (currentDiagram) {
+      saveDiagram();
+    } else {
+      setShowSaveDialog(true);
+    }
+  };
+
+  // "My diagrams" (top bar, ☰ menu, Ctrl+O)
+  const openMyDiagrams = () => {
+    if (serverStorageAvailable) {
+      setShowDiagramManager(true);
+    } else {
+      setShowLoadDialog(true);
+    }
+  };
+
+  // Stable onModelUpdated for the editor: a new function on every render made
+  // the editor report its model in an endless loop (hundreds of times a
+  // second). It's rebuilt only when the editor is remounted, and ignores
+  // reports from an editor instance that has already been replaced.
+  const handleModelUpdatedRef = useRef(handleModelUpdated);
+  handleModelUpdatedRef.current = handleModelUpdated;
+  const onEditorModelUpdated = useMemo(() => {
+    const generation = editorGenerationRef.current;
+    return (model: any) => {
+      if (generation !== editorGenerationRef.current) return;
+      handleModelUpdatedRef.current(model);
+    };
+  }, [fossflowKey]);
+
+  // Keep the latest handlers for the stable ☰ menu callbacks below
+  const handlersRef = useRef({ handleSave, openMyDiagrams, newDiagram });
+  handlersRef.current = { handleSave, openMyDiagrams, newDiagram };
+
+  const currentLanguage =
+    supportedLanguages.find((l) => {
+      return l.value === i18n.language;
+    }) ?? supportedLanguages[0];
+
+  // Entries the app adds to the editor's ☰ menu
+  const menuItems = useMemo((): HostMenuItem[] => {
+    const nextLanguage =
+      supportedLanguages[
+        (supportedLanguages.indexOf(currentLanguage) + 1) % supportedLanguages.length
+      ];
+    return [
+      {
+        id: 'new-diagram',
+        group: 'file',
+        label: t('nav.newDiagram'),
+        icon: 'newDiagram',
+        onClick: () => {
+          handlersRef.current.newDiagram();
+        }
+      },
+      {
+        id: 'my-diagrams',
+        group: 'file',
+        label: t('nav.myDiagrams'),
+        icon: 'library',
+        shortcut: 'Ctrl+O',
+        onClick: () => {
+          handlersRef.current.openMyDiagrams();
+        }
+      },
+      {
+        id: 'save',
+        group: 'file',
+        label: t('nav.save'),
+        icon: 'save',
+        shortcut: 'Ctrl+S',
+        onClick: () => {
+          handlersRef.current.handleSave();
+        }
+      },
+      {
+        id: 'language',
+        group: 'app',
+        label: `${t('nav.language')}: ${currentLanguage.label} → ${nextLanguage.label}`,
+        icon: 'language',
+        onClick: () => {
+          i18n.changeLanguage(nextLanguage.value);
+          localStorage.setItem('i18nextLng', nextLanguage.value);
+        }
+      }
+    ];
+  }, [t, i18n, currentLanguage]);
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -711,19 +837,13 @@ function EditorPage() {
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
 
-        // Quick save if current diagram exists and has unsaved changes
-        if (currentDiagram && hasUnsavedChanges) {
-          saveDiagram();
-        } else {
-          // Otherwise show save dialog
-          setShowSaveDialog(true);
-        }
+        handlersRef.current.handleSave();
       }
 
-      // Ctrl+O or Cmd+O for Open/Load
+      // Ctrl+O or Cmd+O: My diagrams
       if ((e.ctrlKey || e.metaKey) && e.key === 'o') {
         e.preventDefault();
-        setShowLoadDialog(true);
+        handlersRef.current.openMyDiagrams();
       }
     };
 
@@ -736,69 +856,29 @@ function EditorPage() {
   return (
     <div className="App">
       <div className="toolbar">
-        {!isReadonlyUrl && (
-          <>
-            <button onClick={newDiagram}>{t('nav.newDiagram')}</button>
-            {serverStorageAvailable && (
-              <button
-                onClick={() => {
-                  return setShowDiagramManager(true);
-                }}
-                style={{ backgroundColor: '#2196F3', color: 'white' }}
+        {/* Slim top bar: diagram name + save state, then Save and My diagrams.
+            Everything else (new diagram, export, language...) is in the ☰ menu. */}
+        <span className="current-diagram">
+          {isReadonlyUrl ? (
+            <span>
+              {t('status.current')}: {diagramName}
+            </span>
+          ) : (
+            <>
+              <strong>
+                {currentDiagram ? currentDiagram.name : diagramName || t('status.untitled')}
+              </strong>
+              <span
+                className={`save-state ${hasUnsavedChanges ? 'is-modified' : 'is-saved'}`}
               >
-                {storageKind === 'electron' ? '📁' : '🌐'} {t('nav.serverStorage')}
-              </button>
-            )}
-            {!serverStorageAvailable && (
-              <>
-                <button
-                  onClick={() => {
-                    return setShowSaveDialog(true);
-                  }}
-                >
-                  {t('nav.saveSessionOnly')}
-                </button>
-                <button
-                  onClick={() => {
-                    return setShowLoadDialog(true);
-                  }}
-                >
-                  {t('nav.loadSessionOnly')}
-                </button>
-              </>
-            )}
-            <button
-              onClick={() => {
-                return setShowExportDialog(true);
-              }}
-              style={{ backgroundColor: '#007bff' }}
-            >
-              💾 {t('nav.exportFile')}
-            </button>
-            {!serverStorageAvailable && (
-              <button
-                onClick={() => {
-                  if (currentDiagram && hasUnsavedChanges) {
-                    saveDiagram();
-                  }
-                }}
-                disabled={!currentDiagram || !hasUnsavedChanges}
-                style={{
-                  backgroundColor:
-                    currentDiagram && hasUnsavedChanges ? '#ffc107' : '#6c757d',
-                  opacity: currentDiagram && hasUnsavedChanges ? 1 : 0.5,
-                  cursor:
-                    currentDiagram && hasUnsavedChanges
-                      ? 'pointer'
-                      : 'not-allowed'
-                }}
-                title="Save to current session only"
-              >
-                {t('nav.quickSaveSession')}
-              </button>
-            )}
-          </>
-        )}
+                {hasUnsavedChanges ? `● ${t('status.modified')}` : `✓ ${t('status.saved')}`}
+              </span>
+              {!serverStorageAvailable && (
+                <span className="session-note">({t('status.sessionStorageNote')})</span>
+              )}
+            </>
+          )}
+        </span>
         {isReadonlyUrl && (
           <div
             style={{
@@ -812,41 +892,34 @@ function EditorPage() {
             {t('dialog.readOnly.mode')}
           </div>
         )}
-        <ChangeLanguage />
-        <span className="current-diagram">
-          {isReadonlyUrl ? (
-            <span>
-              {t('status.current')}: {diagramName}
-            </span>
-          ) : (
-            <>
-              {currentDiagram
-                ? `${t('status.current')}: ${currentDiagram.name}`
-                : diagramName || t('status.untitled')}
-              {hasUnsavedChanges && (
-                <span style={{ color: '#ff9800', marginLeft: '10px' }}>
-                  • {t('status.modified')}
-                </span>
-              )}
-              {!serverStorageAvailable && (
-                <span
-                  style={{ fontSize: '12px', color: '#666', marginLeft: '10px' }}
-                >
-                  ({t('status.sessionStorageNote')})
-                </span>
-              )}
-            </>
-          )}
-        </span>
+        {!isReadonlyUrl && (
+          <>
+            <button
+              className={`toolbar-btn ${hasUnsavedChanges ? 'primary' : ''}`}
+              onClick={handleSave}
+              title={`${t('nav.save')} (Ctrl+S)`}
+            >
+              <UiIcon name="save" size={18} /> {t('nav.save')}
+            </button>
+            <button
+              className="toolbar-btn"
+              onClick={openMyDiagrams}
+              title={`${t('nav.myDiagrams')} (Ctrl+O)`}
+            >
+              <UiIcon name="library" size={18} /> {t('nav.myDiagrams')}
+            </button>
+          </>
+        )}
       </div>
-
       <div className="fossflow-container">
         <Isoflow
           key={`${fossflowKey}-${i18n.language}`}
           initialData={diagramData}
-          onModelUpdated={handleModelUpdated}
+          onModelUpdated={onEditorModelUpdated}
           editorMode={isReadonlyUrl ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
           mainMenuOptions={MAIN_MENU_OPTIONS}
+          onExportJson={openExportDialog}
+          menuItems={menuItems}
           locale={currentLocale}
           iconPackManager={{
             lazyLoadingEnabled: iconPackManager.lazyLoadingEnabled,

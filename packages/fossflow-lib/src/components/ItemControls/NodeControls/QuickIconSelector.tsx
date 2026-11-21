@@ -7,6 +7,7 @@ import { useIconCategories } from 'src/hooks/useIconCategories';
 import { IconGrid } from '../IconSelectionControls/IconGrid';
 import { Icons } from '../IconSelectionControls/Icons';
 import { Section } from '../components/Section';
+import { useTranslation } from 'src/stores/localeStore';
 
 interface Props {
   onIconSelected: (icon: Icon) => void;
@@ -41,6 +42,7 @@ const escapeRegex = (str: string): string => {
 };
 
 export const QuickIconSelector = ({ onIconSelected, onClose, currentIconId }: Props) => {
+  const { t } = useTranslation('itemControls');
   const [searchTerm, setSearchTerm] = useState('');
   const [hoveredIndex, setHoveredIndex] = useState(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -146,7 +148,7 @@ export const QuickIconSelector = ({ onIconSelected, onClose, currentIconId }: Pr
           <TextField
             ref={searchInputRef}
             fullWidth
-            placeholder="Search icons (press Enter to select)"
+            placeholder={t('searchIconsEnter')}
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -167,7 +169,7 @@ export const QuickIconSelector = ({ onIconSelected, onClose, currentIconId }: Pr
           {!searchTerm && recentIcons.length > 0 && (
             <>
               <Typography variant="caption" color="text.secondary">
-                RECENTLY USED
+                {t('recentlyUsed')}
               </Typography>
               <IconGrid
                 icons={recentIcons}
@@ -224,8 +226,8 @@ export const QuickIconSelector = ({ onIconSelected, onClose, currentIconId }: Pr
       <Section sx={{ py: 1 }}>
         <Typography variant="caption" color="text.secondary">
           {searchTerm 
-            ? 'Use arrow keys to navigate • Enter to select • Double-click to select and close'
-            : 'Type to search • Click category to expand • Double-click to select and close'
+            ? t('hintSearching')
+            : t('hintBrowsing')
           }
         </Typography>
       </Section>

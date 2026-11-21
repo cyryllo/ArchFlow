@@ -16,6 +16,7 @@ import { Icons } from '../IconSelectionControls/Icons';
 import { NodeSettings } from './NodeSettings/NodeSettings';
 import { Section } from '../components/Section';
 import { QuickIconSelector } from './QuickIconSelector';
+import { useTranslation } from 'src/stores/localeStore';
 
 interface Props {
   id: string;
@@ -29,6 +30,7 @@ const ModeOptions = {
 type Mode = keyof typeof ModeOptions;
 
 export const NodeControls = ({ id }: Props) => {
+  const { t } = useTranslation('itemControls');
   const [mode, setMode] = useState<Mode>('SETTINGS');
   const { updateModelItem, updateViewItem, deleteViewItem } = useScene();
   const uiStateActions = useUiStateStore((state) => {
@@ -72,7 +74,7 @@ export const NodeControls = ({ id }: Props) => {
       >
         {/* Close button */}
         <MUIIconButton
-          aria-label="Close"
+          aria-label={t('close')}
           onClick={() => {
             return uiStateActions.setItemControls(null);
           }}
@@ -106,7 +108,7 @@ export const NodeControls = ({ id }: Props) => {
                 }}
                 variant="text"
               >
-                Update icon
+                {t('updateIcon')}
               </Button>
             )}
             {mode === 'CHANGE_ICON' && (
@@ -117,7 +119,7 @@ export const NodeControls = ({ id }: Props) => {
                 }}
                 variant="text"
               >
-                Settings
+                {t('settings')}
               </Button>
             )}
           </Stack>

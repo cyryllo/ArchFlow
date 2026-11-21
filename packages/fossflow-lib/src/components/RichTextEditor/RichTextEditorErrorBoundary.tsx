@@ -1,4 +1,5 @@
 import React, { Component, ReactNode } from 'react';
+import { useTranslation } from 'src/stores/localeStore';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -9,6 +10,12 @@ interface ErrorBoundaryState {
   hasError: boolean;
   errorCount: number;
 }
+
+// Hooks can't be used in the class below, so the translated text lives here
+const EditorUnavailableText = () => {
+  const { t } = useTranslation('exportImage');
+  return <>{t('editorUnavailable')}</>;
+};
 
 class RichTextEditorErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
@@ -84,7 +91,7 @@ class RichTextEditorErrorBoundary extends Component<ErrorBoundaryProps, ErrorBou
           backgroundColor: '#f9f9f9',
           color: '#666'
         }}>
-          Rich text editor temporarily unavailable
+          <EditorUnavailableText />
         </div>
       );
     }

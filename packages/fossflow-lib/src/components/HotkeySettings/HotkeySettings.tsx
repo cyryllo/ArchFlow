@@ -31,24 +31,22 @@ export const HotkeySettings = () => {
     { name: t('settings.hotkeys.toolAddItem'), key: currentMapping.addItem },
     { name: t('settings.hotkeys.toolRectangle'), key: currentMapping.rectangle },
     { name: t('settings.hotkeys.toolConnector'), key: currentMapping.connector },
-    { name: t('settings.hotkeys.toolText'), key: currentMapping.text }
+    { name: t('settings.hotkeys.toolText'), key: currentMapping.text },
+    { name: t('toolMenu.boxSelect'), key: currentMapping.lasso },
+    { name: t('toolMenu.freehandLasso'), key: currentMapping.freehandLasso }
   ];
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h6" gutterBottom>
-        {t('settings.hotkeys.title')}
-      </Typography>
-
-      <FormControl fullWidth sx={{ mb: 3 }}>
+    <Box>
+      <FormControl fullWidth sx={{ mb: 2, maxWidth: 420 }} size="small">
         <InputLabel>{t('settings.hotkeys.profile')}</InputLabel>
         <Select
           value={hotkeyProfile}
           label={t('settings.hotkeys.profile')}
           onChange={(e) => setHotkeyProfile(e.target.value as HotkeyProfile)}
         >
-          <MenuItem value="qwerty">{t('settings.hotkeys.profileQwerty')}</MenuItem>
           <MenuItem value="smnrct">{t('settings.hotkeys.profileSmnrct')}</MenuItem>
+          <MenuItem value="qwerty">{t('settings.hotkeys.profileQwerty')}</MenuItem>
           <MenuItem value="none">{t('settings.hotkeys.profileNone')}</MenuItem>
         </Select>
       </FormControl>

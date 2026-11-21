@@ -1,4 +1,4 @@
-import { ModelStore, UiStateStore, Size } from '../types';
+import { ModelStore, UiStateStore, Size, SlimMouseEvent } from '../types';
 import { useScene } from '../hooks/useScene';
 export interface State {
     model: ModelStore;
@@ -7,6 +7,7 @@ export interface State {
     rendererRef: HTMLElement;
     rendererSize: Size;
     isRendererInteraction: boolean;
+    mouseEvent?: SlimMouseEvent;
 }
 export type ModeActionsAction = (state: State) => void;
 export type ModeActions = {

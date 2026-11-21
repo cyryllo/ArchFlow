@@ -6,6 +6,7 @@ import { useModelItem } from 'src/hooks/useModelItem';
 import { useModelStore } from 'src/stores/modelStore';
 import { DeleteButton } from '../../components/DeleteButton';
 import { Section } from '../../components/Section';
+import { useTranslation } from 'src/stores/localeStore';
 
 export type NodeUpdates = {
   model: Partial<ModelItem>;
@@ -25,6 +26,7 @@ export const NodeSettings = ({
   onViewItemUpdated,
   onDeleted
 }: Props) => {
+  const { t } = useTranslation('itemControls');
   const modelItem = useModelItem(node.id);
   const modelActions = useModelStore((state) => state.actions);
   const icons = useModelStore((state) => state.icons);
@@ -71,14 +73,28 @@ export const NodeSettings = ({
     };
   }, []);
 
+  // F2 / "Rename" asks the open panel to focus the name field
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    const focusName = () => {
+      nameInputRef.current?.focus();
+      nameInputRef.current?.select();
+    };
+    window.addEventListener('archflow:focusName', focusName);
+    return () => {
+      window.removeEventListener('archflow:focusName', focusName);
+    };
+  }, []);
+
   if (!modelItem) {
     return null;
   }
 
   return (
     <>
-      <Section title="Name">
+      <Section title={t('name')}>
         <TextField
+          inputRef={nameInputRef}
           value={modelItem.name}
           onChange={(e) => {
             const text = e.target.value as string;
@@ -86,7 +102,7 @@ export const NodeSettings = ({
           }}
         />
       </Section>
-      <Section title="Description">
+      <Section title={t('description')}>
         <RichTextEditor
           value={modelItem.description}
           onChange={(text) => {
@@ -96,7 +112,7 @@ export const NodeSettings = ({
         />
       </Section>
       {modelItem.name && (
-        <Section title="Label height">
+        <Section title={t('labelHeight')}>
           <Slider
             marks
             step={20}
@@ -111,7 +127,7 @@ export const NodeSettings = ({
         </Section>
       )}
 
-      <Section title="Icon size">
+      <Section title={t('iconSize')}>
         <Slider
           marks
           step={0.1}

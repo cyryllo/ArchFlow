@@ -15,7 +15,9 @@ import {
   generateId,
   CoordsUtils,
   getAnchorTile,
-  connectorPathTileToGlobal
+  connectorPathTileToGlobal,
+  getItemsBounds,
+  isMultiSelectable
 } from 'src/utils';
 import { useScene } from 'src/hooks/useScene';
 
@@ -100,12 +102,9 @@ const mousedown: ModeActionsAction = ({
     );
 
     uiState.actions.setItemControls(null);
-
-    // Show context menu for empty space on left click
-    uiState.actions.setContextMenu({
-      type: 'EMPTY',
-      tile: uiState.mouse.position.tile
-    });
+    // The "Add node / Add rectangle" menu is only on right-click now
+    // (onContextMenu in useInteractionManager), not on left-click.
+    uiState.actions.setContextMenu(null);
   }
 };
 
@@ -141,21 +140,64 @@ export const Cursor: ModeActions = {
         isInitialMovement: true
       });
     } else {
-      // If no item is being dragged and the mouse has moved, switch to PAN mode
-      // Only do this if the drag started on empty space
+      // Dragging on empty space draws a selection box (like most editors).
+      // If "empty area click pan" is enabled in Pan Settings it pans the view
+      // instead. Either way, control returns to Select afterwards.
       if (uiState.mouse.mousedown) {
-        uiState.actions.setMode({
-          type: 'PAN',
-          showCursor: false
-        });
+        if (uiState.panSettings.emptyAreaClickPan) {
+          uiState.actions.setMode({
+            type: 'PAN',
+            showCursor: false,
+            returnTo: { type: 'CURSOR', showCursor: true, mousedownItem: null }
+          });
+        } else {
+          uiState.actions.setContextMenu(null);
+          uiState.actions.setMode({
+            type: 'LASSO',
+            showCursor: true,
+            selection: null,
+            isDragging: false,
+            fromCursor: true
+          });
+        }
       }
     }
   },
   mousedown,
-  mouseup: ({ uiState, isRendererInteraction }) => {
+  mouseup: ({ uiState, scene, isRendererInteraction, mouseEvent }) => {
     if (uiState.mode.type !== 'CURSOR' || !isRendererInteraction) return;
 
     const hasMoved = uiState.mouse.mousedown && hasMovedTile(uiState.mouse);
+
+    // Shift+click: add the clicked element to what's already selected
+    const clicked = uiState.mode.mousedownItem;
+    const current =
+      uiState.itemControls && 'id' in uiState.itemControls
+        ? uiState.itemControls
+        : null;
+    if (
+      mouseEvent?.shiftKey &&
+      !hasMoved &&
+      isMultiSelectable(clicked) &&
+      isMultiSelectable(current) &&
+      clicked &&
+      current &&
+      !(clicked.type === current.type && clicked.id === current.id)
+    ) {
+      const items = [current, clicked];
+      const bounds = getItemsBounds(items, scene);
+      if (bounds) {
+        uiState.actions.setItemControls(null);
+        uiState.actions.setMode({
+          type: 'LASSO',
+          showCursor: true,
+          isDragging: false,
+          fromCursor: true,
+          selection: { ...bounds, items }
+        });
+        return;
+      }
+    }
 
     if (uiState.mode.mousedownItem && !hasMoved) {
       if (uiState.mode.mousedownItem.type === 'ITEM') {

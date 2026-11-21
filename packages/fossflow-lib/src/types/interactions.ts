@@ -1,4 +1,4 @@
-import { ModelStore, UiStateStore, Size } from 'src/types';
+import { ModelStore, UiStateStore, Size, SlimMouseEvent } from 'src/types';
 import { useScene } from 'src/hooks/useScene';
 
 export interface State {
@@ -8,6 +8,8 @@ export interface State {
   rendererRef: HTMLElement;
   rendererSize: Size;
   isRendererInteraction: boolean;
+  // The raw event (for modifier keys such as Shift+click)
+  mouseEvent?: SlimMouseEvent;
 }
 
 export type ModeActionsAction = (state: State) => void;

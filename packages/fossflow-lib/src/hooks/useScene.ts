@@ -4,14 +4,22 @@ import {
   ViewItem,
   Connector,
   TextBox,
-  Rectangle
+  Rectangle,
+  ItemReference,
+  ClipboardData,
+  Coords
 } from 'src/types';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useModelStore } from 'src/stores/modelStore';
 import { useSceneStore } from 'src/stores/sceneStore';
 import * as reducers from 'src/stores/reducers';
 import type { State } from 'src/stores/reducers/types';
-import { getItemByIdOrThrow } from 'src/utils';
+import { produce } from 'immer';
+import {
+  getItemByIdOrThrow,
+  generateId,
+  findNearestUnoccupiedTilesForGroup
+} from 'src/utils';
 import {
   CONNECTOR_DEFAULTS,
   RECTANGLE_DEFAULTS,
@@ -295,17 +303,20 @@ export const useScene = () => {
     ]
   );
 
+  // Pass `currentState` (and use the returned state) to chain several
+  // updates in one tick without them overwriting each other
   const updateConnector = useCallback(
-    (id: string, updates: Partial<Connector>) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+    (id: string, updates: Partial<Connector>, currentState?: State) => {
+      if (!model?.actions || !scene?.actions || !currentViewId) return currentState;
 
       saveToHistoryBeforeChange();
       const newState = reducers.view({
         action: 'UPDATE_CONNECTOR',
         payload: { id, ...updates },
-        ctx: { viewId: currentViewId, state: getState() }
+        ctx: { viewId: currentViewId, state: currentState || getState() }
       });
       setState(newState);
+      return newState;
     },
     [
       getState,
@@ -361,17 +372,20 @@ export const useScene = () => {
     ]
   );
 
+  // Pass `currentState` (and use the returned state) to chain several
+  // updates in one tick without them overwriting each other
   const updateTextBox = useCallback(
-    (id: string, updates: Partial<TextBox>) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+    (id: string, updates: Partial<TextBox>, currentState?: State) => {
+      if (!model?.actions || !scene?.actions || !currentViewId) return currentState;
 
       saveToHistoryBeforeChange();
       const newState = reducers.view({
         action: 'UPDATE_TEXTBOX',
         payload: { id, ...updates },
-        ctx: { viewId: currentViewId, state: getState() }
+        ctx: { viewId: currentViewId, state: currentState || getState() }
       });
       setState(newState);
+      return newState;
     },
     [
       getState,
@@ -427,17 +441,20 @@ export const useScene = () => {
     ]
   );
 
+  // Pass `currentState` (and use the returned state) to chain several
+  // updates in one tick without them overwriting each other
   const updateRectangle = useCallback(
-    (id: string, updates: Partial<Rectangle>) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+    (id: string, updates: Partial<Rectangle>, currentState?: State) => {
+      if (!model?.actions || !scene?.actions || !currentViewId) return currentState;
 
       saveToHistoryBeforeChange();
       const newState = reducers.view({
         action: 'UPDATE_RECTANGLE',
         payload: { id, ...updates },
-        ctx: { viewId: currentViewId, state: getState() }
+        ctx: { viewId: currentViewId, state: currentState || getState() }
       });
       setState(newState);
+      return newState;
     },
     [
       getState,
@@ -498,6 +515,223 @@ export const useScene = () => {
     [saveToHistoryBeforeChange, model?.actions, scene?.actions]
   );
 
+  // Deletes several elements (nodes, rectangles, connectors, text boxes) as a
+  // single undo step. The reducers are chained on one state object because
+  // the individual delete* helpers each read the render-time state and would
+  // overwrite each other when called in the same tick.
+  const deleteItems = useCallback(
+    (refs: ItemReference[]) => {
+      if (!model?.actions || !scene?.actions || !currentViewId) return;
+      if (refs.length === 0) return;
+
+      const actionByType: Partial<Record<ItemReference['type'], string>> = {
+        ITEM: 'DELETE_VIEWITEM',
+        RECTANGLE: 'DELETE_RECTANGLE',
+        CONNECTOR: 'DELETE_CONNECTOR',
+        TEXTBOX: 'DELETE_TEXTBOX'
+      };
+
+      saveToHistoryBeforeChange();
+
+      let state: State = getState();
+      refs.forEach((ref) => {
+        const action = actionByType[ref.type];
+        if (!action) return;
+        try {
+          state = reducers.view({
+            action,
+            payload: ref.id,
+            ctx: { viewId: currentViewId, state }
+          } as Parameters<typeof reducers.view>[0]);
+        } catch {
+          // Already gone (e.g. a connector removed together with its node)
+        }
+      });
+      setState(state);
+    },
+    [
+      getState,
+      setState,
+      currentViewId,
+      saveToHistoryBeforeChange,
+      model?.actions,
+      scene?.actions
+    ]
+  );
+
+  // Pastes clipboard content with fresh ids, shifted by `offset` tiles, as a
+  // single undo step. Nodes keep their relative layout but are nudged to the
+  // nearest free tiles. Returns references to the new elements (to select them).
+  const pasteItems = useCallback(
+    (clip: ClipboardData, offset: Coords): ItemReference[] => {
+      if (!model?.actions || !scene?.actions || !currentViewId) return [];
+
+      const idMap = new Map<string, string>();
+      const newId = (oldId: string) => {
+        const id = generateId();
+        idMap.set(oldId, id);
+        return id;
+      };
+      const shift = (tile: Coords) => {
+        return { x: tile.x + offset.x, y: tile.y + offset.y };
+      };
+
+      saveToHistoryBeforeChange();
+      let state: State = getState();
+      const created: ItemReference[] = [];
+
+      // Nodes: find free tiles for the whole group at once
+      const targets = clip.viewItems.map((viewItem) => {
+        return { id: viewItem.id, targetTile: shift(viewItem.tile) };
+      });
+      const freeTiles =
+        targets.length > 0
+          ? findNearestUnoccupiedTilesForGroup(targets, { items, rectangles: [] } as any, [])
+          : [];
+
+      clip.viewItems.forEach((viewItem, index) => {
+        const modelItem = clip.modelItems.find((m) => {
+          return m.id === viewItem.id;
+        });
+        if (!modelItem) return;
+        const id = newId(viewItem.id);
+        state = reducers.createModelItem({ ...modelItem, id }, state);
+        state = reducers.view({
+          action: 'CREATE_VIEWITEM',
+          payload: {
+            ...viewItem,
+            id,
+            tile: freeTiles?.[index] ?? targets[index].targetTile
+          },
+          ctx: { viewId: currentViewId, state }
+        });
+        created.push({ type: 'ITEM', id });
+      });
+
+      clip.rectangles.forEach((rectangle) => {
+        const id = newId(rectangle.id);
+        state = reducers.view({
+          action: 'CREATE_RECTANGLE',
+          payload: {
+            ...rectangle,
+            id,
+            from: shift(rectangle.from),
+            to: shift(rectangle.to)
+          },
+          ctx: { viewId: currentViewId, state }
+        });
+        created.push({ type: 'RECTANGLE', id });
+      });
+
+      clip.textBoxes.forEach((textBox) => {
+        const id = newId(textBox.id);
+        state = reducers.view({
+          action: 'CREATE_TEXTBOX',
+          payload: { ...textBox, id, tile: shift(textBox.tile) },
+          ctx: { viewId: currentViewId, state }
+        });
+        created.push({ type: 'TEXTBOX', id });
+      });
+
+      // Connectors: give every anchor a new id first, so anchor-to-anchor
+      // references inside the copied set can be remapped too
+      clip.connectors.forEach((connector) => {
+        connector.anchors.forEach((anchor) => {
+          return newId(anchor.id);
+        });
+      });
+      clip.connectors.forEach((connector) => {
+        const anchors = connector.anchors.map((anchor) => {
+          const ref: typeof anchor.ref = {};
+          if (anchor.ref.item) ref.item = idMap.get(anchor.ref.item);
+          if (anchor.ref.anchor) ref.anchor = idMap.get(anchor.ref.anchor);
+          if (anchor.ref.tile) ref.tile = shift(anchor.ref.tile);
+          return { id: idMap.get(anchor.id) as string, ref };
+        });
+        // Skip a connector whose ends point outside what was copied
+        const isComplete = anchors.every((anchor) => {
+          return anchor.ref.item || anchor.ref.anchor || anchor.ref.tile;
+        });
+        if (!isComplete) return;
+
+        try {
+          state = reducers.view({
+            action: 'CREATE_CONNECTOR',
+            payload: { ...connector, id: generateId(), anchors },
+            ctx: { viewId: currentViewId, state }
+          });
+        } catch {
+          // A connector that can't be routed is simply left out
+        }
+      });
+
+      setState(state);
+      return created;
+    },
+    [
+      getState,
+      setState,
+      items,
+      currentViewId,
+      saveToHistoryBeforeChange,
+      model?.actions,
+      scene?.actions
+    ]
+  );
+
+  // Moves rectangles / text boxes / nodes to the top or bottom of their layer
+  const reorderItems = useCallback(
+    (refs: ItemReference[], where: 'front' | 'back') => {
+      if (!model?.actions || !scene?.actions || !currentViewId) return;
+
+      const listByType: Partial<
+        Record<ItemReference['type'], 'rectangles' | 'textBoxes' | 'items'>
+      > = {
+        RECTANGLE: 'rectangles',
+        TEXTBOX: 'textBoxes',
+        ITEM: 'items'
+      };
+
+      saveToHistoryBeforeChange();
+      const newState = produce(getState(), (draft) => {
+        const view = draft.model.views.find((v) => {
+          return v.id === currentViewId;
+        });
+        if (!view) return;
+
+        (['rectangles', 'textBoxes', 'items'] as const).forEach((listName) => {
+          const ids = refs
+            .filter((ref) => {
+              return listByType[ref.type] === listName;
+            })
+            .map((ref) => {
+              return ref.id;
+            });
+          const list = view[listName] as { id: string }[] | undefined;
+          if (!list || ids.length === 0) return;
+
+          const moved = list.filter((el) => {
+            return ids.includes(el.id);
+          });
+          const rest = list.filter((el) => {
+            return !ids.includes(el.id);
+          });
+          (view as any)[listName] =
+            where === 'front' ? [...rest, ...moved] : [...moved, ...rest];
+        });
+      });
+      setState(newState);
+    },
+    [
+      getState,
+      setState,
+      currentViewId,
+      saveToHistoryBeforeChange,
+      model?.actions,
+      scene?.actions
+    ]
+  );
+
   const placeIcon = useCallback(
     (params: { modelItem: ModelItem; viewItem: ViewItem }) => {
       if (!model?.actions || !scene?.actions) return;
@@ -553,6 +787,9 @@ export const useScene = () => {
     updateRectangle,
     deleteRectangle,
     transaction,
-    placeIcon
+    placeIcon,
+    deleteItems,
+    pasteItems,
+    reorderItems
   };
 };

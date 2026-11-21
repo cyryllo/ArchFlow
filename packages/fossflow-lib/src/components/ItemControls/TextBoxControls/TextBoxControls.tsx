@@ -19,12 +19,14 @@ import { useScene } from 'src/hooks/useScene';
 import { ControlsContainer } from '../components/ControlsContainer';
 import { Section } from '../components/Section';
 import { DeleteButton } from '../components/DeleteButton';
+import { useTranslation } from 'src/stores/localeStore';
 
 interface Props {
   id: string;
 }
 
 export const TextBoxControls = ({ id }: Props) => {
+  const { t } = useTranslation('itemControls');
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
   });
@@ -41,7 +43,7 @@ export const TextBoxControls = ({ id }: Props) => {
       <Box sx={{ position: 'relative', paddingTop: '24px' }}>
         {/* Close button */}
         <MUIIconButton
-          aria-label="Close"
+          aria-label={t('close')}
           onClick={() => {
             return uiStateActions.setItemControls(null);
           }}
@@ -55,7 +57,7 @@ export const TextBoxControls = ({ id }: Props) => {
         >
           <CloseIcon />
         </MUIIconButton>
-        <Section title="Enter text">
+        <Section title={t('enterText')}>
           <TextField
             value={textBox.content}
             onChange={(e) => {
@@ -63,7 +65,7 @@ export const TextBoxControls = ({ id }: Props) => {
             }}
           />
         </Section>
-        <Section title="Text size">
+        <Section title={t('textSize')}>
           <Slider
             marks
             step={0.3}
@@ -75,7 +77,7 @@ export const TextBoxControls = ({ id }: Props) => {
             }}
           />
         </Section>
-        <Section title="Alignment">
+        <Section title={t('alignment')}>
           <ToggleButtonGroup
             value={textBox.orientation}
             exclusive

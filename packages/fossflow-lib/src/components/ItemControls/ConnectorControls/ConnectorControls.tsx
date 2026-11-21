@@ -33,12 +33,14 @@ import { getConnectorLabels, generateId } from 'src/utils';
 import { ControlsContainer } from '../components/ControlsContainer';
 import { Section } from '../components/Section';
 import { DeleteButton } from '../components/DeleteButton';
+import { useTranslation } from 'src/stores/localeStore';
 
 interface Props {
   id: string;
 }
 
 export const ConnectorControls = ({ id }: Props) => {
+  const { t } = useTranslation('itemControls');
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
   });
@@ -131,7 +133,7 @@ export const ConnectorControls = ({ id }: Props) => {
       >
         {/* Close button */}
         <MUIIconButton
-          aria-label="Close"
+          aria-label={t('close')}
           onClick={() => {
             return uiStateActions.setItemControls(null);
           }}
@@ -145,7 +147,7 @@ export const ConnectorControls = ({ id }: Props) => {
         >
           <CloseIcon />
         </MUIIconButton>
-        <Section title="Labels">
+        <Section title={t('labels')}>
           <Box sx={{ mb: 2 }}>
             <Box
               sx={{
@@ -156,7 +158,7 @@ export const ConnectorControls = ({ id }: Props) => {
               }}
             >
               <Typography variant="body2" color="text.secondary">
-                {labels.length} / 256 labels
+                {labels.length} / 256 {t('labelsCount')}
               </Typography>
               <Button
                 startIcon={<AddIcon />}
@@ -165,7 +167,7 @@ export const ConnectorControls = ({ id }: Props) => {
                 size="small"
                 variant="outlined"
               >
-                Add Label
+                {t('addLabel')}
               </Button>
             </Box>
 
@@ -175,7 +177,7 @@ export const ConnectorControls = ({ id }: Props) => {
                 color="text.secondary"
                 sx={{ textAlign: 'center', py: 2 }}
               >
-                No labels. Click &quot;Add Label&quot; to create one.
+                {t('noLabels')}
               </Typography>
             )}
 
@@ -191,7 +193,7 @@ export const ConnectorControls = ({ id }: Props) => {
                     }}
                   >
                     <Typography variant="caption" color="text.secondary">
-                      Label {index + 1}
+                      {t('label')} {index + 1}
                     </Typography>
                     <MUIIconButton
                       size="small"
@@ -205,7 +207,7 @@ export const ConnectorControls = ({ id }: Props) => {
                   </Box>
 
                   <TextField
-                    label="Text"
+                    label={t('labelText')}
                     value={label.text}
                     onChange={(e) => {
                       return handleUpdateLabel(label.id, {
@@ -218,7 +220,7 @@ export const ConnectorControls = ({ id }: Props) => {
 
                   <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
                     <TextField
-                      label="Position (%)"
+                      label={t('labelPosition')}
                       type="number"
                       value={label.position}
                       onChange={(e) => {
@@ -257,15 +259,15 @@ export const ConnectorControls = ({ id }: Props) => {
                         }}
                         sx={{ flex: 1 }}
                       >
-                        <MenuItem value="1">Line 1</MenuItem>
-                        <MenuItem value="2">Line 2</MenuItem>
+                        <MenuItem value="1">{t('line1')}</MenuItem>
+                        <MenuItem value="2">{t('line2')}</MenuItem>
                       </Select>
                     )}
                   </Box>
 
                   <Box>
                     <Typography variant="caption" color="text.secondary">
-                      Height Offset
+                      {t('heightOffset')}
                     </Typography>
                     <Slider
                       marks
@@ -293,7 +295,7 @@ export const ConnectorControls = ({ id }: Props) => {
                           }}
                         />
                       }
-                      label="Show Dotted Line"
+                      label={t('showDottedLine')}
                     />
                   </Box>
                 </Paper>
@@ -301,7 +303,7 @@ export const ConnectorControls = ({ id }: Props) => {
             })}
           </Box>
         </Section>
-        <Section title="Color">
+        <Section title={t('color')}>
           <FormControlLabel
             control={
               <Switch
@@ -314,7 +316,7 @@ export const ConnectorControls = ({ id }: Props) => {
                 }}
               />
             }
-            label="Use Custom Color"
+            label={t('useCustomColor')}
             sx={{ mb: 2 }}
           />
           {useCustomColor ? (
@@ -336,7 +338,7 @@ export const ConnectorControls = ({ id }: Props) => {
             />
           )}
         </Section>
-        <Section title="Width">
+        <Section title={t('width')}>
           <Slider
             marks
             step={10}
@@ -348,7 +350,7 @@ export const ConnectorControls = ({ id }: Props) => {
             }}
           />
         </Section>
-        <Section title="Line Style">
+        <Section title={t('lineStyle')}>
           <Select
             value={connector.style || 'SOLID'}
             onChange={(e) => {
@@ -362,13 +364,13 @@ export const ConnectorControls = ({ id }: Props) => {
             {Object.values(connectorStyleOptions).map((style) => {
               return (
                 <MenuItem key={style} value={style}>
-                  {style}
+                  {t(`style${style}` as 'styleSOLID')}
                 </MenuItem>
               );
             })}
           </Select>
         </Section>
-        <Section title="Line Type">
+        <Section title={t('lineType')}>
           <Select
             value={connector.lineType || 'SINGLE'}
             onChange={(e) => {
@@ -379,12 +381,7 @@ export const ConnectorControls = ({ id }: Props) => {
             fullWidth
           >
             {Object.values(connectorLineTypeOptions).map((type) => {
-              let displayName = 'Double Line with Circle';
-              if (type === 'SINGLE') {
-                displayName = 'Single Line';
-              } else if (type === 'DOUBLE') {
-                displayName = 'Double Line';
-              }
+              const displayName = t(`line${type}` as 'lineSINGLE');
               return (
                 <MenuItem key={type} value={type}>
                   {displayName}
@@ -405,7 +402,7 @@ export const ConnectorControls = ({ id }: Props) => {
                 }}
               />
             }
-            label="Show Arrow"
+            label={t('showArrow')}
           />
         </Section>
         <Section>

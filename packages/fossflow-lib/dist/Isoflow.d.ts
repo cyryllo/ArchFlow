@@ -16,4 +16,7 @@ declare const useIsoflow: () => {
 };
 export { useIsoflow };
 export * from './standaloneExports';
+export { UiIcon } from './components/Icons/UiIcons';
+export type { UiIconName } from './components/Icons/UiIcons';
+export type { HostMenuItem, HostMenuGroup, ClipboardData } from './types';
 export default Isoflow;

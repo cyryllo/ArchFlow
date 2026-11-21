@@ -9,7 +9,7 @@ import {
 import { UiStateStore } from 'src/types';
 import { INITIAL_UI_STATE } from 'src/config';
 import { DEFAULT_HOTKEY_PROFILE } from 'src/config/hotkeys';
-import { DEFAULT_PAN_SETTINGS } from 'src/config/panSettings';
+import { loadPanSettings, savePanSettings } from 'src/config/panSettings';
 import { DEFAULT_ZOOM_SETTINGS } from 'src/config/zoomSettings';
 import { DEFAULT_LABEL_SETTINGS } from 'src/config/labelSettings';
 
@@ -35,12 +35,15 @@ const initialState = () => {
       itemControls: null,
       enableDebugTools: false,
       hotkeyProfile: DEFAULT_HOTKEY_PROFILE,
-      panSettings: DEFAULT_PAN_SETTINGS,
+      panSettings: loadPanSettings(),
       zoomSettings: DEFAULT_ZOOM_SETTINGS,
       labelSettings: DEFAULT_LABEL_SETTINGS,
       connectorInteractionMode: 'click', // Default to click mode
       expandLabels: false, // Default to collapsed labels
       iconPackManager: null, // Will be set by Isoflow if provided
+      exportJsonHandler: null, // Will be set by Isoflow if provided
+      hostMenuItems: [],
+      clipboard: null,
 
       actions: {
         setView: (view) => {
@@ -112,6 +115,7 @@ const initialState = () => {
           set({ hotkeyProfile });
         },
         setPanSettings: (panSettings) => {
+          savePanSettings(panSettings);
           set({ panSettings });
         },
         setZoomSettings: (zoomSettings) => {
@@ -128,6 +132,15 @@ const initialState = () => {
         },
         setIconPackManager: (iconPackManager) => {
           set({ iconPackManager });
+        },
+        setExportJsonHandler: (exportJsonHandler) => {
+          set({ exportJsonHandler });
+        },
+        setHostMenuItems: (hostMenuItems) => {
+          set({ hostMenuItems });
+        },
+        setClipboard: (clipboard) => {
+          set({ clipboard });
         }
       }
     };

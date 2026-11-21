@@ -9,6 +9,8 @@ interface Props {
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   tooltipPosition?: TooltipProps['placement'];
   disabled?: boolean;
+  // Single-letter tool shortcut shown in the button's corner
+  hotkey?: string | null;
 }
 
 export const IconButton = ({
@@ -17,7 +19,8 @@ export const IconButton = ({
   onClick,
   isActive = false,
   disabled = false,
-  tooltipPosition = 'bottom'
+  tooltipPosition = 'bottom',
+  hotkey
 }: Props) => {
   const theme = useTheme();
   const iconColor = useMemo(() => {
@@ -44,7 +47,10 @@ export const IconButton = ({
       <Button
         variant="text"
         onClick={onClick}
+        aria-label={name}
+        aria-pressed={isActive}
         sx={{
+          position: 'relative',
           borderRadius: 0,
           height: theme.customVars.toolMenu.height,
           width: theme.customVars.toolMenu.height,
@@ -67,6 +73,23 @@ export const IconButton = ({
         >
           {Icon}
         </Box>
+        {hotkey && (
+          <Box
+            component="span"
+            sx={{
+              position: 'absolute',
+              right: 3,
+              bottom: 1,
+              fontSize: 9,
+              lineHeight: 1,
+              fontFamily: 'monospace',
+              color: isActive ? 'grey.200' : 'grey.500',
+              pointerEvents: 'none'
+            }}
+          >
+            {hotkey.toUpperCase()}
+          </Box>
+        )}
       </Button>
     </Tooltip>
   );

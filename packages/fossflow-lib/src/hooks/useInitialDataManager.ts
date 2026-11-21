@@ -135,7 +135,7 @@ export const useInitialDataManager = () => {
       ).map((collection) => {
         return {
           id: collection.name,
-          isExpanded: false
+          isExpanded: true // icon categories open expanded in the picker
         };
       });
 

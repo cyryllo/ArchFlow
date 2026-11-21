@@ -1,4 +1,4 @@
-import { ModelItem, ViewItem, Connector, TextBox, Rectangle } from '../types';
+import { ModelItem, ViewItem, Connector, TextBox, Rectangle, ItemReference, ClipboardData, Coords } from '../types';
 import type { State } from '../stores/reducers/types';
 export declare const useScene: () => {
     items: {
@@ -150,17 +150,20 @@ export declare const useScene: () => {
     updateViewItem: (id: string, updates: Partial<ViewItem>, currentState?: State) => State;
     deleteViewItem: (id: string) => void;
     createConnector: (newConnector: Connector) => void;
-    updateConnector: (id: string, updates: Partial<Connector>) => void;
+    updateConnector: (id: string, updates: Partial<Connector>, currentState?: State) => State | undefined;
     deleteConnector: (id: string) => void;
     createTextBox: (newTextBox: TextBox) => void;
-    updateTextBox: (id: string, updates: Partial<TextBox>) => void;
+    updateTextBox: (id: string, updates: Partial<TextBox>, currentState?: State) => State | undefined;
     deleteTextBox: (id: string) => void;
     createRectangle: (newRectangle: Rectangle) => void;
-    updateRectangle: (id: string, updates: Partial<Rectangle>) => void;
+    updateRectangle: (id: string, updates: Partial<Rectangle>, currentState?: State) => State | undefined;
     deleteRectangle: (id: string) => void;
     transaction: (operations: () => void) => void;
     placeIcon: (params: {
         modelItem: ModelItem;
         viewItem: ViewItem;
     }) => void;
+    deleteItems: (refs: ItemReference[]) => void;
+    pasteItems: (clip: ClipboardData, offset: Coords) => ItemReference[];
+    reorderItems: (refs: ItemReference[], where: "front" | "back") => void;
 };

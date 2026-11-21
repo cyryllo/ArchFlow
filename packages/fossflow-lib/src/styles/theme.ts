@@ -101,6 +101,16 @@ export const themeConfig: ThemeOptions = {
         }
       }
     },
+    // Make the white switch thumb visible on white backgrounds (the theme's
+    // flat shadows otherwise hide it when the switch is off)
+    MuiSwitch: {
+      styleOverrides: {
+        thumb: {
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.35)',
+          border: '1px solid rgba(0, 0, 0, 0.12)'
+        }
+      }
+    },
     MuiButtonBase: {
       defaultProps: {
         disableRipple: true,

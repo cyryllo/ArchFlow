@@ -83,9 +83,6 @@ export const UiOverlay = () => {
   const rendererEl = useUiStateStore((state) => {
     return state.rendererEl;
   });
-  const iconPackManager = useUiStateStore((state) => {
-    return state.iconPackManager;
-  });
   const contextMenu = useUiStateStore((state) => {
     return state.contextMenu;
   });
@@ -127,41 +124,34 @@ export const UiOverlay = () => {
           </UiElement>
         )}
 
-        {availableTools.includes('TOOL_MENU') && (
-          <Box
-            ref={toolMenuRef}
-            sx={{
-              position: 'absolute',
-              transform: 'translateX(-100%)'
-            }}
-            style={{
-              left: rendererSize.width - appPadding.x,
-              top: topRowY
-            }}
-          >
-            <ToolMenu />
-          </Box>
-        )}
-
-        {(availableTools.includes('MAIN_MENU') ||
-          availableTools.includes('ZOOM_CONTROLS')) && (
-          <Box
-            sx={{
-              position: 'absolute',
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center'
-            }}
-            style={{
-              top: topRowY,
-              left: appPadding.x,
-              gap: spacing(1)
-            }}
-          >
+        {/* One row along the top: ☰ menu on the left, tools in the middle,
+            zoom on the right */}
+        <Box
+          sx={{
+            position: 'absolute',
+            display: 'grid',
+            gridTemplateColumns: '1fr auto 1fr',
+            alignItems: 'center',
+            columnGap: spacing(1),
+            pointerEvents: 'none',
+            '& > *': { pointerEvents: 'auto' }
+          }}
+          style={{
+            top: topRowY,
+            left: appPadding.x,
+            width: Math.max(0, rendererSize.width - appPadding.x * 2)
+          }}
+        >
+          <Box sx={{ justifySelf: 'start' }}>
             {availableTools.includes('MAIN_MENU') && <MainMenu />}
+          </Box>
+          <Box ref={toolMenuRef} sx={{ justifySelf: 'center' }}>
+            {availableTools.includes('TOOL_MENU') && <ToolMenu />}
+          </Box>
+          <Box sx={{ justifySelf: 'end' }}>
             {availableTools.includes('ZOOM_CONTROLS') && <ZoomControls />}
           </Box>
-        )}
+        </Box>
 
         {enableDebugTools && (
           <UiElement
@@ -197,7 +187,7 @@ export const UiOverlay = () => {
 
       {dialog === DialogTypeEnum.HELP && <HelpDialog />}
 
-      {dialog === DialogTypeEnum.SETTINGS && <SettingsDialog iconPackManager={iconPackManager || undefined} />}
+      {dialog === DialogTypeEnum.SETTINGS && <SettingsDialog />}
 
       <SceneLayer>
         {contextMenu && (
@@ -210,7 +200,7 @@ export const UiOverlay = () => {
             }}
           />
         )}
-        <ContextMenuManager anchorEl={contextMenu && contextMenu.type === "EMPTY" ? contextMenuAnchorRef.current : null} />
+        <ContextMenuManager anchorEl={contextMenu ? contextMenuAnchorRef.current : null} />
       </SceneLayer>
     </>
   );

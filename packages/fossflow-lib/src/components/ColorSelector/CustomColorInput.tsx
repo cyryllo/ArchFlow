@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, TextField, IconButton, Tooltip } from '@mui/material';
 import { Colorize as ColorizeIcon } from '@mui/icons-material';
 import { ColorPicker } from './ColorPicker';
+import { useTranslation } from 'src/stores/localeStore';
 
 interface EyeDropper {
   open: (options?: { signal?: AbortSignal }) => Promise<{ sRGBHex: string }>;
@@ -21,6 +22,7 @@ interface Props {
 }
 
 export const CustomColorInput = ({ value, onChange }: Props) => {
+  const { t } = useTranslation('exportImage');
   const [localValue, setLocalValue] = useState(value);
 
   useEffect(() => {
@@ -75,7 +77,7 @@ export const CustomColorInput = ({ value, onChange }: Props) => {
         }}
       />
       {hasEyeDropper && (
-        <Tooltip title="Pick color from screen">
+        <Tooltip title={t('pickColor')}>
           <IconButton onClick={handleEyeDropper} size="small">
             <ColorizeIcon fontSize="small" />
           </IconButton>

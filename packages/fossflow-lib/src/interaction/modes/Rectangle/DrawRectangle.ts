@@ -44,6 +44,7 @@ export const DrawRectangle: ModeActions = {
   mouseup: ({ uiState }) => {
     if (uiState.mode.type !== 'RECTANGLE.DRAW' || !uiState.mode.id) return;
 
+    // One rectangle per use: go straight back to Select once it's drawn.
     uiState.actions.setMode({
       type: 'CURSOR',
       showCursor: true,

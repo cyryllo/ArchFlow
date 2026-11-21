@@ -4,22 +4,25 @@
         "saveSessionOnly": "Save (Session Only)",
         "loadSessionOnly": "Load (Session Only)",
         "importFile": "Import File",
-        "exportFile": "Export File",
         "quickSaveSession": "Quick Save (Session)",
-        "serverStorage": "App Storage"
+        "serverStorage": "App Storage",
+        "save": "Save",
+        "myDiagrams": "My diagrams",
+        "language": "Language"
     },
     "status": {
         "current": "Current",
         "untitled": "Untitled Diagram",
         "modified": "Modified",
-        "sessionStorageNote": "Session storage only - export to save permanently"
+        "sessionStorageNote": "Session storage only - export to save permanently",
+        "saved": "Saved"
     },
     "dialog": {
         "save": {
             "title": "Save Diagram (Current Session Only)",
             "warningTitle": "Important",
             "warningMessage": "This save is temporary and will be lost when you close the browser.",
-            "warningExport": "Use <strong>Export File</strong> to permanently save your work.",
+            "warningExport": "Use <strong>Export as JSON</strong> in the ☰ menu to permanently save your work.",
             "placeholder": "Enter diagram name",
             "btnSave": "Save",
             "btnCancel": "Cancel"

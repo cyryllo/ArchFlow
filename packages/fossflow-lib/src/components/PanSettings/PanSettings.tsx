@@ -1,156 +1,109 @@
 import React from 'react';
-import {
-  Box,
-  Typography,
-  FormControlLabel,
-  Switch,
-  Slider,
-  Paper,
-  Divider
-} from '@mui/material';
+import { Box, Typography, FormControlLabel, Switch, Slider, FormGroup } from '@mui/material';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useTranslation } from 'src/stores/localeStore';
+import { PanSettings as PanSettingsType } from 'src/config/panSettings';
 
-export const PanSettings = () => {
-  const panSettings = useUiStateStore((state) => state.panSettings);
-  const setPanSettings = useUiStateStore((state) => state.actions.setPanSettings);
-  const { t } = useTranslation();
+const usePanSettings = () => {
+  const panSettings = useUiStateStore((state) => {
+    return state.panSettings;
+  });
+  const setPanSettings = useUiStateStore((state) => {
+    return state.actions.setPanSettings;
+  });
 
-  const handleToggle = (setting: keyof typeof panSettings) => {
+  const toggle = (setting: keyof PanSettingsType) => {
     if (typeof panSettings[setting] === 'boolean') {
-      setPanSettings({
-        ...panSettings,
-        [setting]: !panSettings[setting]
-      });
+      setPanSettings({ ...panSettings, [setting]: !panSettings[setting] });
     }
   };
 
-  const handleSpeedChange = (value: number) => {
-    setPanSettings({
-      ...panSettings,
-      keyboardPanSpeed: value
-    });
-  };
+  return { panSettings, setPanSettings, toggle };
+};
+
+// Which mouse gestures move the view (the Pan tool always does)
+export const MousePanSettings = () => {
+  const { panSettings, toggle } = usePanSettings();
+  const { t } = useTranslation();
+
+  const options: { key: keyof PanSettingsType; label: string }[] = [
+    { key: 'middleClickPan', label: t('settings.pan.middleClickPan') },
+    { key: 'emptyAreaClickPan', label: t('settings.pan.emptyAreaClickPan') },
+    { key: 'rightClickPan', label: t('settings.pan.rightClickPan') },
+    { key: 'ctrlClickPan', label: t('settings.pan.ctrlClickPan') },
+    { key: 'altClickPan', label: t('settings.pan.altClickPan') }
+  ];
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h6" gutterBottom>
-        {t('settings.pan.title')}
-      </Typography>
-
-      <Paper sx={{ p: 2, mb: 2 }}>
-        <Typography variant="subtitle2" gutterBottom>
-          {t('settings.pan.mousePanOptions')}
-        </Typography>
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={panSettings.emptyAreaClickPan}
-              onChange={() => handleToggle('emptyAreaClickPan')}
-            />
-          }
-          label={t('settings.pan.emptyAreaClickPan')}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={!panSettings.middleClickPan}
-              onChange={() => handleToggle('middleClickPan')}
-            />
-          }
-          label={t('settings.pan.middleClickPan')}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={!panSettings.rightClickPan}
-              onChange={() => handleToggle('rightClickPan')}
-            />
-          }
-          label={t('settings.pan.rightClickPan')}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={!panSettings.ctrlClickPan}
-              onChange={() => handleToggle('ctrlClickPan')}
-            />
-          }
-          label={t('settings.pan.ctrlClickPan')}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={!panSettings.altClickPan}
-              onChange={() => handleToggle('altClickPan')}
-            />
-          }
-          label={t('settings.pan.altClickPan')}
-        />
-      </Paper>
-
-      <Paper sx={{ p: 2 }}>
-        <Typography variant="subtitle2" gutterBottom>
-          {t('settings.pan.keyboardPanOptions')}
-        </Typography>
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={panSettings.arrowKeysPan}
-              onChange={() => handleToggle('arrowKeysPan')}
-            />
-          }
-          label={t('settings.pan.arrowKeys')}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={panSettings.wasdPan}
-              onChange={() => handleToggle('wasdPan')}
-            />
-          }
-          label={t('settings.pan.wasdKeys')}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={panSettings.ijklPan}
-              onChange={() => handleToggle('ijklPan')}
-            />
-          }
-          label={t('settings.pan.ijklKeys')}
-        />
-
-        <Divider sx={{ my: 2 }} />
-
-        <Typography variant="subtitle2" gutterBottom>
-          {t('settings.pan.keyboardPanSpeed')}
-        </Typography>
-
-        <Box sx={{ px: 2 }}>
-          <Slider
-            value={panSettings.keyboardPanSpeed}
-            onChange={(_, value) => handleSpeedChange(value as number)}
-            min={5}
-            max={50}
-            step={5}
-            marks
-            valueLabelDisplay="auto"
+    <FormGroup>
+      {options.map((option) => {
+        return (
+          <FormControlLabel
+            key={option.key}
+            control={
+              <Switch
+                checked={Boolean(panSettings[option.key])}
+                onChange={() => {
+                  toggle(option.key);
+                }}
+              />
+            }
+            label={option.label}
           />
-        </Box>
-      </Paper>
+        );
+      })}
+    </FormGroup>
+  );
+};
 
-      <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
-        {t('settings.pan.note')}
+// Moving the view from the keyboard (when nothing is selected)
+export const KeyboardPanSettings = () => {
+  const { panSettings, setPanSettings, toggle } = usePanSettings();
+  const { t } = useTranslation();
+
+  const options: { key: keyof PanSettingsType; label: string }[] = [
+    { key: 'arrowKeysPan', label: t('settings.pan.arrowKeys') },
+    { key: 'wasdPan', label: t('settings.pan.wasdKeys') },
+    { key: 'ijklPan', label: t('settings.pan.ijklKeys') }
+  ];
+
+  return (
+    <Box>
+      <FormGroup>
+        {options.map((option) => {
+          return (
+            <FormControlLabel
+              key={option.key}
+              control={
+                <Switch
+                  checked={Boolean(panSettings[option.key])}
+                  onChange={() => {
+                    toggle(option.key);
+                  }}
+                />
+              }
+              label={option.label}
+            />
+          );
+        })}
+      </FormGroup>
+
+      <Typography variant="body2" sx={{ mt: 2 }}>
+        {t('settings.pan.keyboardPanSpeed')}
       </Typography>
+      <Box sx={{ px: 1, maxWidth: 360 }}>
+        <Slider
+          value={panSettings.keyboardPanSpeed}
+          onChange={(_, value) => {
+            setPanSettings({ ...panSettings, keyboardPanSpeed: value as number });
+          }}
+          min={5}
+          max={50}
+          step={5}
+          marks
+          valueLabelDisplay="auto"
+        />
+      </Box>
     </Box>
   );
 };

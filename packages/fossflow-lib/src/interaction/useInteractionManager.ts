@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useModelStore } from 'src/stores/modelStore';
 import { useUiStateStore } from 'src/stores/uiStateStore';
-import { ModeActions, State, SlimMouseEvent } from 'src/types';
+import { ModeActions, State, SlimMouseEvent, ItemReference } from 'src/types';
 import { DialogTypeEnum } from 'src/types/ui';
 import { getMouse, getItemAtTile, generateId, incrementZoom, decrementZoom } from 'src/utils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
@@ -20,6 +20,7 @@ import { TextBox } from './modes/TextBox';
 import { Lasso } from './modes/Lasso';
 import { FreehandLasso } from './modes/FreehandLasso';
 import { usePanHandlers } from './usePanHandlers';
+import { useEditorActions } from 'src/hooks/useEditorActions';
 
 const modes: { [k in string]: ModeActions } = {
   CURSOR: Cursor,
@@ -61,42 +62,60 @@ export const useInteractionManager = () => {
   const { undo, redo, canUndo, canRedo } = useHistory();
   const { createTextBox } = scene;
   const { handleMouseDown: handlePanMouseDown, handleMouseUp: handlePanMouseUp } = usePanHandlers();
+  const editor = useEditorActions();
 
   // Keyboard shortcuts for undo/redo
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // ESC key handling - should work even in input fields
+      // ESC key handling - should work even in input fields.
+      // Tools stay active until another tool is picked or ESC is pressed:
+      // ESC cancels whatever is in progress and always goes back to Select.
       if (e.key === 'Escape') {
         e.preventDefault();
 
-        // Priority 1: Close ItemControls (node menus) if open
+        // Close ItemControls (node menus, icon picker) if open
         if (uiState.itemControls) {
           uiState.actions.setItemControls(null);
-          return;
+        }
+        if (uiState.contextMenu) {
+          uiState.actions.setContextMenu(null);
         }
 
-        // Priority 2: Cancel in-progress connector
-        if (uiState.mode.type === 'CONNECTOR') {
-          const connectorMode = uiState.mode;
+        const currentMode = uiState.mode;
 
-          // Check if connection is in progress
+        // Cancel an in-progress connector
+        if (currentMode.type === 'CONNECTOR' && currentMode.id) {
           const isConnectionInProgress =
-            (uiState.connectorInteractionMode === 'click' && connectorMode.isConnecting) ||
-            (uiState.connectorInteractionMode === 'drag' && connectorMode.id !== null);
+            (uiState.connectorInteractionMode === 'click' && currentMode.isConnecting) ||
+            uiState.connectorInteractionMode === 'drag';
 
-          if (isConnectionInProgress && connectorMode.id) {
-            // Delete the temporary connector
-            scene.deleteConnector(connectorMode.id);
-
-            // Reset connector mode to initial state
-            uiState.actions.setMode({
-              type: 'CONNECTOR',
-              showCursor: true,
-              id: null,
-              startAnchor: undefined,
-              isConnecting: false
-            });
+          if (isConnectionInProgress) {
+            scene.deleteConnector(currentMode.id);
           }
+        }
+
+        // Discard a text box that is still following the mouse (not placed yet)
+        if (currentMode.type === 'TEXTBOX' && currentMode.id) {
+          scene.deleteTextBox(currentMode.id);
+        }
+
+        // Switch back to Select - except in read-only editors, and while a
+        // drag/resize is mid-gesture (those finish on mouse release anyway).
+        const isMidGesture =
+          currentMode.type === 'DRAG_ITEMS' ||
+          currentMode.type === 'RECTANGLE.TRANSFORM' ||
+          (currentMode.type === 'PAN' && currentMode.returnTo !== undefined);
+
+        if (
+          uiState.editorMode === 'EDITABLE' &&
+          !isMidGesture &&
+          currentMode.type !== 'CURSOR'
+        ) {
+          uiState.actions.setMode({
+            type: 'CURSOR',
+            showCursor: true,
+            mousedownItem: null
+          });
         }
 
         return;
@@ -114,6 +133,85 @@ export const useInteractionManager = () => {
       }
 
       const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+      const key = e.key.toLowerCase();
+      const selection = editor.getSelection();
+
+      // Delete / Backspace removes the selection (one undo step)
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selection.length > 0) {
+        e.preventDefault();
+        editor.deleteItems(selection);
+        return;
+      }
+
+      if (isCtrlOrCmd && !e.altKey && editor.isEditable) {
+        const handled = (() => {
+          switch (key) {
+            case 'a':
+              editor.selectAll();
+              return true;
+            case 'c':
+              editor.copy();
+              return true;
+            case 'x':
+              editor.cut();
+              return true;
+            case 'v':
+              editor.paste();
+              return true;
+            case 'd':
+              editor.duplicate();
+              return true;
+            case ']':
+              editor.reorder('front');
+              return true;
+            case '[':
+              editor.reorder('back');
+              return true;
+            case '+':
+            case '=':
+              editor.zoomIn();
+              return true;
+            case '-':
+            case '_':
+              editor.zoomOut();
+              return true;
+            default:
+              return false;
+          }
+        })();
+        if (handled) {
+          e.preventDefault();
+          return;
+        }
+      }
+
+      // Shift+1: fit the whole diagram on screen
+      if (e.shiftKey && !isCtrlOrCmd && e.code === 'Digit1') {
+        e.preventDefault();
+        editor.fitToView();
+        return;
+      }
+
+      // F2: rename the selected node
+      if (e.key === 'F2') {
+        e.preventDefault();
+        editor.rename();
+        return;
+      }
+
+      // Arrow keys nudge the selection one tile along the grid (with nothing
+      // selected they pan the view - see usePanHandlers)
+      const arrowDelta: Record<string, { x: number; y: number }> = {
+        ArrowUp: { x: 1, y: 0 },
+        ArrowRight: { x: 0, y: -1 },
+        ArrowDown: { x: -1, y: 0 },
+        ArrowLeft: { x: 0, y: 1 }
+      };
+      if (arrowDelta[e.key] && !isCtrlOrCmd && !e.altKey && selection.length > 0) {
+        e.preventDefault();
+        editor.moveSelection(arrowDelta[e.key]);
+        return;
+      }
 
       if (isCtrlOrCmd && e.key.toLowerCase() === 'z' && !e.shiftKey) {
         e.preventDefault();
@@ -139,9 +237,10 @@ export const useInteractionManager = () => {
         uiState.actions.setDialog(DialogTypeEnum.HELP);
       }
 
-      // Tool hotkeys
+      // Tool hotkeys - single letters only, never with Ctrl/Alt (Ctrl+C is
+      // copy, not the connector tool)
+      if (isCtrlOrCmd || e.altKey) return;
       const hotkeyMapping = HOTKEY_PROFILES[uiState.hotkeyProfile];
-      const key = e.key.toLowerCase();
 
       // Quick icon selection for selected node (when ItemControls is an ItemReference with type 'ITEM')
       if (key === 'i' && uiState.itemControls && 'id' in uiState.itemControls && uiState.itemControls.type === 'ITEM') {
@@ -227,24 +326,11 @@ export const useInteractionManager = () => {
     return () => {
       return window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [undo, redo, canUndo, canRedo, uiState.hotkeyProfile, uiState.actions, createTextBox, uiState.mouse.position.tile, scene, uiState.itemControls, uiState.mode, uiState.connectorInteractionMode]);
+  }, [undo, redo, canUndo, canRedo, uiState.hotkeyProfile, uiState.actions, createTextBox, uiState.mouse.position.tile, scene, uiState.itemControls, uiState.mode, uiState.connectorInteractionMode, uiState.contextMenu, uiState.editorMode, editor]);
 
   const onMouseEvent = useCallback(
     (e: SlimMouseEvent) => {
       if (!rendererRef.current) return;
-
-      // Check pan handlers first
-      if (e.type === 'mousedown' && handlePanMouseDown(e)) {
-        return;
-      }
-      if (e.type === 'mouseup' && handlePanMouseUp(e)) {
-        return;
-      }
-
-      const mode = modes[uiState.mode.type];
-      const modeFunction = getModeFunction(mode, e);
-
-      if (!modeFunction) return;
 
       const nextMouse = getMouse({
         interactiveElement: rendererRef.current,
@@ -255,15 +341,45 @@ export const useInteractionManager = () => {
         rendererSize
       });
 
+      // Check pan handlers first. The mouse state must still be updated here,
+      // otherwise the PAN mode never sees a mousedown and can't move the view.
+      if (e.type === 'mousedown' && handlePanMouseDown(e)) {
+        uiState.actions.setMouse(nextMouse);
+        return;
+      }
+      if (e.type === 'mouseup' && handlePanMouseUp()) {
+        uiState.actions.setMouse(nextMouse);
+        return;
+      }
+
+      // Tools only react to the primary (left) button - a right click must
+      // not e.g. start a rectangle while the drawing tool stays active.
+      if (
+        (e.type === 'mousedown' || e.type === 'mouseup') &&
+        e.button !== undefined &&
+        e.button !== 0
+      ) {
+        return;
+      }
+
+      const mode = modes[uiState.mode.type];
+      const modeFunction = getModeFunction(mode, e);
+
+      if (!modeFunction) return;
+
       uiState.actions.setMouse(nextMouse);
 
       const baseState: State = {
         model,
         scene,
-        uiState,
+        // Modes see the mouse position of *this* event (the store update
+        // above only reaches uiState on the next render), so selection boxes
+        // and drags don't lag one event behind the pointer
+        uiState: { ...uiState, mouse: nextMouse },
         rendererRef: rendererRef.current,
         rendererSize,
-        isRendererInteraction: rendererRef.current === e.target
+        isRendererInteraction: rendererRef.current === e.target,
+        mouseEvent: e
       };
 
       if (reducerTypeRef.current !== uiState.mode.type) {

@@ -8,108 +8,167 @@ import {
   hasMovedTile,
   getAnchorParent,
   getItemAtTile,
-  findNearestUnoccupiedTilesForGroup
+  findNearestUnoccupiedTilesForGroup,
+  getItemsBounds
 } from 'src/utils';
 
-const dragItems = (
+export const dragItems = (
   items: ItemReference[],
   tile: Coords,
   delta: Coords,
   scene: ReturnType<typeof useScene>
 ) => {
-  // Separate items from other draggable elements
-  const itemRefs = items.filter(item => item.type === 'ITEM');
-  const otherRefs = items.filter(item => item.type !== 'ITEM');
+  const itemRefs = items.filter((item) => {
+    return item.type === 'ITEM';
+  });
+  const otherRefs = items.filter((item) => {
+    return item.type !== 'ITEM';
+  });
 
-  // If there are items being dragged, find nearest unoccupied tiles for them
+  // Nodes snap to the nearest free tiles as a group
+  let newTiles: Coords[] | null = null;
   if (itemRefs.length > 0) {
-    const itemsWithTargets = itemRefs.map(item => {
+    const itemsWithTargets = itemRefs.map((item) => {
       const node = getItemByIdOrThrow(scene.items, item.id).value;
       return {
         id: item.id,
         targetTile: CoordsUtils.add(node.tile, delta)
       };
     });
-
-    // Find nearest unoccupied tiles for all items
-    const newTiles = findNearestUnoccupiedTilesForGroup(
+    newTiles = findNearestUnoccupiedTilesForGroup(
       itemsWithTargets,
       scene,
-      itemRefs.map(item => item.id) // Exclude the items being dragged
+      itemRefs.map((item) => {
+        return item.id;
+      }) // Exclude the items being dragged
     );
-
-    // If we found valid positions for all items, move them
-    if (newTiles) {
-      // Wrap all updates in a transaction to prevent history issues
-      scene.transaction(() => {
-        // Chain state updates to avoid race conditions
-        let currentState: State | undefined;
-        itemRefs.forEach((item, index) => {
-          currentState = scene.updateViewItem(item.id, {
-            tile: newTiles[index]
-          }, currentState);
-        });
-      });
-    }
+    // No room for the whole group: leave everything where it is, so nodes and
+    // the zones/texts around them never drift apart
+    if (!newTiles) return;
   }
 
-  // Handle non-item references (rectangles, textboxes, connector anchors)
-  otherRefs.forEach((item) => {
-    if (item.type === 'RECTANGLE') {
-      // Skip rectangles if regular items are also being dragged
-      // This is because items use snap-to-grid logic, while rectangles move freely
-      // Moving them together would cause desynchronization
-      if (itemRefs.length > 0) return;
+  // Every update is chained on one state object inside one transaction:
+  // separate updates in the same tick would each start from the render-time
+  // state and overwrite one another (that's how nodes used to stay behind
+  // while a zone or text in the same selection moved).
+  scene.transaction(() => {
+    let currentState: State | undefined;
 
-      const rectangle = getItemByIdOrThrow(scene.rectangles, item.id).value;
-      const newFrom = CoordsUtils.add(rectangle.from, delta);
-      const newTo = CoordsUtils.add(rectangle.to, delta);
+    itemRefs.forEach((item, index) => {
+      currentState = scene.updateViewItem(
+        item.id,
+        { tile: (newTiles as Coords[])[index] },
+        currentState
+      );
+    });
 
-      scene.updateRectangle(item.id, { from: newFrom, to: newTo });
-    } else if (item.type === 'TEXTBOX') {
-      const textBox = getItemByIdOrThrow(scene.textBoxes, item.id).value;
-
-      scene.updateTextBox(item.id, {
-        tile: CoordsUtils.add(textBox.tile, delta)
+    // Connectors travel with the selection: hand-placed points (tile anchors)
+    // move by the same delta when the connector itself is selected (the box
+    // caught it - see connectorFollowsSelection), or when both of its ends
+    // sit on nodes that are being moved. A connector with a free end stays
+    // put otherwise, so a join with another connector never gets torn.
+    const movedNodeIds = new Set(
+      itemRefs.map((item) => {
+        return item.id;
+      })
+    );
+    const selectedConnectorIds = new Set(
+      otherRefs
+        .filter((item) => {
+          return item.type === 'CONNECTOR';
+        })
+        .map((item) => {
+          return item.id;
+        })
+    );
+    scene.connectors.forEach((connector) => {
+      const first = connector.anchors[0];
+      const last = connector.anchors[connector.anchors.length - 1];
+      const travels =
+        selectedConnectorIds.has(connector.id) ||
+        (!!first?.ref.item &&
+          !!last?.ref.item &&
+          movedNodeIds.has(first.ref.item) &&
+          movedNodeIds.has(last.ref.item));
+      const hasPoints = connector.anchors.some((anchor) => {
+        return anchor.ref.tile;
       });
-    } else if (item.type === 'CONNECTOR_ANCHOR') {
-      const connector = getAnchorParent(item.id, scene.connectors);
+      if (!travels || !hasPoints) return;
 
-      const newConnector = produce(connector, (draft) => {
-        const anchor = getItemByIdOrThrow(connector.anchors, item.id);
+      currentState = scene.updateConnector(
+        connector.id,
+        {
+          anchors: connector.anchors.map((anchor) => {
+            return anchor.ref.tile
+              ? { ...anchor, ref: { ...anchor.ref, tile: CoordsUtils.add(anchor.ref.tile, delta) } }
+              : anchor;
+          })
+        },
+        currentState
+      );
+    });
 
-        const itemAtTile = getItemAtTile({ tile, scene });
+    otherRefs.forEach((item) => {
+      if (item.type === 'RECTANGLE') {
+        const rectangle = getItemByIdOrThrow(scene.rectangles, item.id).value;
+        currentState = scene.updateRectangle(
+          item.id,
+          {
+            from: CoordsUtils.add(rectangle.from, delta),
+            to: CoordsUtils.add(rectangle.to, delta)
+          },
+          currentState
+        );
+      } else if (item.type === 'TEXTBOX') {
+        const textBox = getItemByIdOrThrow(scene.textBoxes, item.id).value;
+        currentState = scene.updateTextBox(
+          item.id,
+          { tile: CoordsUtils.add(textBox.tile, delta) },
+          currentState
+        );
+      } else if (item.type === 'CONNECTOR_ANCHOR') {
+        const connector = getAnchorParent(item.id, scene.connectors);
 
-        switch (itemAtTile?.type) {
-          case 'ITEM':
-            draft.anchors[anchor.index] = {
-              ...anchor.value,
-              ref: {
-                item: itemAtTile.id
-              }
-            };
-            break;
-          case 'CONNECTOR_ANCHOR':
-            draft.anchors[anchor.index] = {
-              ...anchor.value,
-              ref: {
-                anchor: itemAtTile.id
-              }
-            };
-            break;
-          default:
-            draft.anchors[anchor.index] = {
-              ...anchor.value,
-              ref: {
-                tile
-              }
-            };
-            break;
-        }
-      });
+        const newConnector = produce(connector, (draft) => {
+          const anchor = getItemByIdOrThrow(connector.anchors, item.id);
 
-      scene.updateConnector(connector.id, newConnector);
-    }
+          const itemAtTile = getItemAtTile({ tile, scene });
+
+          switch (itemAtTile?.type) {
+            case 'ITEM':
+              draft.anchors[anchor.index] = {
+                ...anchor.value,
+                ref: {
+                  item: itemAtTile.id
+                }
+              };
+              break;
+            case 'CONNECTOR_ANCHOR':
+              draft.anchors[anchor.index] = {
+                ...anchor.value,
+                ref: {
+                  anchor: itemAtTile.id
+                }
+              };
+              break;
+            default:
+              draft.anchors[anchor.index] = {
+                ...anchor.value,
+                ref: {
+                  tile
+                }
+              };
+              break;
+          }
+        });
+
+        currentState = scene.updateConnector(
+          connector.id,
+          newConnector,
+          currentState
+        );
+      }
+    });
   });
 };
 
@@ -150,8 +209,31 @@ export const DragItems: ModeActions = {
 
     dragItems(uiState.mode.items, uiState.mouse.position.tile, delta, scene);
   },
-  mouseup: ({ uiState }) => {
+  mouseup: ({ uiState, scene }) => {
     uiState.actions.setItemControls(null);
+
+    // A dragged multi-selection stays selected (as a box around its new
+    // position), so it can be dragged again, nudged or deleted
+    if (uiState.mode.type === 'DRAG_ITEMS' && uiState.mode.keepSelection) {
+      const items = uiState.mode.items;
+      // (a selection of only connectors has no tile bounds; the drawn box
+      // is computed from the elements themselves anyway)
+      const bounds = getItemsBounds(items, scene) ?? {
+        startTile: uiState.mouse.position.tile,
+        endTile: uiState.mouse.position.tile
+      };
+      if (items.length > 0) {
+        uiState.actions.setMode({
+          type: 'LASSO',
+          showCursor: true,
+          isDragging: false,
+          fromCursor: true,
+          selection: { ...bounds, items }
+        });
+        return;
+      }
+    }
+
     uiState.actions.setMode({
       type: 'CURSOR',
       showCursor: true,

@@ -37,6 +37,7 @@ import { Isoflow } from 'src/Isoflow';
 import { Loader } from 'src/components/Loader/Loader';
 import { customVars } from 'src/styles/theme';
 import { ColorPicker } from 'src/components/ColorSelector/ColorPicker';
+import { useTranslation } from 'src/stores/localeStore';
 
 interface Props {
   quality?: number;
@@ -51,6 +52,7 @@ interface CropArea {
 }
 
 export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
+  const { t } = useTranslation('exportImage');
   const containerRef = useRef<HTMLDivElement>();
   const cropCanvasRef = useRef<HTMLCanvasElement>(null);
   const isExporting = useRef<boolean>(false);
@@ -318,7 +320,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
           ctx.fillStyle = 'white';
           ctx.font = '14px Arial';
           ctx.textAlign = 'left';
-          ctx.fillText('Click and drag to select crop area', 10, 25);
+          ctx.fillText(t('cropCanvasHint'), 10, 25);
         }
       }
     };
@@ -416,16 +418,13 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
 
   return (
     <Dialog open onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>Export as image</DialogTitle>
+      <DialogTitle>{t('title')}</DialogTitle>
       <DialogContent>
         <Stack spacing={2}>
           <Alert severity="info">
-            <strong>
-              Browser Compatibility Notice
-            </strong>
+            <strong>{t('browserNoticeTitle')}</strong>
             <br />
-            For best results, please use Chrome or Edge. Firefox currently has 
-            compatibility issues with the export feature.
+            {t('browserNotice')}
           </Alert>
 
           {!imageData && (
@@ -504,7 +503,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                     {isInCropMode && (
                       <Box sx={{ mt: 1 }}>
                         <Typography variant="caption" color="primary">
-                          Click and drag to select the area you want to export
+                          {t('cropHint')}
                         </Typography>
                       </Box>
                     )}
@@ -529,11 +528,11 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
             <Box sx={{ width: '100%' }}>
               <Box component="fieldset">
                 <Typography variant="caption" component="legend">
-                  Options
+                  {t('options')}
                 </Typography>
 
                 <FormControlLabel
-                  label="Show grid"
+                  label={t('showGrid')}
                   control={
                     <Checkbox
                       size="small"
@@ -545,7 +544,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                   }
                 />
                 <FormControlLabel
-                  label="Expand descriptions"
+                  label={t('expandDescriptions')}
                   control={
                     <Checkbox
                       size="small"
@@ -557,7 +556,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                   }
                 />
                 <FormControlLabel
-                  label="Crop to content"
+                  label={t('cropToContent')}
                   control={
                     <Checkbox
                       size="small"
@@ -569,7 +568,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                   }
                 />
                 <FormControlLabel
-                  label="Background color"
+                  label={t('backgroundColor')}
                   control={
                     <ColorPicker
                       value={backgroundColor}
@@ -580,7 +579,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                 />
 
                 <FormControlLabel
-                  label="Transparent background"
+                  label={t('transparentBackground')}
                   control={
                     <Checkbox
                       size="small"
@@ -594,7 +593,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
 
                 <Box sx={{ mt: 2, mb: 1 }}>
                   <Typography variant="caption" component="div" sx={{ mb: 1 }}>
-                    Export Quality (DPI)
+                    {t('quality')}
                   </Typography>
 
                   <FormControl fullWidth size="small" sx={{ mb: 1 }}>
@@ -615,14 +614,14 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                           {preset.label}
                         </MenuItem>
                       ))}
-                      <MenuItem value="custom">Custom</MenuItem>
+                      <MenuItem value="custom">{t('custom')}</MenuItem>
                     </Select>
                   </FormControl>
 
                   {scaleMode === 'custom' && (
                     <Box sx={{ px: 1 }}>
                       <Typography variant="caption" gutterBottom>
-                        Scale: {exportScale.toFixed(1)}x ({(exportScale * 72).toFixed(0)} DPI)
+                        {t('scale')}: {exportScale.toFixed(1)}x ({(exportScale * 72).toFixed(0)} DPI)
                       </Typography>
                       <Slider
                         value={exportScale}
@@ -651,19 +650,19 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                   {croppedImageData ? (
                     <Stack direction="row" spacing={1}>
                       <Button variant="outlined" size="small" onClick={handleRecrop}>
-                        Recrop
+                        {t('recrop')}
                       </Button>
                       <Typography variant="caption" sx={{ alignSelf: 'center' }}>
-                        Crop applied successfully
+                        {t('cropApplied')}
                       </Typography>
                     </Stack>
                   ) : cropArea ? (
                     <Stack direction="row" spacing={1}>
                       <Button variant="contained" size="small" onClick={handleAcceptCrop}>
-                        Apply Crop
+                        {t('applyCrop')}
                       </Button>
                       <Button variant="outlined" size="small" onClick={() => setCropArea(null)}>
-                        Clear Selection
+                        {t('clearSelection')}
                       </Button>
                     </Stack>
                   ) : isInCropMode ? (
@@ -679,13 +678,13 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
               <Stack sx={{ width: '100%' }} alignItems="flex-end">
                 <Stack direction="row" spacing={2}>
                   <Button variant="text" onClick={onClose}>
-                    Cancel
+                    {t('cancel')}
                   </Button>
                   <Button 
                     onClick={downloadFile}
                     disabled={cropToContent && isInCropMode && !croppedImageData}
                   >
-                    Download as PNG
+                    {t('download')}
                   </Button>
                 </Stack>
               </Stack>
@@ -693,7 +692,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
           </Stack>
 
           {exportError && (
-            <Alert severity="error">Could not export image</Alert>
+            <Alert severity="error">{t('error')}</Alert>
           )}
         </Stack>
       </DialogContent>

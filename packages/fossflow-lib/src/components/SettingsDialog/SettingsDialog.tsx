@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -6,41 +6,51 @@ import {
   DialogActions,
   Button,
   IconButton,
-  Tabs,
-  Tab,
-  Box
+  Box,
+  Typography,
+  Divider
 } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { HotkeySettings } from '../HotkeySettings/HotkeySettings';
-import { PanSettings } from '../PanSettings/PanSettings';
+import { MousePanSettings, KeyboardPanSettings } from '../PanSettings/PanSettings';
 import { ZoomSettings } from '../ZoomSettings/ZoomSettings';
-import { LabelSettings } from '../LabelSettings/LabelSettings';
 import { ConnectorSettings } from '../ConnectorSettings/ConnectorSettings';
-import { IconPackSettings } from '../IconPackSettings/IconPackSettings';
 import { useTranslation } from 'src/stores/localeStore';
 
-export interface SettingsDialogProps {
-  iconPackManager?: {
-    lazyLoadingEnabled: boolean;
-    onToggleLazyLoading: (enabled: boolean) => void;
-    packInfo: Array<{
-      name: string;
-      displayName: string;
-      loaded: boolean;
-      loading: boolean;
-      error: string | null;
-      iconCount: number;
-    }>;
-    enabledPacks: string[];
-    onTogglePack: (packName: string, enabled: boolean) => void;
-  };
-}
+const Section = ({
+  title,
+  description,
+  children
+}: {
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <Box component="section" sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <Typography variant="h6" sx={{ fontSize: 17 }}>
+        {title}
+      </Typography>
+      {description && (
+        <Typography variant="body2" color="text.secondary">
+          {description}
+        </Typography>
+      )}
+      {children}
+    </Box>
+  );
+};
 
-export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
-  const dialog = useUiStateStore((state) => state.dialog);
-  const setDialog = useUiStateStore((state) => state.actions.setDialog);
-  const [tabValue, setTabValue] = useState(0);
+// All settings on one scrolling page in three sections: mouse, keyboard,
+// connectors. Fixed size, only the content scrolls.
+export const SettingsDialog = () => {
+  const dialog = useUiStateStore((state) => {
+    return state.dialog;
+  });
+  const setDialog = useUiStateStore((state) => {
+    return state.actions.setDialog;
+  });
   const { t } = useTranslation();
 
   const isOpen = dialog === 'SETTINGS';
@@ -49,61 +59,65 @@ export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
     setDialog(null);
   };
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
-
   return (
     <Dialog
       open={isOpen}
       onClose={handleClose}
       maxWidth="md"
       fullWidth
+      PaperProps={{
+        sx: { height: 'min(88vh, 820px)' }
+      }}
     >
       <DialogTitle>
-        Settings
+        {t('settings.title')}
         <IconButton
-          aria-label="close"
+          aria-label={t('settings.close')}
           onClick={handleClose}
           sx={{
             position: 'absolute',
             right: 8,
             top: 8,
-            color: (theme) => theme.palette.grey[500],
+            color: (theme) => {
+              return theme.palette.grey[500];
+            }
           }}
         >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent dividers>
-        <Tabs value={tabValue} onChange={handleTabChange} sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tab label={t('settings.hotkeys.title')} />
-          <Tab label={t('settings.pan.title')} />
-          <Tab label="Zoom" />
-          <Tab label="Labels" />
-          <Tab label={t('settings.connector.title')} />
-          {iconPackManager && <Tab label={t('settings.iconPacks.title')} />}
-        </Tabs>
+      <DialogContent dividers sx={{ px: 3, py: 2 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <Section
+            title={t('settings.sectionMouse')}
+            description={t('settings.sectionMouseDesc')}
+          >
+            <MousePanSettings />
+            <ZoomSettings />
+          </Section>
 
-        <Box sx={{ mt: 2 }}>
-          {tabValue === 0 && <HotkeySettings />}
-          {tabValue === 1 && <PanSettings />}
-          {tabValue === 2 && <ZoomSettings />}
-          {tabValue === 3 && <LabelSettings />}
-          {tabValue === 4 && <ConnectorSettings />}
-          {tabValue === 5 && iconPackManager && (
-            <IconPackSettings
-              lazyLoadingEnabled={iconPackManager.lazyLoadingEnabled}
-              onToggleLazyLoading={iconPackManager.onToggleLazyLoading}
-              packInfo={iconPackManager.packInfo}
-              enabledPacks={iconPackManager.enabledPacks}
-              onTogglePack={iconPackManager.onTogglePack}
-            />
-          )}
+          <Divider />
+
+          <Section
+            title={t('settings.sectionKeyboard')}
+            description={t('settings.sectionKeyboardDesc')}
+          >
+            <HotkeySettings />
+            <Typography variant="subtitle2" sx={{ mt: 2 }}>
+              {t('settings.pan.keyboardPanOptions')}
+            </Typography>
+            <KeyboardPanSettings />
+          </Section>
+
+          <Divider />
+
+          <Section title={t('settings.sectionConnectors')}>
+            <ConnectorSettings />
+          </Section>
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Close</Button>
+        <Button onClick={handleClose}>{t('settings.close')}</Button>
       </DialogActions>
     </Dialog>
   );

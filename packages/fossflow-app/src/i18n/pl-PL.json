@@ -4,22 +4,25 @@
         "saveSessionOnly": "Zapisz (tylko bieżąca sesja)",
         "loadSessionOnly": "Wczytaj (tylko bieżąca sesja)",
         "importFile": "Importuj Plik",
-        "exportFile": "Eksportuj Plik",
         "quickSaveSession": "Szybki zapis (Sesji)",
-        "serverStorage": "Dysk aplikacji"
+        "serverStorage": "Dysk aplikacji",
+        "save": "Zapisz",
+        "myDiagrams": "Moje diagramy",
+        "language": "Język"
     },
     "status": {
         "current": "Obecny",
         "untitled": "Diagram bez tytułu",
         "modified": "Zmodyfikowany",
-        "sessionStorageNote": "Tylko pamięć sesji – eksportuj, aby zapisać na stałe"
+        "sessionStorageNote": "Tylko pamięć sesji – eksportuj, aby zapisać na stałe",
+        "saved": "Zapisano"
     },
     "dialog": {
         "save": {
             "title": "Zapisz diagram (tylko bieżąca sesja)",
             "warningTitle": "Ważne",
             "warningMessage": "To zapisanie jest tymczasowe i zostanie utracone po zamknięciu przeglądarki.",
-            "warningExport": "Użyj opcji <strong>Eksportuj plik</strong>, aby trwale zapisać swoją pracę..",
+            "warningExport": "Użyj <strong>Eksportuj do JSON</strong> w menu ☰, aby trwale zapisać swoją pracę.",
             "placeholder": "Wprowadź nazwę diagramu",
             "btnSave": "Zapisz",
             "btnCancel": "Anuluj"

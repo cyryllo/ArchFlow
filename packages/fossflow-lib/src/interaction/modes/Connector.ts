@@ -69,7 +69,13 @@ export const Connector: ModeActions = {
       scene
     });
 
-    if (uiState.connectorInteractionMode === 'click') {
+    // A connection already started (click mode, or "Connect to…" from the
+    // right-click menu) is finished by this click in either interaction mode
+    const useClickFlow =
+      uiState.connectorInteractionMode === 'click' ||
+      Boolean(uiState.mode.isConnecting && uiState.mode.startAnchor);
+
+    if (useClickFlow) {
       // Click mode: handle first and second clicks
       if (!uiState.mode.startAnchor) {
         // First click: store the start position

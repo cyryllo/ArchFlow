@@ -1,6 +1,7 @@
 import React from 'react';
 import { TextField, InputAdornment } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
+import { useTranslation } from 'src/stores/localeStore';
 
 interface Props {
   value: string;
@@ -8,10 +9,11 @@ interface Props {
 }
 
 export const Searchbox = ({ value, onChange }: Props) => {
+  const { t } = useTranslation('itemControls');
   return (
     <TextField
       fullWidth
-      placeholder="Search icons"
+      placeholder={t('searchIcons')}
       value={value}
       onChange={(e) => {
         return onChange(e.target.value as string);

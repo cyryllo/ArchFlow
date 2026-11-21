@@ -10,3 +10,5 @@ export interface PanSettings {
     keyboardPanSpeed: number;
 }
 export declare const DEFAULT_PAN_SETTINGS: PanSettings;
+export declare const loadPanSettings: () => PanSettings;
+export declare const savePanSettings: (settings: PanSettings) => void;

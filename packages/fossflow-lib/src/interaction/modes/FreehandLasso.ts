@@ -55,7 +55,8 @@ export const FreehandLasso: ModeActions = {
         type: 'DRAG_ITEMS',
         showCursor: true,
         items: uiState.mode.selection.items,
-        isInitialMovement: true
+        isInitialMovement: true,
+        keepSelection: true
       });
       return;
     }

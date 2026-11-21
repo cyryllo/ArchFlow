@@ -4,5 +4,6 @@ export interface Props {
     Icon?: React.ReactNode;
     children: string | React.ReactNode;
     disabled?: boolean;
+    shortcut?: string;
 }
-export declare const MenuItem: ({ onClick, Icon, children, disabled }: Props) => import("react/jsx-runtime").JSX.Element;
+export declare const MenuItem: ({ onClick, Icon, children, disabled, shortcut }: Props) => import("react/jsx-runtime").JSX.Element;

@@ -5,7 +5,7 @@ import { HotkeyProfile } from 'src/config/hotkeys';
 import { PanSettings } from 'src/config/panSettings';
 import { ZoomSettings } from 'src/config/zoomSettings';
 import { LabelSettings } from 'src/config/labelSettings';
-import { IconPackManagerProps } from './isoflowProps';
+import { IconPackManagerProps, HostMenuItem, ClipboardData } from './isoflowProps';
 
 interface AddItemControls {
   type: 'ADD_ITEM';
@@ -45,11 +45,18 @@ export interface DragItemsMode {
   showCursor: boolean;
   items: ItemReference[];
   isInitialMovement: Boolean;
+  // Set when a multi-selection is being dragged: after the drop the same
+  // elements stay selected, so they can be moved again right away
+  keepSelection?: boolean;
 }
 
 export interface PanMode {
   type: 'PAN';
   showCursor: boolean;
+  // Set for a temporary pan (empty-area drag, middle/right/modifier click):
+  // the mode to go back to when the mouse button is released. Absent when
+  // the Pan tool itself was selected, which keeps PAN active until changed.
+  returnTo?: Mode;
 }
 
 export interface PlaceIconMode {
@@ -105,8 +112,16 @@ export interface LassoMode {
     startTile: Coords;
     endTile: Coords;
     items: ItemReference[];
+    // The screen-aligned box being dragged, in scene (un-zoomed) pixels.
+    // Absent for selections made otherwise (Ctrl+A, Shift+click, after a
+    // move): their box is drawn around the selected elements.
+    sceneRect?: { from: Coords; to: Coords };
   } | null;
   isDragging: boolean;
+  // True when the box selection was started by dragging empty space with the
+  // Select tool (rather than picking the Lasso tool). Such a selection hands
+  // control back to Select once it is used or dismissed.
+  fromCursor?: boolean;
 }
 
 export interface FreehandLassoMode {
@@ -185,7 +200,9 @@ export interface UiState {
   connectorInteractionMode: ConnectorInteractionMode;
   expandLabels: boolean;
   iconPackManager: IconPackManagerProps | null;
-
+  exportJsonHandler: (() => void) | null;
+  hostMenuItems: HostMenuItem[];
+  clipboard: ClipboardData | null;
 }
 
 export interface UiStateActions {
@@ -213,7 +230,9 @@ export interface UiStateActions {
   setConnectorInteractionMode: (mode: ConnectorInteractionMode) => void;
   setExpandLabels: (expand: boolean) => void;
   setIconPackManager: (iconPackManager: IconPackManagerProps | null) => void;
-
+  setExportJsonHandler: (handler: (() => void) | null) => void;
+  setHostMenuItems: (items: HostMenuItem[]) => void;
+  setClipboard: (clipboard: ClipboardData | null) => void;
 }
 
 export type UiStateStore = UiState & {
