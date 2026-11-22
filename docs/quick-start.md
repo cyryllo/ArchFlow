@@ -96,6 +96,7 @@ Saved diagrams are listed in **My diagrams** (**Ctrl+O**). Where they are stored
 - **Share or back up:** ☰ → **Export as JSON** gives you a file that opens in any ArchFlow; ☰ → **Export as image** saves a PNG.
 - **Right-click** anything for more actions: connect, copy, duplicate, bring to front, delete…
 - Press **F1** for all keyboard shortcuts, and see ☰ → **Settings** for mouse and keyboard options.
+- Everything in detail: the **[user manual](manual.md)**.
 
 | Most used shortcuts | |
 |---|---|

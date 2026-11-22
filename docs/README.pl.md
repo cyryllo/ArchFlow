@@ -69,7 +69,7 @@ Diagramy zapisują się jako pliki JSON w `./diagrams`. Porty, `docker run`, kon
 | | |
 |---|---|
 | 🚀 [Szybki start](quick-start.pl.md) | Pierwszy diagram w dziesięciu krokach, ze zrzutami ekranu |
-| 🧭 [Korzystanie z ArchFlow](usage.pl.md) | Ekran, narzędzia, menu prawego przycisku, zaznaczanie i przesuwanie, skróty, ustawienia |
+| 📖 [Instrukcja obsługi](manual.pl.md) | Wszystko po kolei: węzły, strefy, połączenia, teksty, zaznaczanie, menu, eksport, ustawienia, wszystkie skróty, problemy |
 | 💾 [Zapisywanie i otwieranie](saving.pl.md) | Pliki, Moje diagramy, eksport do JSON i PNG, tryb tylko w przeglądarce |
 | 🐳 [Instrukcja Dockera](docker.pl.md) | Instalacja i uruchomienie ArchFlow na serwerze |
 | 🛠️ [Dla programistów](development.pl.md) | Uruchamianie ze źródeł, struktura projektu, budowanie aplikacji desktopowej |

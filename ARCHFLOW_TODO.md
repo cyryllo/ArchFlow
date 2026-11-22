@@ -92,8 +92,7 @@ Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` 
 **Done**: README (EN) and docs/README.pl.md rewritten for the new interface (features, downloads, how to use with screenshots, shortcuts, saving); project website (site/, EN + PL) updated with a download section and new gallery; all screenshots retaken in Full HD from a demo diagram (online shop) by `scripts/docs/screenshots.mjs` + `scripts/docs/demo-diagram.mjs` (run against a throwaway instance, see the script header). Re-run the script whenever the UI changes.
 
 ### Stage 4b: user manual
-**Done**: quick start guide (`docs/quick-start.md`, `docs/quick-start.pl.md`): ten steps from an empty canvas to a saved diagram, with screenshots taken by `scripts/docs/screenshots.mjs --set quickstart`. Linked from both READMEs and the website.
-**Next**: the full user manual in Polish and English (all tools, menus, panels, connectors in detail, export options, settings, shortcuts, troubleshooting), using the same screenshot script.
+**Done**: quick start (`docs/quick-start*.md`) and the full user manual (`docs/manual.md`, `docs/manual.pl.md`, 16 chapters: getting ArchFlow, the screen, moving around, nodes, zones, connectors, text, selecting and editing, right-click menus, undo, saving, export, settings, language, all shortcuts, troubleshooting), with screenshots from `scripts/docs/screenshots.mjs` (sets `docs`, `quickstart`, `manual`). It replaces the former `docs/usage*.md`.
 
 ### App fixes found while taking the screenshots (released in v0.6.2)
 - Node labels sat at a fixed height, so the taller new icons poked up behind them; labels are now lifted above the measured icon height (`SceneLayers/Nodes/Node/Node.tsx`).
@@ -129,3 +128,8 @@ Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` 
 
 ### Slimmer README
 **Done**: README.md and docs/README.pl.md are down from ~400 to ~85 lines (what it is, features, download, Docker in four lines, a documentation table). The rest moved to `docs/docker`, `docs/usage`, `docs/saving` and `docs/development` (`.md` English, `.pl.md` Polish); the website's Docker link points to `docs/docker*.md`.
+
+### Most settings aren't remembered
+**Problem**: only the pan settings are persisted (`config/panSettings.ts`, localStorage). Tool letters (hotkey profile), zoom-to-cursor and the connector mode live only in the in-memory UI store, so they reset on every reload - and also when the language changes, because the editor is remounted.
+**Fix Strategy**: persist them the same way as pan settings (load on store creation, save in the setters in `stores/uiStateStore.tsx`), then update the manual (docs/manual*.md, chapter 13).
+

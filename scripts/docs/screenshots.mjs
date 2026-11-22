@@ -37,7 +37,7 @@ const argVal = (name) => {
 const only = argVal('--only')?.split(',');
 const langs = argVal('--lang') ? [argVal('--lang')] : ['en', 'pl'];
 // Which sets to take: 'docs' (README/site) and/or 'quickstart' (quick start guide)
-const sets = (argVal('--set') ?? 'docs,quickstart').split(',');
+const sets = (argVal('--set') ?? 'docs,quickstart,manual').split(',');
 
 // ---------------------------------------------------------------------------
 // Minimal Chrome DevTools Protocol client
@@ -158,8 +158,8 @@ const want = (name) => {
 // ---------------------------------------------------------------------------
 
 const L = {
-  en: { save: 'Save', saveCurrent: 'Save Current Diagram', server: 'Server', database: 'Database', nameWeb: 'Web server', nameDb: 'Customer database', zoneText: 'Production', diagramName: 'My first diagram', cancel: 'Cancel', load: 'Load', myDiagrams: 'My diagrams', settings: 'Settings', exportJson: 'Export as JSON', exportImage: 'Export as image', orders: 'Orders', db: 'Orders DB', dbFull: 'Orders DB', payments: 'Payments', queue: 'Event queue' },
-  pl: { save: 'Zapisz', saveCurrent: 'Zapisz bieżący diagram', server: 'Serwer', database: 'Baza danych', nameWeb: 'Serwer WWW', nameDb: 'Baza klientów', zoneText: 'Produkcja', diagramName: 'Mój pierwszy diagram', cancel: 'Anuluj', load: 'Wczytaj', myDiagrams: 'Moje diagramy', settings: 'Ustawienia', exportJson: 'Eksportuj do JSON', exportImage: 'Eksportuj do obrazu', orders: 'Zamówienia', db: 'Baza zamówień', dbFull: 'Baza zamówień', payments: 'Płatności', queue: 'Kolejka zdarzeń' }
+  en: { addLabel: 'Add label', selectionModes: 'Selection mode', cacheName: 'Cache', dwhName: 'Data warehouse', save: 'Save', saveCurrent: 'Save Current Diagram', server: 'Server', database: 'Database', nameWeb: 'Web server', nameDb: 'Customer database', zoneText: 'Production', diagramName: 'My first diagram', cancel: 'Cancel', load: 'Load', myDiagrams: 'My diagrams', settings: 'Settings', exportJson: 'Export as JSON', exportImage: 'Export as image', orders: 'Orders', db: 'Orders DB', dbFull: 'Orders DB', payments: 'Payments', queue: 'Event queue' },
+  pl: { addLabel: 'Dodaj etykietę', selectionModes: 'Sposób zaznaczania', cacheName: 'Cache', dwhName: 'Hurtownia danych', save: 'Zapisz', saveCurrent: 'Zapisz bieżący diagram', server: 'Serwer', database: 'Baza danych', nameWeb: 'Serwer WWW', nameDb: 'Baza klientów', zoneText: 'Produkcja', diagramName: 'Mój pierwszy diagram', cancel: 'Anuluj', load: 'Wczytaj', myDiagrams: 'Moje diagramy', settings: 'Ustawienia', exportJson: 'Eksportuj do JSON', exportImage: 'Eksportuj do obrazu', orders: 'Zamówienia', db: 'Baza zamówień', dbFull: 'Baza zamówień', payments: 'Płatności', queue: 'Kolejka zdarzeń' }
 };
 
 async function api(path, init) {
@@ -462,6 +462,71 @@ async function quickstart(l) {
   await shoot('qs-saved', { x: 0, y: 0, width: 560, height: 56 });
 }
 
+
+// ---------------------------------------------------------------------------
+// Extra shots for the full user manual (demo diagram).
+// Saved as docs/screenshots/<lang>-m-<name>.png
+
+async function manual(l) {
+  lang = l;
+  const t = L[l];
+  await openFresh(l);
+
+  // Zone: click the empty right corner of the Data zone (its middle is under
+  // a node label) -> zone panel + resize handles
+  const top = await nodePos(t.cacheName), bottom = await nodePos(t.dwhName);
+  const centre = { x: (top.x + bottom.x) / 2, y: (top.y + bottom.y) / 2 };
+  const mid = { x: centre.x + 95, y: centre.y + 4 };
+  await click(mid.x, mid.y);
+  await sleep(800);
+  await move(W / 2, 20);
+  await shoot('m-zone-panel', await panelBox());
+  await shoot('m-zone-handles', { x: centre.x - 330, y: centre.y - 210, width: 660, height: 400 });
+  await esc();
+
+  // Connector label: click the Orders -> Orders DB line, add a label
+  const a = await nodePos(t.orders), b = await nodePos(t.dbFull);
+  const lineMid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 + 4 };
+  await click(lineMid.x, lineMid.y);
+  await sleep(800);
+  await clickText(t.addLabel, '.MuiCard-root button, .MuiCard-root button *');
+  await sleep(500);
+  await evaluate(`(() => { const el = [...document.querySelectorAll('.MuiCard-root input')].find((e) => e.offsetParent && e.type === 'text'); el?.focus(); el?.select(); return !!el; })()`);
+  await typeText('REST');
+  await move(W / 2, 20);
+  await sleep(400);
+  await shoot('m-connector-label', await panelBox());
+  await shoot('m-connector-label-canvas', { x: a.x - 140, y: a.y - 170, width: b.x - a.x + 280, height: 300 });
+  await key('z', 'KeyZ', 90, 2); // undo the label so later shots stay clean
+  await esc();
+
+  // Quick icon change: select a node and press I
+  await click(b.x, b.y);
+  await sleep(700);
+  await key('i', 'KeyI', 73);
+  await sleep(800);
+  await move(W / 2, 20);
+  await shoot('m-icon-change', await panelBox());
+  await esc();
+  await esc();
+
+  // Importing icons: bottom of the icon picker
+  await key('n', 'KeyN', 78);
+  await sleep(900);
+  await evaluate(`(() => { const file = document.querySelector('.MuiCard-root input[type=file]'); const btn = file?.parentElement?.querySelector('button') ?? [...document.querySelectorAll('.MuiCard-root button')].pop(); (btn?.parentElement ?? btn)?.scrollIntoView({ block: 'end' }); return !!btn; })()`);
+  await sleep(500);
+  const pb = await panelBox();
+  await shoot('m-icon-import', { x: pb.x, y: pb.y + pb.height - 300, width: pb.width, height: 300 });
+  await esc();
+
+  // Box select / freehand lasso switch
+  await evaluate(`(() => { const b = document.querySelector('[aria-label="${t.selectionModes}"]'); b?.click(); return !!b; })()`);
+  await sleep(500);
+  const m = await menuBox();
+  await shoot('m-selection-modes', union({ x: 760, y: 60, width: 420, height: 60 }, m));
+  await esc();
+}
+
 try {
   mkdirSync(OUT, { recursive: true });
   await connect();
@@ -471,6 +536,7 @@ try {
   for (const l of langs) {
     if (sets.includes('docs')) await run(l);
     if (sets.includes('quickstart')) await quickstart(l);
+    if (sets.includes('manual')) await manual(l);
   }
 } finally {
   ws?.close();

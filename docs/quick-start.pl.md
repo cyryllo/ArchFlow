@@ -96,6 +96,7 @@ Zapisane diagramy znajdziesz w **Moich diagramach** (**Ctrl+O**). Gdzie są prze
 - **Udostępnij albo zrób kopię:** ☰ → **Eksportuj do JSON** daje plik, który otworzysz w każdym ArchFlow; ☰ → **Eksportuj do obrazu** zapisuje PNG.
 - **Prawy przycisk** na dowolnym elemencie daje więcej akcji: połącz, kopiuj, duplikuj, na wierzch, usuń…
 - **F1** pokazuje wszystkie skróty klawiszowe, a ☰ → **Ustawienia** opcje myszy i klawiatury.
+- Wszystko szczegółowo: **[instrukcja obsługi](manual.pl.md)**.
 
 | Najczęściej używane skróty | |
 |---|---|

@@ -69,7 +69,7 @@ Diagrams are saved as JSON files in `./diagrams`. Ports, `docker run`, configura
 | | |
 |---|---|
 | 🚀 [Quick start](docs/quick-start.md) | Your first diagram in ten steps, with screenshots |
-| 🧭 [Using ArchFlow](docs/usage.md) | The screen, tools, right-click menus, selecting and moving, shortcuts, settings |
+| 📖 [User manual](docs/manual.md) | Everything in detail: nodes, zones, connectors, text, selecting, menus, export, settings, all shortcuts, troubleshooting |
 | 💾 [Saving and opening](docs/saving.md) | Files, My diagrams, export to JSON and PNG, browser-only mode |
 | 🐳 [Docker guide](docs/docker.md) | Installing and running ArchFlow on your server |
 | 🛠️ [Development](docs/development.md) | Running from source, project structure, building the desktop app |
