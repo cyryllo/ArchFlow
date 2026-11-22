@@ -12,5 +12,11 @@ services:
       - ENABLE_GIT_BACKUP=${ENABLE_GIT_BACKUP:-false}
       # Turns on the MCP server for AI assistants at /mcp (see docs/mcp.md)
       - MCP_TOKEN=${MCP_TOKEN:-}
+      # Logins: local = accounts (the first visit creates the administrator),
+      # none = no logins, everyone can do everything (trusted networks only)
+      - AUTH_MODE=${AUTH_MODE:-local}
+      # Optional: create the administrator without the setup screen
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
     volumes:
       - ./diagrams:/data/diagrams

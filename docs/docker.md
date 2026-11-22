@@ -113,8 +113,51 @@ Good to know before you run it on a server:
 - **File ownership (Linux).** The container runs as `root`, so the `./diagrams` folder and the JSON files in it are owned by `root` on the host. To edit, move or delete them by hand, use `sudo` or take ownership: `sudo chown -R $USER: diagrams`. ArchFlow itself keeps working after that.
 - **Works offline.** Everything the app needs is inside the image, so the container starts in a few seconds and doesn't need internet access, only for pulling the image.
 - **Restarts.** Both examples use `restart: unless-stopped`: the container starts again after a crash or a reboot of the machine, unless you stopped it yourself.
-- **No logins.** ArchFlow has no user accounts. Anyone who can open the address can view, change and delete diagrams in My diagrams. Run it on a trusted network, or put it behind a reverse proxy with authentication (e.g. basic auth) if it's reachable from the internet.
-- **Backups.** Everything ArchFlow stores is in `/data/diagrams` (your `./diagrams` folder), so backing up that folder is enough.
+- **Logins.** With `compose.yml` from 0.9.0, ArchFlow asks for a login: see [Accounts and logins](#accounts-and-logins). With `AUTH_MODE=none` there are no accounts, and anyone who can open the address can view, change and delete diagrams. Keep that setup on a trusted network.
+- **Backups.** Everything ArchFlow stores is in `/data/diagrams` (your `./diagrams` folder), including accounts (`.archflow/auth.json`), so backing up that folder is enough.
+
+## Accounts and logins
+
+From 0.9.0, ArchFlow in Docker can ask for a login. `compose.yml` turns this on (`AUTH_MODE=local`). The image on its own, or a `compose.yml` from before 0.9.0, keeps working as before, without logins (`AUTH_MODE=none`).
+
+**The first administrator.** On a fresh ArchFlow with logins, the first person who opens it sees *Create the administrator account*. Do this right after starting the container: until then, anyone who reaches the address could take that role. Alternatively, set `ADMIN_EMAIL` and `ADMIN_PASSWORD` (e.g. in `.env`), and the account is created when the container starts. This only works while there are no accounts yet.
+
+**Roles**
+
+| Role | Can |
+|---|---|
+| Administrator | Everything, plus users and settings (☰ → *Users and settings*) |
+| Editor | Create, change and delete diagrams |
+| Viewer | Open diagrams without changing them |
+
+Every logged-in user sees all diagrams. Each diagram records who created it and who changed it last; *My diagrams* shows the last one.
+
+**Adding people.** In ☰ → *Users and settings*, enter an e-mail, a name and a role, then click *Add user*. ArchFlow shows a temporary password once. Give it to the person; they choose their own password at their first login. The same panel resets passwords, changes roles, and disables or deletes users. ArchFlow always keeps at least one active administrator.
+
+**Public access.** In *Settings* → *Public access*, people who aren't logged in can open ArchFlow and design. They save only in their browser or to a file, never to the server, and can log in with the button at the top.
+
+**Tokens for AI assistants and scripts.**
+- Each user creates their own tokens in *Account* → *Tokens*: read-only or read-and-change, with an optional expiry date. A token acts with its owner's rights.
+- Tokens can be created by administrators, by users with *API and MCP* ticked, or by everyone when *Settings* → *API and MCP access for everyone* is on.
+- The administrator sees every token on the *Tokens* tab and can revoke any of them.
+- See [AI assistants (MCP)](mcp.md#mcp-in-docker-over-http).
+
+**Sessions**
+- A login lasts 30 days.
+- Changing a password logs out the other browsers.
+- Disabling a user logs them out at once and stops their tokens.
+- After 10 failed logins from one address in 15 minutes, logging in from it is blocked for the rest of that time.
+
+**HTTPS.** Logins work over plain HTTP in your own network. Over the internet, put ArchFlow behind a reverse proxy with HTTPS, such as Nginx Proxy Manager. The proxy has to pass `X-Forwarded-Proto` (most do), so the login cookie is marked secure. Don't add the proxy's own password protection (basic auth): it uses the same `Authorization` header that tokens need.
+
+**Where accounts are kept.** In `.archflow/auth.json` inside the diagrams folder. Passwords are stored as scrypt hashes and tokens as SHA-256 hashes. Back this file up together with the diagrams.
+
+**Lost the only administrator's password?**
+1. Stop the container.
+2. Delete `.archflow/auth.json` from the diagrams folder (`sudo` may be needed).
+3. Start the container again and create the administrator anew.
+
+The diagrams stay. Accounts and tokens are gone and have to be added again.
 
 ## Configuration
 
@@ -123,7 +166,9 @@ Good to know before you run it on a server:
 | `ARCHFLOW_VERSION` | `latest` | Image tag used by `compose.yml`. |
 | `ENABLE_SERVER_STORAGE` | `true` | Save diagrams as files on the server (My diagrams). Set to `false` for browser-only (session) storage. |
 | `STORAGE_PATH` | `/data/diagrams` | Where diagrams are stored inside the container. Mount a host folder or volume here. |
-| `MCP_TOKEN` | *(empty)* | Turns on the MCP server for AI assistants at `/mcp`. Clients send it as `Authorization: Bearer <token>`. See [AI assistants (MCP)](mcp.md#mcp-in-docker-over-http). |
+| `AUTH_MODE` | `none` in the image, `local` in `compose.yml` | `local` = accounts and logins, `none` = no logins (trusted networks only). See [Accounts and logins](#accounts-and-logins). |
+| `ADMIN_EMAIL`, `ADMIN_PASSWORD` | *(empty)* | Create the first administrator at start-up, instead of the setup screen. Used only while there are no accounts. |
+| `MCP_TOKEN` | *(empty)* | Only without logins (`AUTH_MODE=none`): turns on the MCP server for AI assistants at `/mcp`. With logins, everyone uses their own token instead. Clients send it as `Authorization: Bearer <token>`. See [AI assistants (MCP)](mcp.md#mcp-in-docker-over-http). |
 
 To disable server storage and fall back to browser-only (session) storage, set `ENABLE_SERVER_STORAGE=false`:
 ```bash

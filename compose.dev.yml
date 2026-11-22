@@ -10,5 +10,8 @@ services:
       - STORAGE_PATH=/data/diagrams
       - ENABLE_GIT_BACKUP=false
       - MCP_TOKEN=${MCP_TOKEN:-}
+      - AUTH_MODE=${AUTH_MODE:-local}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
     volumes:
       - ./diagrams:/data/diagrams

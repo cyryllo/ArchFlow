@@ -1,6 +1,8 @@
 // The MCP server over HTTP, as a remote client (e.g. Claude Code) sees it.
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync } from 'node:fs';
+import { spawn } from 'node:child_process';
+import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
+import { setTimeout as sleep } from 'node:timers/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, before, describe, test } from 'node:test';
@@ -16,7 +18,7 @@ describe('HTTP transport', () => {
   let server;
   let base;
   before(async () => {
-    server = await startHttpServer({ port: 0, host: '127.0.0.1', token: TOKEN, storeFor: () => new FolderStore(dir) });
+    server = await startHttpServer({ port: 0, host: '127.0.0.1', auth: { kind: 'token', token: TOKEN }, storeFor: () => new FolderStore(dir) });
     base = `http://127.0.0.1:${server.address().port}`;
   });
   after(() => {
@@ -72,4 +74,74 @@ test('links use the address the client came from', () => {
   const store = new HttpStore('http://127.0.0.1:3001', undefined, 'https://diagrams.example.com/');
   assert.equal(store.locate('My shop'), 'https://diagrams.example.com/display/My%20shop');
   assert.match(store.where, /diagrams\.example\.com/);
+});
+
+// ArchFlow with logins: clients use their own ArchFlow tokens
+const BACKEND = new URL('../../fossflow-backend/server.js', import.meta.url).pathname;
+describe('HTTP with ArchFlow user tokens', { skip: !existsSync(BACKEND) && 'backend not found' }, () => {
+  const dir = mkdtempSync(join(tmpdir(), 'archflow-login-'));
+  const bport = 41000 + Math.floor(Math.random() * 1000);
+  const api = `http://127.0.0.1:${bport}`;
+  let backend;
+  let mcp;
+  let base;
+  const tokens = {};
+  before(async () => {
+    backend = spawn(process.execPath, [BACKEND], {
+      env: { ...process.env, ENABLE_SERVER_STORAGE: 'true', STORAGE_PATH: dir, BACKEND_PORT: String(bport), AUTH_MODE: 'local', ADMIN_EMAIL: 'admin@x.pl', ADMIN_PASSWORD: 'admin-pass-123' },
+      stdio: 'ignore'
+    });
+    for (let i = 0; i < 50; i++) {
+      try {
+        if ((await fetch(`${api}/api/storage/status`)).ok) break;
+      } catch {
+        // not up yet
+      }
+      await sleep(100);
+    }
+    const login = await fetch(`${api}/api/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: 'admin@x.pl', password: 'admin-pass-123' }) });
+    const cookie = login.headers.get('set-cookie').split(';')[0];
+    for (const scope of ['read', 'write']) {
+      const r = await fetch(`${api}/api/auth/tokens`, { method: 'POST', headers: { 'Content-Type': 'application/json', Cookie: cookie }, body: JSON.stringify({ name: scope, scope }) });
+      tokens[scope] = (await r.json()).token;
+    }
+    mcp = await startHttpServer({
+      port: 0,
+      host: '127.0.0.1',
+      auth: { kind: 'archflow', url: api },
+      storeFor: (req) => new HttpStore(api, req.headers.authorization.split(' ')[1])
+    });
+    base = `http://127.0.0.1:${mcp.address().port}`;
+  });
+  after(() => {
+    mcp?.close();
+    backend?.kill();
+  });
+
+  const connectWith = async (token) => {
+    const client = new Client({ name: 'test', version: '1.0.0' });
+    await client.connect(new StreamableHTTPClientTransport(new URL(`${base}/mcp`), { requestInit: { headers: { Authorization: `Bearer ${token}` } } }));
+    return client;
+  };
+
+  test('a write token builds diagrams as its owner', async () => {
+    const client = await connectWith(tokens.write);
+    const r = await client.callTool({ name: 'build_diagram', arguments: { title: 'By token', nodes: [{ name: 'A', icon: 'server' }] } });
+    assert.equal(r.isError, undefined, r.content[0].text);
+    assert.equal(JSON.parse(readFileSync(join(dir, 'By token.json'), 'utf8')).createdBy, 'admin@x.pl');
+    await client.close();
+  });
+
+  test('a read-only token can read but not save', async () => {
+    const client = await connectWith(tokens.read);
+    assert.match((await client.callTool({ name: 'list_diagrams', arguments: {} })).content[0].text, /By token/);
+    const r = await client.callTool({ name: 'build_diagram', arguments: { title: 'Nope', nodes: [{ name: 'A', icon: 'server' }] } });
+    assert.equal(r.isError, true);
+    assert.match(r.content[0].text, /read-only/);
+    await client.close();
+  });
+
+  test('an unknown token is refused', async () => {
+    await assert.rejects(connectWith('afk_not-a-real-token'), /401|token/i);
+  });
 });

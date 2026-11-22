@@ -24,6 +24,7 @@ Everything ArchFlow can do, chapter by chapter. New here? The [quick start](quic
 14. [Language](#14-language)
 15. [Keyboard shortcuts](#15-keyboard-shortcuts)
 16. [Troubleshooting](#16-troubleshooting)
+17. [Accounts and logins](#17-accounts-and-logins)
 
 ---
 
@@ -379,6 +380,18 @@ Shortcuts don't fire while you're typing in a text field.
 **Linux: the AppImage doesn't start.** Make it executable (`chmod +x`). On some distributions AppImages also need FUSE 2 (e.g. `sudo apt install libfuse2` on Ubuntu).
 
 **Docker: I can't edit the files in `./diagrams`.** The container writes them as `root`; take them over with `sudo chown -R $USER: diagrams`. More in the [Docker guide](docker.md).
+
+## 17. Accounts and logins
+
+Only for ArchFlow in Docker with logins (the default `compose.yml` from 0.9.0). The desktop app and ArchFlow without logins don't have accounts.
+
+- **Logging in.** ArchFlow asks for your e-mail and password. On a brand-new ArchFlow, the first person creates the administrator account. If the administrator gave you a temporary password, you set your own after logging in. Forgot your password? The administrator resets it.
+- **Your account.** Click your name at the top (☰ → *Account*) to change your password, create tokens for AI assistants ([AI assistants](mcp.md#mcp-in-docker-over-http)), or log out.
+- **Roles.** *Editors* create and change diagrams; *viewers* only open them (the editor is read-only and there's no *Save*). Everyone logged in sees all diagrams, and *My diagrams* shows who changed each one last.
+- **Administrators** manage people in ☰ → *Users and settings*: add users (ArchFlow shows a temporary password once), change roles, reset passwords, disable or delete accounts, and allow API and MCP access.
+- **Public access.** When the administrator turns it on, people who aren't logged in can design too, but save only in their browser or to a file. *Log in* at the top switches to your account.
+
+Setting it up on a server is described in the [Docker guide](docker.md#accounts-and-logins).
 
 ---
 

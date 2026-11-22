@@ -34,6 +34,7 @@ ArchFlow is a free, open-source editor for clear, good-looking **isometric diagr
 - **Export** to a portable JSON file (every icon included) or to a PNG image with your choice of resolution, background and cropping.
 - **Save where you like:** files on your computer, a shared list on your Docker server, or the desktop app's `Documents/ArchFlow` folder.
 - **10 interface languages**: English, Polish, German, French, Spanish, Italian, Portuguese (Brazil), Czech, Dutch and Ukrainian, icon names included.
+- **Accounts on your server (Docker):** logins with administrator, editor and viewer roles, an admin panel, optional public access without saving to the server, and personal tokens for AI assistants.
 - **AI assistants (MCP):** Claude and other assistants that support MCP can draw and change diagrams for you from a plain description. See [AI assistants](docs/mcp.md).
 
 ## ⬇️ Download

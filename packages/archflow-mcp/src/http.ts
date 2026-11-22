@@ -7,10 +7,14 @@ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/
 import { createServer } from './server.js';
 import type { DiagramStore } from './storage.js';
 
+// Who may connect: one shared token (MCP_TOKEN), or ArchFlow's own user
+// tokens, checked with ArchFlow (logins on)
+export type HttpAuth = { kind: 'token'; token: string } | { kind: 'archflow'; url: string };
+
 export interface HttpOptions {
   port: number;
   host: string;
-  token: string;
+  auth: HttpAuth;
   path?: string;
   // The store for one request (it may depend on the address the client used)
   storeFor: (req: IncomingMessage) => DiagramStore;
@@ -28,12 +32,36 @@ const rpcError = (res: ServerResponse, status: number, message: string, headers:
   sendJson(res, status, { jsonrpc: '2.0', error: { code: -32000, message }, id: null }, headers);
 };
 
-const tokenMatches = (header: string | undefined, token: string) => {
-  const m = header?.match(/^Bearer\s+(.+)$/i);
-  if (!m) return false;
-  const a = Buffer.from(m[1].trim());
+export const bearerOf = (req: IncomingMessage) => {
+  return req.headers.authorization?.match(/^Bearer\s+(.+)$/i)?.[1].trim();
+};
+
+const tokenMatches = (given: string | undefined, token: string) => {
+  if (!given) return false;
+  const a = Buffer.from(given);
   const b = Buffer.from(token);
   return a.length === b.length && timingSafeEqual(a, b);
+};
+
+// ArchFlow user tokens: valid when ArchFlow says so (cached for a minute)
+const checked = new Map<string, { ok: boolean; message: string; at: number }>();
+const checkWithArchflow = async (url: string, token: string) => {
+  const hit = checked.get(token);
+  if (hit && Date.now() - hit.at < 60000) return hit;
+  let result: { ok: boolean; message: string; at: number };
+  try {
+    const res = await fetch(`${url.replace(/\/+$/, '')}/api/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const body = (await res.json().catch(() => {
+      return null;
+    })) as { error?: string } | null;
+    result = { ok: res.ok, message: res.ok ? '' : (body?.error ?? `ArchFlow answered ${res.status}`), at: Date.now() };
+  } catch (e) {
+    return { ok: false, message: `Can't reach ArchFlow (${(e as Error).message})`, at: 0 };
+  }
+  checked.set(token, result);
+  return result;
 };
 
 const readBody = (req: IncomingMessage) => {
@@ -74,10 +102,22 @@ export const startHttpServer = (opts: HttpOptions): Promise<Server> => {
   const server = createHttpServer(async (req, res) => {
     const url = new URL(req.url ?? '/', 'http://localhost');
     if (url.pathname !== path) return sendJson(res, 404, { error: 'Not found' });
-    if (!tokenMatches(req.headers.authorization, opts.token)) {
+    const given = bearerOf(req);
+    if (opts.auth.kind === 'token' && !tokenMatches(given, opts.auth.token)) {
       return rpcError(res, 401, 'Missing or wrong token (Authorization: Bearer <MCP_TOKEN>)', {
         'WWW-Authenticate': 'Bearer'
       });
+    }
+    if (opts.auth.kind === 'archflow') {
+      const check = given ? await checkWithArchflow(opts.auth.url, given) : { ok: false, message: '' };
+      if (!check.ok) {
+        return rpcError(
+          res,
+          401,
+          `${check.message || 'Missing token'}. Use your personal token from ArchFlow (account menu -> API tokens): Authorization: Bearer <token>`,
+          { 'WWW-Authenticate': 'Bearer' }
+        );
+      }
     }
     // Stateless: no server-to-client stream and no sessions to end
     if (req.method !== 'POST') return rpcError(res, 405, 'Method not allowed', { Allow: 'POST' });

@@ -36,6 +36,10 @@ declare const PATHS: {
     readonly language: "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z\"/>";
     readonly version: "<path d=\"M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z\"/><circle cx=\"7.5\" cy=\"7.5\" r=\"1.3\"/>";
     readonly chevronDown: "<path d=\"m6 9 6 6 6-6\"/>";
+    readonly account: "<circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4.5 20.5c.8-3.8 3.8-6 7.5-6s6.7 2.2 7.5 6\"/>";
+    readonly users: "<circle cx=\"9\" cy=\"8.5\" r=\"3.5\"/><path d=\"M2.5 20c.7-3.4 3.3-5.5 6.5-5.5s5.8 2.1 6.5 5.5\"/><path d=\"M15.5 5.2a3.5 3.5 0 0 1 0 6.6\"/><path d=\"M17.5 14.8c2 .7 3.4 2.6 4 5.2\"/>";
+    readonly login: "<path d=\"M14 4h4.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H14\"/><path d=\"M4 12h11\"/><path d=\"m11 8 4 4-4 4\"/>";
+    readonly logout: "<path d=\"M10 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H10\"/><path d=\"M9 12h11\"/><path d=\"m16 8 4 4-4 4\"/>";
 };
 export type UiIconName = keyof typeof PATHS;
 interface Props {

@@ -11,7 +11,7 @@
 //   ARCHFLOW_DIR=/path/to/folder        a folder of diagram files
 //   (neither)                           Documents/ArchFlow, like the desktop app
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { publicUrlOf, startHttpServer } from './http.js';
+import { bearerOf, publicUrlOf, startHttpServer } from './http.js';
 import { VERSION, createServer } from './server.js';
 import { storeFromEnv } from './storage.js';
 
@@ -30,8 +30,10 @@ if (args.includes('--help') || args.includes('-h')) {
 
 Usage:
   archflow-mcp                         stdio (default)
-  archflow-mcp --http [--port 3002] [--host 127.0.0.1]
-                                       HTTP at /mcp, requires MCP_TOKEN
+  archflow-mcp --http [--port 3002] [--host 127.0.0.1] [--auth archflow]
+                                       HTTP at /mcp; requires MCP_TOKEN, or with
+                                       --auth archflow the users' own ArchFlow
+                                       tokens (ArchFlow with logins)
 
 Environment:
   ARCHFLOW_URL         address of ArchFlow in Docker, e.g. http://localhost:9500
@@ -48,22 +50,34 @@ Docs: https://github.com/cyryllo/ArchFlow/blob/master/docs/mcp.md`);
 }
 
 if (args.includes('--http')) {
+  const port = Number(option('--port') ?? process.env.MCP_PORT ?? 3002);
+  const host = option('--host') ?? process.env.MCP_HOST ?? '127.0.0.1';
+  // --auth archflow: clients use their own ArchFlow tokens (logins on);
+  // otherwise one shared MCP_TOKEN
+  const archflowAuth = option('--auth') === 'archflow';
   const token = process.env.MCP_TOKEN?.trim();
-  if (!token || token.length < 16) {
+  if (archflowAuth && !process.env.ARCHFLOW_URL) {
+    console.error('archflow-mcp --http --auth archflow needs ARCHFLOW_URL');
+    process.exit(1);
+  }
+  if (!archflowAuth && (!token || token.length < 16)) {
     console.error('archflow-mcp --http needs MCP_TOKEN (at least 16 characters), e.g.: export MCP_TOKEN=$(openssl rand -hex 32)');
     process.exit(1);
   }
-  const port = Number(option('--port') ?? process.env.MCP_PORT ?? 3002);
-  const host = option('--host') ?? process.env.MCP_HOST ?? '127.0.0.1';
   await startHttpServer({
     port,
     host,
-    token,
+    auth: archflowAuth ? { kind: 'archflow', url: process.env.ARCHFLOW_URL! } : { kind: 'token', token: token! },
     storeFor: (req) => {
-      return storeFromEnv(process.env, publicUrlOf(req));
+      // With ArchFlow tokens, the client's token is used for every change,
+      // so ArchFlow applies that user's rights
+      const env = archflowAuth ? { ...process.env, ARCHFLOW_TOKEN: bearerOf(req) } : process.env;
+      return storeFromEnv(env, publicUrlOf(req));
     }
   });
-  console.error(`archflow-mcp ${VERSION}: HTTP on http://${host}:${port}/mcp, diagrams in the ${storeFromEnv().where}`);
+  console.error(
+    `archflow-mcp ${VERSION}: HTTP on http://${host}:${port}/mcp (${archflowAuth ? 'ArchFlow user tokens' : 'MCP_TOKEN'}), diagrams in the ${storeFromEnv().where}`
+  );
 } else {
   const store = storeFromEnv();
   await createServer(store).connect(new StdioServerTransport());

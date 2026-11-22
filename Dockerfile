@@ -65,6 +65,8 @@ ENV ENABLE_SERVER_STORAGE=true
 ENV STORAGE_PATH=/data/diagrams
 ENV BACKEND_PORT=3001
 ENV MCP_PORT=3002
+# Logins: none (as before) or local (accounts). compose.yml turns them on.
+ENV AUTH_MODE=none
 
 # Start services
 ENTRYPOINT ["/docker-entrypoint.sh"]

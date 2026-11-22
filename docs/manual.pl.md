@@ -24,6 +24,7 @@ Wszystko, co potrafi ArchFlow, rozdział po rozdziale. Pierwszy raz? [Szybki sta
 14. [Język](#14-język)
 15. [Skróty klawiszowe](#15-skróty-klawiszowe)
 16. [Rozwiązywanie problemów](#16-rozwiązywanie-problemów)
+17. [Konta i logowanie](#17-konta-i-logowanie)
 
 ---
 
@@ -379,6 +380,18 @@ Skróty nie działają, gdy piszesz w polu tekstowym.
 **Linux: AppImage się nie uruchamia.** Nadaj mu prawo uruchamiania (`chmod +x`). Na niektórych dystrybucjach AppImage potrzebuje też FUSE 2 (np. `sudo apt install libfuse2` na Ubuntu).
 
 **Docker: nie mogę edytować plików w `./diagrams`.** Kontener zapisuje je jako `root`; przejmij je poleceniem `sudo chown -R $USER: diagrams`. Więcej w [instrukcji Dockera](docker.pl.md).
+
+## 17. Konta i logowanie
+
+Tylko w ArchFlow w Dockerze z logowaniem (domyślny `compose.yml` od wersji 0.9.0). Aplikacja desktopowa i ArchFlow bez logowania nie mają kont.
+
+- **Logowanie.** ArchFlow pyta o e-mail i hasło. W zupełnie nowym ArchFlow pierwsza osoba tworzy konto administratora. Jeśli administrator dał Ci hasło tymczasowe, po zalogowaniu ustawisz własne. Nie pamiętasz hasła? Administrator je zresetuje.
+- **Twoje konto.** Kliknij swoje imię u góry (☰ → *Konto*), żeby zmienić hasło, utworzyć tokeny dla asystentów AI ([Asystenci AI](mcp.pl.md#mcp-w-dockerze-przez-http)) albo się wylogować.
+- **Role.** *Edytorzy* tworzą i zmieniają diagramy; *czytelnicy* tylko je otwierają (edytor jest wtedy tylko do podglądu i nie ma *Zapisz*). Każdy zalogowany widzi wszystkie diagramy, a *Moje diagramy* pokazują, kto ostatni zmienił każdy z nich.
+- **Administratorzy** zarządzają ludźmi w ☰ → *Użytkownicy i ustawienia*: dodają użytkowników (ArchFlow raz pokazuje hasło tymczasowe), zmieniają role, resetują hasła, wyłączają i usuwają konta oraz pozwalają na dostęp do API i MCP.
+- **Dostęp publiczny.** Gdy administrator go włączy, niezalogowani też mogą projektować, ale zapisują tylko w swojej przeglądarce albo do pliku. *Zaloguj się* u góry przełącza na Twoje konto.
+
+Konfigurację na serwerze opisuje [instrukcja Dockera](docker.pl.md#konta-i-logowanie).
 
 ---
 

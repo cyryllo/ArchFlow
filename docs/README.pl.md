@@ -34,6 +34,7 @@ ArchFlow to darmowy edytor open source do czytelnych, ładnych **diagramów izom
 - **Eksport** do przenośnego pliku JSON (ze wszystkimi ikonami) albo obrazu PNG z wyborem rozdzielczości, tła i przycięcia.
 - **Zapis tam, gdzie wolisz:** pliki na komputerze, wspólna lista na serwerze w Dockerze albo folder `Dokumenty/ArchFlow` aplikacji desktopowej.
 - **Interfejs w 10 językach**: polskim, angielskim, niemieckim, francuskim, hiszpańskim, włoskim, portugalskim (Brazylia), czeskim, niderlandzkim i ukraińskim, łącznie z nazwami ikon.
+- **Konta na Twoim serwerze (Docker):** logowanie z rolami administratora, edytora i czytelnika, panel administratora, opcjonalny dostęp publiczny bez zapisu na serwer i osobiste tokeny dla asystentów AI.
 - **Asystenci AI (MCP):** Claude i inni asystenci obsługujący MCP narysują i zmienią diagram na podstawie zwykłego opisu. Zobacz [Asystenci AI](mcp.pl.md).
 
 ## ⬇️ Pobierz

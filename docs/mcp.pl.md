@@ -32,7 +32,7 @@ Serwer MCP zapisuje diagramy tam, skąd czyta je ArchFlow:
 | w **aplikacji desktopowej** | nic (domyślnie) | *Moje diagramy* w aplikacji (`Dokumenty/ArchFlow`) |
 | z plikami w **innym folderze** | `ARCHFLOW_DIR=/ścieżka/do/folderu` | ☰ → *Otwórz z pliku (JSON)* |
 
-Podaj adres, pod którym otwierasz ArchFlow w przeglądarce, np. `http://localhost:9500` (ArchFlow uruchomiony z `compose.yml`) albo `http://localhost:3000` (deweloperski `compose.dev.yml`). Zapis na serwerze musi być włączony; w obrazie Dockera jest włączony domyślnie.
+Podaj adres, pod którym otwierasz ArchFlow w przeglądarce, np. `http://localhost:9500` (ArchFlow uruchomiony z `compose.yml`) albo `http://localhost:3000` (deweloperski `compose.dev.yml`). Zapis na serwerze musi być włączony; w obrazie Dockera jest włączony domyślnie. Jeśli Twój ArchFlow ma logowanie (domyślny `compose.yml` od wersji 0.9.0), ustaw też `ARCHFLOW_TOKEN` na swój osobisty token z *Konta* (zobacz [Z logowaniem](#z-logowaniem-domyślnie-od-wersji-090)).
 
 ## 2. Dodaj go do asystenta
 
@@ -122,7 +122,21 @@ Asystent napisze, gdzie zapisał diagram. Zwykle najpierw szuka ikon przez `list
 
 ## MCP w Dockerze (przez HTTP)
 
-Obraz Dockera (od wersji 0.8.1) zawiera serwer MCP. Jest wyłączony, dopóki nie dostanie tokenu.
+Obraz Dockera (od wersji 0.8.1) zawiera serwer MCP. Sposób łączenia zależy od tego, czy Twój ArchFlow ma logowanie.
+
+### Z logowaniem (domyślnie od wersji 0.9.0)
+
+Serwer działa zawsze, a **każdy używa własnego tokenu**:
+
+1. W ArchFlow kliknij swoje imię u góry (albo ☰ → *Konto*) i w sekcji *Tokeny dla asystentów AI i API* utwórz token. Wybierz *Odczyt i zmiany* albo *Tylko odczyt* dla asystenta, który ma tylko odpowiadać na pytania.
+2. ArchFlow raz pokaże token razem z gotowym poleceniem `claude mcp add …` dla Claude Code. Skopiuj je i uruchom w terminalu.
+
+Asystent działa wtedy z Twoimi uprawnieniami: token czytelnika niczego nie zmieni, a unieważniony token od razu przestaje działać. Jeśli w sekcji tokenów widzisz, że dostęp nie jest włączony, poproś administratora (*Użytkownicy i ustawienia* → *API i MCP*). Więcej w [instrukcji Dockera](docker.pl.md#konta-i-logowanie).
+
+### Bez logowania (`AUTH_MODE=none`): jeden wspólny token
+
+Serwer jest wyłączony, dopóki nie dostanie tokenu.
+
 
 1. **Wygeneruj token**, czyli długi losowy ciąg znaków:
 
@@ -239,6 +253,9 @@ Przed każdym zapisem diagram przechodzi takie samo sprawdzenie, jakie robi Arch
 | Diagramu nie ma w *Moich diagramach* | Zamknij *Moje diagramy* i otwórz ponownie. Upewnij się, że patrzysz na ten ArchFlow, do którego zapisuje serwer: ten sam adres albo aplikację desktopową, gdy nie ma `ARCHFLOW_URL`. |
 | *The ArchFlow MCP server is off* (z `/mcp` w Dockerze) | Ustaw `MCP_TOKEN` dla kontenera i uruchom go ponownie (`docker compose up -d`). `ENABLE_SERVER_STORAGE` musi być `true`. |
 | *Missing or wrong token* | Asystent musi wysyłać `Authorization: Bearer <token>` z dokładnie tym samym tokenem co `MCP_TOKEN` kontenera. |
+| *Unknown or revoked token* / *The token has expired* | Z logowaniem: utwórz nowy token w *Koncie* i zaktualizuj asystenta. |
+| *API and MCP access is not allowed for this user* | Administrator włącza go w *Użytkownicy i ustawienia* (dla osoby albo dla wszystkich w *Ustawieniach*). |
+| *This token is read-only* | Token utworzono jako *Tylko odczyt*. Utwórz nowy z *Odczyt i zmiany*. |
 | Asystent pisze pliki albo kod zamiast używać narzędzi | Poproś go, żeby „użył narzędzi archflow”, i sprawdź `/mcp`. |
 
 ## Bez MCP

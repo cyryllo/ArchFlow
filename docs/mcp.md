@@ -32,7 +32,7 @@ The MCP server saves diagrams to the same place ArchFlow reads them from:
 | as the **desktop app** | nothing (the default) | *My diagrams* in the app (`Documents/ArchFlow`) |
 | with files in **another folder** | `ARCHFLOW_DIR=/path/to/folder` | ☰ → *Open from file (JSON)* |
 
-Use the address you open ArchFlow at in the browser, e.g. `http://localhost:9500` (ArchFlow started with `compose.yml`) or `http://localhost:3000` (the development `compose.dev.yml`). Server storage must be on: it is by default in the Docker image.
+Use the address you open ArchFlow at in the browser, e.g. `http://localhost:9500` (ArchFlow started with `compose.yml`) or `http://localhost:3000` (the development `compose.dev.yml`). Server storage must be on: it is by default in the Docker image. If your ArchFlow has logins (the default `compose.yml` from 0.9.0), also set `ARCHFLOW_TOKEN` to your personal token from *Account* (see [With logins](#with-logins-the-default-from-090)).
 
 ## 2. Add it to your assistant
 
@@ -122,7 +122,21 @@ The assistant tells you where it saved the diagram. Behind the scenes it usually
 
 ## MCP in Docker (over HTTP)
 
-The Docker image (0.8.1 or newer) contains the MCP server. It is off until you give it a token.
+The Docker image (0.8.1 or newer) contains the MCP server. How you connect depends on whether your ArchFlow has logins.
+
+### With logins (the default from 0.9.0)
+
+The server is always on, and **each person uses their own token**:
+
+1. In ArchFlow open your name at the top (or ☰ → *Account*) and create a token in *Tokens for AI assistants and the API*. Choose *Read and change*, or *Read only* for an assistant that should only answer questions.
+2. ArchFlow shows the token once, together with the ready `claude mcp add …` command for Claude Code. Copy it and run it in a terminal.
+
+The assistant then works with your rights: a viewer's token can't change anything, and a revoked token stops working at once. If *Tokens* says access isn't turned on, ask the administrator (*Users and settings* → *API and MCP*). More in the [Docker guide](docker.md#accounts-and-logins).
+
+### Without logins (`AUTH_MODE=none`): one shared token
+
+The server is off until you give it a token.
+
 
 1. **Make a token**, a long random string:
 
@@ -239,6 +253,9 @@ Before anything is saved, the diagram is checked the same way ArchFlow checks it
 | The diagram isn't in *My diagrams* | Close *My diagrams* and open it again. Make sure you're looking at the ArchFlow the server saves to: the same address, or the desktop app when there's no `ARCHFLOW_URL`. |
 | *The ArchFlow MCP server is off* (from `/mcp` in Docker) | Set `MCP_TOKEN` for the container and restart it (`docker compose up -d`). `ENABLE_SERVER_STORAGE` must be `true`. |
 | *Missing or wrong token* | The assistant must send `Authorization: Bearer <token>` with exactly the container's `MCP_TOKEN`. |
+| *Unknown or revoked token* / *The token has expired* | With logins: create a new token in *Account* and update the assistant. |
+| *API and MCP access is not allowed for this user* | The administrator turns it on in *Users and settings* (per user, or for everyone in *Settings*). |
+| *This token is read-only* | The token was created as *Read only*. Create one with *Read and change*. |
 | The assistant writes files or code instead of using the tools | Ask it to "use the archflow tools", and check `/mcp`. |
 
 ## Without MCP

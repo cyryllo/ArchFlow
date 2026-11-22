@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { storageManager, DiagramInfo } from '../services/storageService';
+import { useAuth } from '../auth/AuthContext';
 import './DiagramManager.css';
 
 interface Props {
@@ -21,6 +22,8 @@ export const DiagramManager: React.FC<Props> = ({
   onClose
 }) => {
   const { t } = useTranslation('app');
+  // Viewers (ArchFlow with logins) only open diagrams
+  const { canEdit } = useAuth();
   const [diagrams, setDiagrams] = useState<DiagramInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -218,7 +221,7 @@ export const DiagramManager: React.FC<Props> = ({
 
         {error && <div className="error-message">{error}</div>}
 
-        <div className="diagram-manager-actions">
+        {canEdit && <div className="diagram-manager-actions">
           <button
             className="action-button primary"
             onClick={() => {
@@ -228,7 +231,7 @@ export const DiagramManager: React.FC<Props> = ({
           >
             💾 {t('diagramManager.saveCurrent')}
           </button>
-        </div>
+        </div>}
 
         {loading ? (
           <div className="loading">{t('diagramManager.loading')}</div>
@@ -249,6 +252,7 @@ export const DiagramManager: React.FC<Props> = ({
                         {t('diagramManager.lastModified')}: {diagram.lastModified.toLocaleString()}
                         {diagram.size &&
                           ` • ${(diagram.size / 1024).toFixed(1)} KB`}
+                        {diagram.modifiedBy && ` • ${diagram.modifiedBy}`}
                       </span>
                     </div>
                     <div className="diagram-actions">
@@ -276,15 +280,17 @@ export const DiagramManager: React.FC<Props> = ({
                           {t('diagramManager.btnShare')}
                         </button>
                       )}
-                      <button
-                        className="action-button danger"
-                        onClick={() => {
-                          return handleDelete(diagram.id);
-                        }}
-                        disabled={loading}
-                      >
-                        {t('diagramManager.btnDelete')}
-                      </button>
+                      {canEdit && (
+                        <button
+                          className="action-button danger"
+                          onClick={() => {
+                            return handleDelete(diagram.id);
+                          }}
+                          disabled={loading}
+                        >
+                          {t('diagramManager.btnDelete')}
+                        </button>
+                      )}
                     </div>
                   </div>
                 );

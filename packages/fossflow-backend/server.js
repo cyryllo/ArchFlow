@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import { createAuth } from './auth.js';
 
 // Load environment variables
 dotenv.config();
@@ -18,19 +19,62 @@ const PORT = process.env.BACKEND_PORT || 3001;
 const STORAGE_ENABLED = process.env.ENABLE_SERVER_STORAGE === 'true';
 const STORAGE_PATH = process.env.STORAGE_PATH || '/data/diagrams';
 const ENABLE_GIT_BACKUP = process.env.ENABLE_GIT_BACKUP === 'true';
+// Logins (AUTH_MODE=local) protect server storage, so they need it
+const AUTH_MODE = process.env.AUTH_MODE === 'local' && STORAGE_ENABLED ? 'local' : 'none';
+if (process.env.AUTH_MODE === 'local' && !STORAGE_ENABLED) {
+  console.log('AUTH_MODE=local needs ENABLE_SERVER_STORAGE=true - logins are off');
+}
 
-// Middleware
-app.use(cors());
+// Behind nginx (and maybe another proxy): trust X-Forwarded-* for the client IP and https
+app.set('trust proxy', true);
+
+// Middleware. With logins the app and the API share one address (nginx), so
+// cross-origin requests aren't needed - and mustn't carry the session cookie.
+if (AUTH_MODE === 'none') app.use(cors());
 app.use(express.json({ limit: '10mb' }));
+
+const auth = createAuth({
+  mode: AUTH_MODE,
+  dataDir: path.join(STORAGE_PATH, '.archflow'),
+  adminEmail: process.env.ADMIN_EMAIL,
+  adminPassword: process.env.ADMIN_PASSWORD
+});
+app.use('/api', auth.attach);
+app.use('/api/auth', auth.router);
+app.use('/api/admin', auth.adminRouter);
+
+// Reading diagrams: any logged-in user; changing them: editors and admins
+const canRead = auth.requireUser;
+const canWrite = auth.requireRole('admin', 'editor');
 
 // Health check / Storage status endpoint
 app.get('/api/storage/status', (req, res) => {
   res.json({
     enabled: STORAGE_ENABLED,
     gitBackup: ENABLE_GIT_BACKUP,
-    version: '1.0.0'
+    version: '1.0.0',
+    auth: auth.status()
   });
 });
+
+// A diagram id is a file name stem: no folders, no hidden files
+const validId = (id) => {
+  return typeof id === 'string' && id.length > 0 && id.length <= 200 && !/[\\/\x00]/.test(id) && !id.startsWith('.');
+};
+const checkId = (req, res, next) => {
+  if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid diagram id' });
+  next();
+};
+
+// Who saved what: kept in the diagram file, never taken from the client
+const AUTHOR_FIELDS = ['owner', 'createdBy', 'modifiedBy'];
+const withoutAuthorFields = (body) => {
+  const copy = { ...body };
+  AUTHOR_FIELDS.forEach((f) => {
+    delete copy[f];
+  });
+  return copy;
+};
 
 // Turn a diagram name into a filesystem-safe filename stem: strips characters
 // invalid on Windows/Linux/macOS, collapses whitespace, and caps the length.
@@ -98,7 +142,7 @@ if (STORAGE_ENABLED) {
   };
 
   // List all diagrams
-  app.get('/api/diagrams', async (req, res) => {
+  app.get('/api/diagrams', canRead, async (req, res) => {
     try {
       // First check if storage directory exists
       try {
@@ -129,7 +173,8 @@ if (STORAGE_ENABLED) {
               id: file.replace('.json', ''),
               name: name,
               lastModified: stats.mtime,
-              size: stats.size
+              size: stats.size,
+              ...(data.modifiedBy ? { modifiedBy: data.modifiedBy } : {})
             });
           } catch (fileError) {
             console.error(`Error reading diagram file ${file}:`, fileError.message);
@@ -148,7 +193,7 @@ if (STORAGE_ENABLED) {
   });
 
   // Get specific diagram
-  app.get('/api/diagrams/:id', async (req, res) => {
+  app.get('/api/diagrams/:id', canRead, checkId, async (req, res) => {
     const diagramId = req.params.id;
     console.log(`[GET /api/diagrams/${diagramId}] Loading diagram...`);
 
@@ -173,16 +218,28 @@ if (STORAGE_ENABLED) {
   });
 
   // Save or update diagram
-  app.put('/api/diagrams/:id', async (req, res) => {
+  app.put('/api/diagrams/:id', canWrite, checkId, async (req, res) => {
     const diagramId = req.params.id;
     console.log(`[PUT /api/diagrams/${diagramId}] Saving diagram...`);
 
     try {
       const newId = await uniqueDiagramId(req.body.name || req.body.title, diagramId);
       const filePath = diagramPath(newId);
+      // Keep who created it; note who changed it
+      const previous = await fs
+        .readFile(diagramPath(diagramId), 'utf-8')
+        .then((c) => {
+          return JSON.parse(c);
+        })
+        .catch(() => {
+          return {};
+        });
       const data = {
-        ...req.body,
+        ...withoutAuthorFields(req.body),
         id: newId,
+        ...(previous.created ? { created: previous.created } : {}),
+        ...(previous.owner ? { owner: previous.owner, createdBy: previous.createdBy } : {}),
+        ...(req.user?.email ? { modifiedBy: req.user.email } : {}),
         lastModified: new Date().toISOString()
       };
 
@@ -213,7 +270,7 @@ if (STORAGE_ENABLED) {
   });
 
   // Delete diagram
-  app.delete('/api/diagrams/:id', async (req, res) => {
+  app.delete('/api/diagrams/:id', canWrite, checkId, async (req, res) => {
     try {
       const filePath = path.join(STORAGE_PATH, `${req.params.id}.json`);
       await fs.unlink(filePath);
@@ -230,14 +287,15 @@ if (STORAGE_ENABLED) {
   });
 
   // Create a new diagram
-  app.post('/api/diagrams', async (req, res) => {
+  app.post('/api/diagrams', canWrite, async (req, res) => {
     try {
       const id = await uniqueDiagramId(req.body.name || req.body.title);
       const filePath = diagramPath(id);
 
       const data = {
-        ...req.body,
+        ...withoutAuthorFields(req.body),
         id,
+        ...(req.user?.email ? { owner: req.user.id, createdBy: req.user.email, modifiedBy: req.user.email } : {}),
         created: new Date().toISOString(),
         lastModified: new Date().toISOString()
       };

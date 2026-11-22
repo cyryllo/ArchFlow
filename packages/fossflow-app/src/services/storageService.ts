@@ -5,6 +5,8 @@ export interface DiagramInfo {
   name: string;
   lastModified: Date;
   size?: number;
+  // Who saved it last (ArchFlow with logins)
+  modifiedBy?: string;
 }
 
 export interface StorageService {
@@ -16,18 +18,39 @@ export interface StorageService {
   createDiagram(data: Model): Promise<string>;
 }
 
+// Logins (ArchFlow in Docker with AUTH_MODE=local), as /api/storage/status reports them
+export interface AuthStatus {
+  mode: 'none' | 'local';
+  setupRequired: boolean;
+  publicAccess: boolean;
+}
+
+// The server said "not logged in" (e.g. the session expired): the login
+// screen listens for this event
+export const UNAUTHORIZED_EVENT = 'archflow:unauthorized';
+
+const serverFetch = async (url: string, init?: RequestInit) => {
+  const response = await fetch(url, init);
+  if (response.status === 401) window.dispatchEvent(new Event(UNAUTHORIZED_EVENT));
+  return response;
+};
+
+const idPath = (id: string) => {
+  return encodeURIComponent(id);
+};
+
 // Server Storage Implementation
 class ServerStorage implements StorageService {
   private baseUrl: string;
   private available: boolean | null = null;
   private availabilityCheckedAt: number | null = null;
   private readonly AVAILABILITY_CACHE_MS = 60000; // Re-check every 60 seconds
+  authStatus: AuthStatus = { mode: 'none', setupRequired: false, publicAccess: true };
 
   constructor(baseUrl: string = '') {
-    // In production (Docker), use relative paths (nginx proxy)
-    // In development, use localhost:3001
-    const isDevelopment = window.location.hostname === 'localhost' && window.location.port === '3000';
-    this.baseUrl = baseUrl || (isDevelopment ? 'http://localhost:3001' : '');
+    // Always the same address as the app: nginx (Docker) or the dev server's
+    // proxy pass /api on to the backend. Login cookies need one origin.
+    this.baseUrl = baseUrl;
   }
 
   async isAvailable(): Promise<boolean> {
@@ -47,6 +70,7 @@ class ServerStorage implements StorageService {
       });
       const data = await response.json();
       this.available = data.enabled;
+      if (data.auth) this.authStatus = data.auth;
       this.availabilityCheckedAt = Date.now();
       console.log(`Server storage availability: ${this.available}`);
       return this.available ?? false;
@@ -60,7 +84,7 @@ class ServerStorage implements StorageService {
 
   async listDiagrams(): Promise<DiagramInfo[]> {
     console.log(`Fetching diagrams from: ${this.baseUrl}/api/diagrams`);
-    const response = await fetch(`${this.baseUrl}/api/diagrams`);
+    const response = await serverFetch(`${this.baseUrl}/api/diagrams`);
     console.log(`Response status: ${response.status}`);
 
     if (!response.ok) {
@@ -81,7 +105,7 @@ class ServerStorage implements StorageService {
   async loadDiagram(id: string): Promise<Model> {
     console.log(`ServerStorage: Loading diagram ${id} from ${this.baseUrl}/api/diagrams/${id}`);
     try {
-      const response = await fetch(`${this.baseUrl}/api/diagrams/${id}`, {
+      const response = await serverFetch(`${this.baseUrl}/api/diagrams/${idPath(id)}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         signal: AbortSignal.timeout(10000) // 10 second timeout
@@ -105,7 +129,7 @@ class ServerStorage implements StorageService {
   async saveDiagram(id: string, data: Model): Promise<string> {
     console.log(`ServerStorage: Saving diagram ${id}`);
     try {
-      const response = await fetch(`${this.baseUrl}/api/diagrams/${id}`, {
+      const response = await serverFetch(`${this.baseUrl}/api/diagrams/${idPath(id)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -128,14 +152,14 @@ class ServerStorage implements StorageService {
   }
 
   async deleteDiagram(id: string): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/api/diagrams/${id}`, {
+    const response = await serverFetch(`${this.baseUrl}/api/diagrams/${idPath(id)}`, {
       method: 'DELETE'
     });
     if (!response.ok) throw new Error('Failed to delete diagram');
   }
 
   async createDiagram(data: Model): Promise<string> {
-    const response = await fetch(`${this.baseUrl}/api/diagrams`, {
+    const response = await serverFetch(`${this.baseUrl}/api/diagrams`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -253,6 +277,8 @@ class StorageManager {
   private electronStorage: ElectronStorage;
   private sessionStorage: SessionStorage;
   private activeStorage: StorageService | null = null;
+  // A guest (public access, not logged in) designs but saves only in the browser
+  private guest = false;
 
   constructor() {
     this.serverStorage = new ServerStorage();
@@ -260,11 +286,21 @@ class StorageManager {
     this.sessionStorage = new SessionStorage();
   }
 
+  setGuest(guest: boolean) {
+    this.guest = guest;
+  }
+
+  // Whether this app talks to an ArchFlow server, and how it handles logins
+  async serverAuthStatus(): Promise<AuthStatus | null> {
+    if (await this.electronStorage.isAvailable()) return null;
+    return (await this.serverStorage.isAvailable()) ? this.serverStorage.authStatus : null;
+  }
+
   async initialize(): Promise<StorageService> {
     if (await this.electronStorage.isAvailable()) {
       console.log('Using Electron storage (local files)');
       this.activeStorage = this.electronStorage;
-    } else if (await this.serverStorage.isAvailable()) {
+    } else if (!this.guest && (await this.serverStorage.isAvailable())) {
       console.log('Using server storage');
       this.activeStorage = this.serverStorage;
     } else {

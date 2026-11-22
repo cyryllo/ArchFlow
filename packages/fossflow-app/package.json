@@ -1,6 +1,6 @@
 {
   "name": "fossflow-app",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "private": true,
   "description": "Progressive Web App for creating isometric diagrams",
   "dependencies": {

@@ -6,6 +6,13 @@ const assetPrefix = publicUrl ? (publicUrl.endsWith('/') ? publicUrl : publicUrl
 
 export default defineConfig({
     plugins: [pluginReact()],
+    // Development: the backend runs separately (npm run dev:backend, port 3001);
+    // the app always calls /api on its own address, like behind nginx
+    server: {
+        proxy: {
+            '/api': 'http://localhost:3001',
+        },
+    },
     html: {
         template: './public/index.html',
         templateParameters: {

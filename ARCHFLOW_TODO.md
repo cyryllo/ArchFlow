@@ -125,6 +125,19 @@ Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` 
 **Notes**: validate everything against the model schema (`packages/fossflow-lib/src/schemas`) before saving; reuse/extend `LLM-GENERATION-GUIDE.md` as the format reference; ship as an npm package (stdio transport for desktop clients) and optionally as an HTTP endpoint in the Docker image; document setup for Claude Desktop / Claude Code.
 
 ### Stage 7: logins and user management (Docker version)
+**0.9.0 done** (decisions 2026-11-22):
+- **Backend** (`packages/fossflow-backend/auth.js`): `AUTH_MODE=local` adds accounts. They live in `<STORAGE_PATH>/.archflow/auth.json`, written atomically with mode 0600. Passwords use scrypt; sessions are HMAC-signed httpOnly SameSite=Lax cookies lasting 30 days, marked Secure behind HTTPS. Logins are rate-limited.
+- **Roles:** admin, editor and viewer. Everyone logged in sees all diagrams; viewers only read. Diagrams keep `owner`, `createdBy` and `modifiedBy`.
+- **Admin:** the first visit creates the administrator, or `ADMIN_EMAIL`/`ADMIN_PASSWORD` do it at start-up. The admin panel adds users with temporary passwords (changed at first login), resets passwords, disables or deletes users and changes roles, always keeping one active admin. It holds the settings *public access* (guests design but save only in the browser) and *API access for everyone*, and lists all tokens.
+- **Personal API/MCP tokens:** `afk_…`, stored as SHA-256, read or write scope, optional expiry, last-used time. Users create them when they have API access (per user, admins, or for everyone). Tokens can't manage accounts.
+- **MCP in Docker** with logins runs `--auth archflow`: it checks the bearer through `/api/auth/me` and forwards it, so the user's rights apply. `MCP_TOKEN` is only for `AUTH_MODE=none`.
+- **Fixed:** diagram ids could reach files outside the diagrams folder (`../`, `.archflow/auth`).
+- **App:** always calls `/api` on its own address (the dev server proxies it); ids are URL-encoded.
+- **Tests:** 13 backend tests (`npm test -w packages/fossflow-backend`) and 21 MCP tests, plus a browser end-to-end run.
+- **Docker:** the image defaults to `AUTH_MODE=none`; `compose.yml` uses `local`.
+
+**Next (0.9.1)**: private diagrams and sharing with people, and share links with a random token instead of `/display/<name>`.
+
 **Why**: the Docker version has no accounts - anyone who can open the address can view, change and delete every diagram in "My diagrams", and the read-only share link isn't access control.
 **Wanted**:
 - log in to ArchFlow (username + password, hashed with bcrypt/argon2; session cookie or token) - optionally single sign-on later (OIDC: Google / Microsoft / Keycloak, maybe LDAP);
@@ -133,6 +146,7 @@ Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` 
 - share links with a random token (optionally expiring), read-only by default, instead of guessable `/display/<name>` URLs;
 - first-run setup of the admin account (or an env variable), and a switch to keep the current no-login mode for trusted networks;
 - an audit trail of who changed what is a nice-to-have.
+- **API/MCP tokens** (user decision 2026-11-22). The admin allows MCP use globally, per role or per user. Users generate their own tokens in their profile; a user can have several, each with a name, an optional expiry date and a read-only or read-write scope. A token is shown once, stored as a hash, records when it was last used, and acts with its owner's permissions. The admin sees all tokens and can revoke any of them, and disabling a user disables their tokens. `MCP_TOKEN` stays only for `AUTH_MODE=none`.
 **Notes**: everything lives in `packages/fossflow-backend` (Express) - it needs a small user store (SQLite file next to the diagrams is enough), auth middleware on `/api/*`, and login / user-management screens in the app. The desktop app and the plain-website mode stay without logins.
 
 ### Share button only with server storage (released in v0.6.3)

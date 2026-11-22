@@ -113,8 +113,51 @@ Warto wiedzieć, zanim uruchomisz go na serwerze:
 - **Właściciel plików (Linux).** Kontener działa jako `root`, więc katalog `./diagrams` i pliki JSON w nim należą na hoście do `root`. Aby je ręcznie edytować, przenosić czy usuwać, użyj `sudo` albo przejmij je: `sudo chown -R $USER: diagrams`. ArchFlow dalej będzie działał.
 - **Działa bez internetu.** Wszystko, czego potrzebuje aplikacja, jest w obrazie, więc kontener startuje w kilka sekund i nie potrzebuje internetu, poza samym pobraniem obrazu.
 - **Restarty.** Oba przykłady używają `restart: unless-stopped`: kontener wstaje sam po awarii albo po restarcie maszyny, chyba że sam go zatrzymasz.
-- **Brak logowania.** ArchFlow nie ma kont użytkowników. Każdy, kto otworzy adres, może przeglądać, zmieniać i usuwać diagramy w Dysku aplikacji. Uruchamiaj go w zaufanej sieci albo za reverse proxy z uwierzytelnianiem (np. basic auth), jeśli ma być dostępny z internetu.
-- **Kopie zapasowe.** Wszystko, co zapisuje ArchFlow, jest w `/data/diagrams` (czyli w katalogu `./diagrams`), więc wystarczy kopia tego katalogu.
+- **Logowanie.** Z `compose.yml` od wersji 0.9.0 ArchFlow wymaga logowania: zobacz [Konta i logowanie](#konta-i-logowanie). Z `AUTH_MODE=none` nie ma kont i każdy, kto otworzy adres, może przeglądać, zmieniać i usuwać diagramy. Taką instalację trzymaj w zaufanej sieci.
+- **Kopie zapasowe.** Wszystko, co zapisuje ArchFlow, jest w `/data/diagrams` (czyli w katalogu `./diagrams`), łącznie z kontami (`.archflow/auth.json`), więc wystarczy kopia tego katalogu.
+
+## Konta i logowanie
+
+Od wersji 0.9.0 ArchFlow w Dockerze może wymagać logowania. Włącza je `compose.yml` (`AUTH_MODE=local`). Sam obraz albo `compose.yml` sprzed 0.9.0 działają jak dotąd, bez logowania (`AUTH_MODE=none`).
+
+**Pierwszy administrator.** W świeżym ArchFlow z logowaniem pierwsza osoba, która go otworzy, zobaczy *Utwórz konto administratora*. Zrób to od razu po uruchomieniu kontenera: do tego czasu każdy, kto dotrze do adresu, mógłby zająć tę rolę. Możesz też ustawić `ADMIN_EMAIL` i `ADMIN_PASSWORD` (np. w `.env`), a konto powstanie przy starcie kontenera. Działa to tylko, dopóki nie ma żadnych kont.
+
+**Role**
+
+| Rola | Może |
+|---|---|
+| Administrator | Wszystko, plus użytkownicy i ustawienia (☰ → *Użytkownicy i ustawienia*) |
+| Edytor | Tworzyć, zmieniać i usuwać diagramy |
+| Czytelnik | Otwierać diagramy bez ich zmieniania |
+
+Każdy zalogowany widzi wszystkie diagramy. Każdy diagram zapamiętuje, kto go utworzył i kto zmienił ostatni; *Moje diagramy* pokazują tę drugą osobę.
+
+**Dodawanie osób.** W ☰ → *Użytkownicy i ustawienia* wpisz e-mail, imię i rolę, a potem kliknij *Dodaj użytkownika*. ArchFlow raz pokaże hasło tymczasowe. Przekaż je tej osobie; przy pierwszym logowaniu ustawi własne. W tym samym panelu resetujesz hasła, zmieniasz role oraz wyłączasz i usuwasz użytkowników. ArchFlow zawsze zostawia co najmniej jednego aktywnego administratora.
+
+**Dostęp publiczny.** Gdy włączysz *Ustawienia* → *Dostęp publiczny*, niezalogowani mogą otworzyć ArchFlow i projektować. Zapisują tylko w swojej przeglądarce albo do pliku, nigdy na serwer, i mogą się zalogować przyciskiem u góry.
+
+**Tokeny dla asystentów AI i skryptów.**
+- Każdy użytkownik tworzy własne tokeny w *Konto* → *Tokeny*: tylko do odczytu albo do odczytu i zmian, z opcjonalną datą wygaśnięcia. Token działa z uprawnieniami właściciela.
+- Tokeny mogą tworzyć administratorzy, użytkownicy z zaznaczonym *API i MCP* albo wszyscy, gdy włączone jest *Ustawienia* → *Dostęp do API i MCP dla wszystkich*.
+- Administrator widzi wszystkie tokeny w zakładce *Tokeny* i może unieważnić każdy z nich.
+- Zobacz [Asystenci AI (MCP)](mcp.pl.md#mcp-w-dockerze-przez-http).
+
+**Sesje**
+- Zalogowanie trwa 30 dni.
+- Zmiana hasła wylogowuje pozostałe przeglądarki.
+- Wyłączenie użytkownika od razu go wylogowuje i zatrzymuje jego tokeny.
+- Po 10 nieudanych logowaniach z jednego adresu w ciągu 15 minut logowanie z niego jest zablokowane do końca tego okresu.
+
+**HTTPS.** We własnej sieci logowanie działa przez zwykłe HTTP. Przez internet wystaw ArchFlow za reverse proxy z HTTPS, np. Nginx Proxy Manager. Proxy musi przekazywać `X-Forwarded-Proto` (większość to robi), żeby ciasteczko logowania było oznaczone jako bezpieczne. Nie dokładaj zabezpieczenia hasłem w samym proxy (basic auth): zajmuje ten sam nagłówek `Authorization`, którego potrzebują tokeny.
+
+**Gdzie są konta.** W `.archflow/auth.json` w katalogu z diagramami. Hasła są zapisane jako skróty scrypt, a tokeny jako skróty SHA-256. Rób kopię tego pliku razem z diagramami.
+
+**Zgubione hasło jedynego administratora?**
+1. Zatrzymaj kontener.
+2. Usuń `.archflow/auth.json` z katalogu z diagramami (może być potrzebne `sudo`).
+3. Uruchom kontener ponownie i utwórz administratora od nowa.
+
+Diagramy zostają. Konta i tokeny przepadają i trzeba je dodać ponownie.
 
 ## Konfiguracja
 
@@ -123,7 +166,9 @@ Warto wiedzieć, zanim uruchomisz go na serwerze:
 | `ARCHFLOW_VERSION` | `latest` | Tag obrazu używany przez `compose.yml`. |
 | `ENABLE_SERVER_STORAGE` | `true` | Zapis diagramów jako plików na serwerze (Moje diagramy). `false` przełącza na zapis tylko w przeglądarce (sesja). |
 | `STORAGE_PATH` | `/data/diagrams` | Gdzie w kontenerze zapisywane są diagramy. Tu montuj katalog z hosta albo wolumen. |
-| `MCP_TOKEN` | *(puste)* | Włącza serwer MCP dla asystentów AI pod `/mcp`. Klienci wysyłają go jako `Authorization: Bearer <token>`. Zobacz [Asystenci AI (MCP)](mcp.pl.md#mcp-w-dockerze-przez-http). |
+| `AUTH_MODE` | `none` w obrazie, `local` w `compose.yml` | `local` = konta i logowanie, `none` = bez logowania (tylko zaufane sieci). Zobacz [Konta i logowanie](#konta-i-logowanie). |
+| `ADMIN_EMAIL`, `ADMIN_PASSWORD` | *(puste)* | Tworzą pierwszego administratora przy starcie, zamiast kreatora. Używane tylko, gdy nie ma jeszcze kont. |
+| `MCP_TOKEN` | *(puste)* | Tylko bez logowania (`AUTH_MODE=none`): włącza serwer MCP dla asystentów AI pod `/mcp`. Z logowaniem każdy używa własnego tokenu. Klienci wysyłają go jako `Authorization: Bearer <token>`. Zobacz [Asystenci AI (MCP)](mcp.pl.md#mcp-w-dockerze-przez-http). |
 
 Aby wyłączyć zapis serwerowy i wrócić do zapisu tylko w przeglądarce (sesja), ustaw `ENABLE_SERVER_STORAGE=false`:
 ```bash

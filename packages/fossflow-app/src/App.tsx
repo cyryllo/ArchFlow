@@ -17,6 +17,9 @@ import { StorageManager } from './StorageManager';
 import { DiagramManager } from './components/DiagramManager';
 import { storageManager } from './services/storageService';
 import { supportedLanguages } from './i18n';
+import { AuthGate, useAuth } from './auth/AuthContext';
+import { AccountDialog } from './auth/AccountDialog';
+import { AdminDialog } from './auth/AdminDialog';
 import { allLocales } from 'fossflow';
 import { useIconPackManager, IconPackName } from './services/iconPackManager';
 import './App.css';
@@ -46,10 +49,13 @@ function App() {
 
   return (
     <BrowserRouter basename={basename}>
-      <Routes>
-        <Route path="/" element={<EditorPage />} />
-        <Route path="/display/:readonlyDiagramId" element={<EditorPage />} />
-      </Routes>
+      {/* With logins (Docker, AUTH_MODE=local): setup, login, guests */}
+      <AuthGate>
+        <Routes>
+          <Route path="/" element={<EditorPage />} />
+          <Route path="/display/:readonlyDiagramId" element={<EditorPage />} />
+        </Routes>
+      </AuthGate>
     </BrowserRouter>
   );
 }
@@ -68,6 +74,9 @@ function EditorPage() {
   const [showLoadDialog, setShowLoadDialog] = useState(false);
   const [showExportDialog, setShowExportDialog] = useState(false);
   const [showLanguageDialog, setShowLanguageDialog] = useState(false);
+  const [showAccount, setShowAccount] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
+  const auth = useAuth();
   const [fossflowKey, setFossflowKey] = useState(0); // Key to force re-render of FossFLOW
   // Bumped whenever a different diagram is put into the editor. Model updates
   // still coming from the previous editor instance carry an older generation
@@ -705,6 +714,8 @@ function EditorPage() {
   // "Save" (top bar, ☰ menu, Ctrl+S): quick-save the open diagram, or ask
   // for a name when it has never been saved
   const handleSave = async () => {
+    // Viewers (ArchFlow with logins) can't save
+    if (!auth.canEdit) return;
     if (serverStorageAvailable) {
       if (!currentDiagram) {
         setShowDiagramManager(true);
@@ -771,7 +782,7 @@ function EditorPage() {
 
   // Entries the app adds to the editor's ☰ menu
   const menuItems = useMemo((): HostMenuItem[] => {
-    return [
+    const items: HostMenuItem[] = [
       {
         id: 'new-diagram',
         group: 'file',
@@ -809,9 +820,62 @@ function EditorPage() {
         onClick: () => {
           setShowLanguageDialog(true);
         }
-      }
+      },
+      // ArchFlow with logins: the account, the admin panel, logging in/out
+      ...(auth.mode === 'local' && auth.user
+        ? [
+            {
+              id: 'account',
+              group: 'app' as const,
+              label: t('account.title'),
+              icon: 'account',
+              onClick: () => {
+                setShowAccount(true);
+              }
+            },
+            ...(auth.isAdmin
+              ? [
+                  {
+                    id: 'admin',
+                    group: 'app' as const,
+                    label: t('admin.title'),
+                    icon: 'users',
+                    onClick: () => {
+                      setShowAdmin(true);
+                    }
+                  }
+                ]
+              : []),
+            {
+              id: 'logout',
+              group: 'app' as const,
+              label: t('auth.logout'),
+              icon: 'logout',
+              onClick: () => {
+                void auth.logout();
+              }
+            }
+          ]
+        : []),
+      ...(auth.guest
+        ? [
+            {
+              id: 'login',
+              group: 'app' as const,
+              label: t('auth.loginButton'),
+              icon: 'login',
+              onClick: () => {
+                auth.showLogin();
+              }
+            }
+          ]
+        : [])
     ];
-  }, [t, currentLanguage]);
+    // Viewers don't get "Save"
+    return items.filter((item) => {
+      return auth.canEdit || item.id !== 'save';
+    });
+  }, [t, currentLanguage, auth]);
 
   const changeLanguage = (lng: string) => {
     setShowLanguageDialog(false);
@@ -863,7 +927,7 @@ function EditorPage() {
               >
                 {hasUnsavedChanges ? `● ${t('status.modified')}` : `✓ ${t('status.saved')}`}
               </span>
-              {!serverStorageAvailable && (
+              {!serverStorageAvailable && !auth.guest && (
                 <span className="session-note">({t('status.sessionStorageNote')})</span>
               )}
             </>
@@ -882,15 +946,21 @@ function EditorPage() {
             {t('dialog.readOnly.mode')}
           </div>
         )}
+        {!isReadonlyUrl && auth.mode === 'local' && !auth.canEdit && (
+          <span className="guest-note">{t('auth.viewerNote')}</span>
+        )}
+        {auth.guest && <span className="guest-note">{t('auth.guestNote')}</span>}
         {!isReadonlyUrl && (
           <>
-            <button
-              className={`toolbar-btn ${hasUnsavedChanges ? 'primary' : ''}`}
-              onClick={handleSave}
-              title={`${t('nav.save')} (Ctrl+S)`}
-            >
-              <UiIcon name="save" size={18} /> {t('nav.save')}
-            </button>
+            {auth.canEdit && (
+              <button
+                className={`toolbar-btn ${hasUnsavedChanges ? 'primary' : ''}`}
+                onClick={handleSave}
+                title={`${t('nav.save')} (Ctrl+S)`}
+              >
+                <UiIcon name="save" size={18} /> {t('nav.save')}
+              </button>
+            )}
             <button
               className="toolbar-btn"
               onClick={openMyDiagrams}
@@ -900,6 +970,22 @@ function EditorPage() {
             </button>
           </>
         )}
+        {auth.user && (
+          <button
+            className="toolbar-btn account-chip"
+            onClick={() => {
+              setShowAccount(true);
+            }}
+            title={`${auth.user.email} · ${t(`auth.role.${auth.user.role}`)}`}
+          >
+            <UiIcon name="account" size={18} /> {auth.user.name || auth.user.email}
+          </button>
+        )}
+        {auth.guest && (
+          <button className="toolbar-btn" onClick={auth.showLogin}>
+            <UiIcon name="login" size={18} /> {t('auth.loginButton')}
+          </button>
+        )}
       </div>
       <div className="fossflow-container">
         <Isoflow
@@ -907,7 +993,7 @@ function EditorPage() {
           initialData={editorInitialData}
           iconCategoryLabels={iconCategoryLabels}
           onModelUpdated={onEditorModelUpdated}
-          editorMode={isReadonlyUrl ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
+          editorMode={isReadonlyUrl || !auth.canEdit ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
           mainMenuOptions={MAIN_MENU_OPTIONS}
           onExportJson={openExportDialog}
           menuItems={menuItems}
@@ -1075,6 +1161,21 @@ function EditorPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {showAccount && (
+        <AccountDialog
+          onClose={() => {
+            setShowAccount(false);
+          }}
+        />
+      )}
+      {showAdmin && (
+        <AdminDialog
+          onClose={() => {
+            setShowAdmin(false);
+          }}
+        />
       )}
 
       {showLanguageDialog && (
