@@ -53,6 +53,7 @@ chmod +x ArchFlow-*-x86_64.AppImage
 
 Instalator Windows nie jest jeszcze podpisany certyfikatem, więc SmartScreen może pokazać ostrzeżenie przy pierwszym uruchomieniu: kliknij **Więcej informacji → Uruchom mimo to**. Wolisz przeglądarkę? [Wypróbuj demo online](https://cyryllo.github.io/ArchFlow/app/) albo [uruchom w Dockerze](#-szybkie-wdrożenie-z-dockerem).
 
+- **🚀 [Szybki start](quick-start.pl.md)** - Pierwszy diagram w dziesięciu krokach.
 - **📝 [ARCHFLOW_TODO.md](https://github.com/cyryllo/ArchFlow/blob/master/ARCHFLOW_TODO.md)** - Bieżące problemy i plan rozwoju.
 - **🤝 [CONTRIBUTING.md](https://github.com/cyryllo/ArchFlow/blob/master/CONTRIBUTING.md)** - Jak włączyć się w rozwój projektu.
 
@@ -258,6 +259,8 @@ npm run publish:lib  # Opublikuj bibliotekę na npm
 
 ## Jak korzystać
 
+**Pierwszy raz z ArchFlow? Zacznij od [szybkiego startu](quick-start.pl.md):** dziesięć kroków od pustego płótna do zapisanego diagramu, ze zrzutami ekranu.
+
 ### Ekran
 
 ![Pasek narzędzi](screenshots/pl-toolbar.png)
@@ -273,7 +276,7 @@ npm run publish:lib  # Opublikuj bibliotekę na npm
 
 1. **Dodaj węzeł:** naciśnij **N** (albo przycisk węzła, albo prawy przycisk na płótnie → *Dodaj węzeł*), wybierz ikonę z kategorii lub wyszukaj, potem kliknij miejsce na płótnie.
 2. **Narysuj strefę:** naciśnij **R** i przeciągnij prostokąt.
-3. **Połącz:** naciśnij **C**, kliknij pierwszy węzeł, potem drugi. Kliknięcia w puste miejsca po drodze dodają punkty załamania. Albo prawy przycisk na węźle → *Połącz z…*.
+3. **Połącz:** naciśnij **C**, kliknij pierwszy węzeł, potem drugi (albo prawy przycisk na węźle → *Połącz z…*). Żeby zagiąć połączenie, przeciągnij jego linię.
 4. **Dodaj tekst:** naciśnij **T** i kliknij, gdzie ma się pojawić.
 5. **Zmień właściwości:** kliknij element, żeby otworzyć jego panel (nazwa, opis, ikona, kolory, styl linii…), albo prawy przycisk → *Właściwości*.
 

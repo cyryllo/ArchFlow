@@ -36,6 +36,8 @@ const argVal = (name) => {
 };
 const only = argVal('--only')?.split(',');
 const langs = argVal('--lang') ? [argVal('--lang')] : ['en', 'pl'];
+// Which sets to take: 'docs' (README/site) and/or 'quickstart' (quick start guide)
+const sets = (argVal('--set') ?? 'docs,quickstart').split(',');
 
 // ---------------------------------------------------------------------------
 // Minimal Chrome DevTools Protocol client
@@ -156,8 +158,8 @@ const want = (name) => {
 // ---------------------------------------------------------------------------
 
 const L = {
-  en: { cancel: 'Cancel', load: 'Load', myDiagrams: 'My diagrams', settings: 'Settings', exportJson: 'Export as JSON', exportImage: 'Export as image', orders: 'Orders', db: 'Orders DB', dbFull: 'Orders DB', payments: 'Payments', queue: 'Event queue' },
-  pl: { cancel: 'Anuluj', load: 'Wczytaj', myDiagrams: 'Moje diagramy', settings: 'Ustawienia', exportJson: 'Eksportuj do JSON', exportImage: 'Eksportuj do obrazu', orders: 'Zamówienia', db: 'Baza zamówień', dbFull: 'Baza zamówień', payments: 'Płatności', queue: 'Kolejka zdarzeń' }
+  en: { save: 'Save', saveCurrent: 'Save Current Diagram', server: 'Server', database: 'Database', nameWeb: 'Web server', nameDb: 'Customer database', zoneText: 'Production', diagramName: 'My first diagram', cancel: 'Cancel', load: 'Load', myDiagrams: 'My diagrams', settings: 'Settings', exportJson: 'Export as JSON', exportImage: 'Export as image', orders: 'Orders', db: 'Orders DB', dbFull: 'Orders DB', payments: 'Payments', queue: 'Event queue' },
+  pl: { save: 'Zapisz', saveCurrent: 'Zapisz bieżący diagram', server: 'Serwer', database: 'Baza danych', nameWeb: 'Serwer WWW', nameDb: 'Baza klientów', zoneText: 'Produkcja', diagramName: 'Mój pierwszy diagram', cancel: 'Anuluj', load: 'Wczytaj', myDiagrams: 'Moje diagramy', settings: 'Ustawienia', exportJson: 'Eksportuj do JSON', exportImage: 'Eksportuj do obrazu', orders: 'Zamówienia', db: 'Baza zamówień', dbFull: 'Baza zamówień', payments: 'Płatności', queue: 'Kolejka zdarzeń' }
 };
 
 async function api(path, init) {
@@ -330,13 +332,146 @@ async function run(l) {
   }
 }
 
+
+// ---------------------------------------------------------------------------
+// Quick start guide: build a small diagram from an empty canvas, step by step.
+// Saved as docs/screenshots/<lang>-qs-<step>.png
+
+const typeText = async (text) => {
+  await send('Input.insertText', { text });
+  await sleep(300);
+};
+
+async function openEmpty(l) {
+  const list = (await api('/diagrams')) ?? [];
+  for (const d of list) await api(`/diagrams/${encodeURIComponent(d.id)}`, { method: 'DELETE' });
+  await send('Page.navigate', { url: `${APP_URL}/` });
+  await sleep(1200);
+  await evaluate(`localStorage.clear(); localStorage.setItem('i18nextLng', '${l === 'pl' ? 'pl-PL' : 'en-US'}'); true`);
+  await send('Page.reload');
+  await sleep(3000);
+  await move(W / 2, 20);
+}
+
+async function quickstart(l) {
+  lang = l;
+  const t = L[l];
+  await openEmpty(l);
+  // Points on the canvas (one tile on screen to the right = 141.5 px at 100%)
+  const A = { x: 820, y: 600 };
+  const B = { x: A.x + 283, y: A.y };
+  const area = { x: 420, y: 300, width: 1080, height: 520 };
+  const withPanel = { x: 0, y: 60, width: 1500, height: 900 };
+
+  await shoot('qs-empty');
+
+  // Add a node: N, pick "Server", click the canvas
+  await key('n', 'KeyN', 78);
+  await sleep(900);
+  await shoot('qs-picker', withPanel);
+  await clickText(t.server, '.MuiCard-root *');
+  await sleep(300);
+  await click(A.x, A.y);
+  await sleep(700);
+  await move(W / 2, 20);
+  await shoot('qs-node', area);
+
+  // Name it: click the node, F2, type
+  await click(A.x, A.y);
+  await sleep(700);
+  await key('F2', 'F2', 113);
+  await sleep(300);
+  await key('a', 'KeyA', 65, 2);
+  await typeText(t.nameWeb);
+  await move(W / 2, 20);
+  await shoot('qs-name', withPanel);
+  await esc();
+
+  // Second node: a database next to it (found with the picker's search)
+  await key('n', 'KeyN', 78);
+  await sleep(900);
+  await evaluate(`(() => { const el = [...document.querySelectorAll('.MuiCard-root input')].find((e) => e.offsetParent && e.type !== 'file' && e.type !== 'checkbox'); el?.focus(); return !!el; })()`);
+  await typeText(t.database);
+  await sleep(500);
+  await clickText(t.database, '.MuiCard-root *');
+  await sleep(300);
+  await click(B.x, B.y);
+  await sleep(700);
+  await click(B.x, B.y);
+  await sleep(600);
+  await key('F2', 'F2', 113);
+  await key('a', 'KeyA', 65, 2);
+  await typeText(t.nameDb);
+  await esc();
+
+  // Zone: R and drag a rectangle around both nodes
+  await key('r', 'KeyR', 82);
+  await sleep(300);
+  await drag(A.x - 141, A.y, B.x + 141, B.y);
+  await sleep(500);
+  await esc();
+  await move(W / 2, 20);
+  await shoot('qs-zone', area);
+
+  // Connect: C, click the first node, then the second
+  await key('c', 'KeyC', 67);
+  await sleep(300);
+  await click(A.x, A.y);
+  await sleep(300);
+  await click(B.x, B.y);
+  await sleep(500);
+  await esc();
+  await move(W / 2, 20);
+  await shoot('qs-connect', area);
+
+  // Text: T, click below the zone, type into its panel
+  await key('t', 'KeyT', 84);
+  await sleep(400);
+  await click(A.x + 40, A.y + 250);
+  await sleep(800);
+  await evaluate(`(() => { const el = [...document.querySelectorAll('.MuiCard-root input, .MuiCard-root textarea')].find((e) => e.offsetParent); el?.focus(); el?.select?.(); return !!el; })()`);
+  await key('a', 'KeyA', 65, 2);
+  await typeText(t.zoneText);
+  await move(W / 2, 20);
+  await shoot('qs-text', withPanel);
+  await esc();
+
+  // Select and move: box around everything, then drag it a bit
+  // (the box must enclose the whole zone for it to be selected too)
+  await drag(A.x - 250, A.y - 235, B.x + 250, A.y + 330);
+  await sleep(400);
+  await drag(A.x, A.y, A.x + 120, A.y + 40);
+  await sleep(600);
+  await move(W / 2, 20);
+  await shoot('qs-move', { x: area.x, y: area.y, width: area.width + 160, height: area.height + 140 });
+  await esc();
+
+  // Save: top bar Save -> My diagrams -> name it
+  await clickText(t.save, '.toolbar button, .toolbar button *');
+  await sleep(1000);
+  await clickText(t.saveCurrent, '.diagram-manager button');
+  await sleep(600);
+  await evaluate(`(() => { const el = document.querySelector('.diagram-manager input'); el?.focus(); el?.select(); return !!el; })()`);
+  await typeText(t.diagramName);
+  await shoot('qs-save', await box('.diagram-manager', 0));
+  await key('Enter', 'Enter', 13);
+  await sleep(1200);
+  await evaluate(`(() => { const b = document.querySelector('.diagram-manager .close-button'); b?.click(); return !!b; })()`);
+  await sleep(600);
+  await move(W / 2, 20);
+  await shoot('qs-saved', { x: 0, y: 0, width: 560, height: 56 });
+}
+
 try {
   mkdirSync(OUT, { recursive: true });
   await connect();
   await send('Page.enable');
   await send('Runtime.enable');
   await send('Emulation.setDeviceMetricsOverride', { width: W, height: H, deviceScaleFactor: 1, mobile: false });
-  for (const l of langs) await run(l);
+  for (const l of langs) {
+    if (sets.includes('docs')) await run(l);
+    if (sets.includes('quickstart')) await quickstart(l);
+  }
 } finally {
   ws?.close();
   const exited = new Promise((r) => chrome.once('exit', r));

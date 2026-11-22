@@ -91,11 +91,11 @@ Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` 
 ### Stage 4: docs and website
 **Done**: README (EN) and docs/README.pl.md rewritten for the new interface (features, downloads, how to use with screenshots, shortcuts, saving); project website (site/, EN + PL) updated with a download section and new gallery; all screenshots retaken in Full HD from a demo diagram (online shop) by `scripts/docs/screenshots.mjs` + `scripts/docs/demo-diagram.mjs` (run against a throwaway instance, see the script header). Re-run the script whenever the UI changes.
 
-### Stage 4b: user manual (next)
-**Wanted**: a step-by-step user manual in Polish and English with screenshots (getting started, drawing, connecting, selecting and moving, menus, saving / My diagrams, export, settings, shortcuts), using the same screenshot script.
+### Stage 4b: user manual
+**Done**: quick start guide (`docs/quick-start.md`, `docs/quick-start.pl.md`): ten steps from an empty canvas to a saved diagram, with screenshots taken by `scripts/docs/screenshots.mjs --set quickstart`. Linked from both READMEs and the website.
+**Next**: the full user manual in Polish and English (all tools, menus, panels, connectors in detail, export options, settings, shortcuts, troubleshooting), using the same screenshot script.
 
-### App fixes waiting for the next release
-Found while taking the screenshots, fixed in the code but not released yet (they ship with the next version bump):
+### App fixes found while taking the screenshots (released in v0.6.2)
 - Node labels sat at a fixed height, so the taller new icons poked up behind them; labels are now lifted above the measured icon height (`SceneLayers/Nodes/Node/Node.tsx`).
 - The dotted line from a label to its node swallowed clicks in the middle of the icon (`components/Label/Label.tsx`, `pointer-events: none`).
 - The right-click menu only appeared on the next re-render (e.g. after moving the mouse), because its anchor was a ref; it's state now (`components/UiOverlay/UiOverlay.tsx`).
@@ -126,4 +126,14 @@ Found while taking the screenshots, fixed in the code but not released yet (they
 ### Share button shows where it can't work
 **Problem**: "Share" in My diagrams copies `<origin>/display/<id>`, which only works with server storage (Docker). In the desktop app it produces an `app://bundle/...` link nobody else can open, and in browser-only mode the link has nothing to load.
 **Fix Strategy**: show the Share button only when `storageKind === 'server'` (`packages/fossflow-app/src/components/DiagramManager.tsx`). Revisit together with stage 7 (token-based share links).
+
+### Slimmer README
+**Problem**: README.md (and docs/README.pl.md) grew to ~400 lines - user docs, the whole Docker guide, desktop builds, developer setup and saving details are all in one file, so the basics are hard to find.
+**Wanted**: keep only the essentials in the README (what ArchFlow is, a screenshot, key features, download / try / run with Docker in a few lines, links) and move the rest to separate pages, linked from the README, in EN and PL:
+- `docs/docker.md` - full Docker guide (compose, docker run, ports, how the container works, configuration, backups);
+- `docs/saving.md` - saving and opening diagrams, My diagrams, export, browser-only mode;
+- `docs/usage.md` (or the future full user manual) - the screen, tools, right-click menus, selection, shortcuts, settings;
+- `docs/development.md` (or CONTRIBUTING.md) - local development, monorepo structure, commands, building the desktop app, screenshots script, release notes;
+- quick start stays in `docs/quick-start.md`.
+Update the links on the website (e.g. "Full Docker guide") when the sections move.
 

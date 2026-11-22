@@ -53,6 +53,7 @@ chmod +x ArchFlow-*-x86_64.AppImage
 
 The Windows installer isn't code-signed yet, so SmartScreen may warn you the first time: click **More info → Run anyway**. Prefer the browser? [Try the live demo](https://cyryllo.github.io/ArchFlow/app/) or [run it with Docker](#-quick-deploy-with-docker).
 
+- **🚀 [Quick start](docs/quick-start.md)** - Your first diagram in ten steps.
 - **📝 [ARCHFLOW_TODO.md](https://github.com/cyryllo/ArchFlow/blob/master/ARCHFLOW_TODO.md)** - Current issues and roadmap.
 - **🤝 [CONTRIBUTING.md](https://github.com/cyryllo/ArchFlow/blob/master/CONTRIBUTING.md)** - How to contribute to the project.
 
@@ -260,6 +261,8 @@ npm run publish:lib  # Publish library to npm
 
 ## How to Use
 
+**New to ArchFlow? Start with the [quick start](docs/quick-start.md):** ten steps from an empty canvas to a saved diagram, with screenshots.
+
 ### The screen
 
 ![Toolbar](docs/screenshots/en-toolbar.png)
@@ -275,7 +278,7 @@ npm run publish:lib  # Publish library to npm
 
 1. **Add a node:** press **N** (or the node button, or right-click the canvas → *Add node*), pick an icon from a category or search, then click a spot on the canvas.
 2. **Draw a zone:** press **R** and drag out a rectangle.
-3. **Connect:** press **C**, click the first node, then the second. Clicking empty spots in between adds waypoints. Or right-click a node → *Connect to…*.
+3. **Connect:** press **C**, click the first node, then the second (or right-click a node → *Connect to…*). To bend a connector, drag its line.
 4. **Add text:** press **T** and click where it should go.
 5. **Edit properties:** click an element to open its panel (name, description, icon, colours, line style…), or right-click it → *Properties*.
 
