@@ -1,4 +1,4 @@
-import React, { useMemo, memo } from 'react';
+import React, { useMemo, memo, useRef, useEffect } from 'react';
 import { Box, Typography, Stack } from '@mui/material';
 import {
   PROJECTED_TILE_SIZE,
@@ -11,6 +11,7 @@ import { ViewItem } from 'src/types';
 import { useModelItem } from 'src/hooks/useModelItem';
 import { ExpandableLabel } from 'src/components/Label/ExpandableLabel';
 import { RichTextEditor } from 'src/components/RichTextEditor/RichTextEditor';
+import { useResizeObserver } from 'src/hooks/useResizeObserver';
 
 interface Props {
   node: ViewItem;
@@ -27,6 +28,20 @@ export const Node = memo(({ node, order }: Props) => {
       origin: 'BOTTOM'
     });
   }, [node.tile]);
+
+  // Measure the drawn icon so the label always sits above it: taller icons
+  // would otherwise poke up behind a label placed at a fixed height
+  const iconBoxRef = useRef<HTMLDivElement>(null);
+  const { size: iconSize, observe, disconnect } = useResizeObserver();
+  useEffect(() => {
+    const img = iconBoxRef.current?.querySelector('img');
+    if (img) observe(img);
+    return disconnect;
+  }, [observe, disconnect, iconComponent]);
+  const labelHeight = Math.max(
+    node.labelHeight ?? DEFAULT_LABEL_HEIGHT,
+    iconSize.height > 0 ? Math.ceil(iconSize.height - PROJECTED_TILE_SIZE.height / 2 + 12) : 0
+  );
 
   const description = useMemo(() => {
     if (
@@ -66,7 +81,7 @@ export const Node = memo(({ node, order }: Props) => {
             <ExpandableLabel
               maxWidth={250}
               expandDirection="BOTTOM"
-              labelHeight={node.labelHeight ?? DEFAULT_LABEL_HEIGHT}
+              labelHeight={labelHeight}
             >
               <Stack spacing={1}>
                 {modelItem.name && (
@@ -82,6 +97,7 @@ export const Node = memo(({ node, order }: Props) => {
         )}
         {iconComponent && (
           <Box
+            ref={iconBoxRef}
             sx={{
               position: 'absolute',
               pointerEvents: 'none'

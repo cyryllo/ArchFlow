@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Box, useTheme } from '@mui/material';
 import { EditorModeEnum, DialogTypeEnum } from 'src/types';
 import { UiElement } from 'components/UiElement/UiElement';
@@ -47,7 +47,9 @@ const getEditorModeMapping = (editorMode: keyof typeof EditorModeEnum) => {
 
 export const UiOverlay = () => {
   const theme = useTheme();
-  const contextMenuAnchorRef = useRef();
+  // Anchor for the right-click menu. Kept in state (not a ref) so the menu
+  // opens in the same render the anchor appears, not on the next mouse move.
+  const [contextMenuAnchor, setContextMenuAnchor] = useState<HTMLElement | null>(null);
   const toolMenuRef = useRef<HTMLDivElement>(null);
   const { appPadding } = theme.customVars;
   const spacing = useCallback(
@@ -192,7 +194,7 @@ export const UiOverlay = () => {
       <SceneLayer>
         {contextMenu && (
           <Box 
-            ref={contextMenuAnchorRef} 
+            ref={setContextMenuAnchor}
             sx={{
               position: 'absolute',
               left: getTilePosition({ tile: contextMenu.tile }).x,
@@ -200,7 +202,7 @@ export const UiOverlay = () => {
             }}
           />
         )}
-        <ContextMenuManager anchorEl={contextMenu ? contextMenuAnchorRef.current : null} />
+        <ContextMenuManager anchorEl={contextMenu ? contextMenuAnchor : null} />
       </SceneLayer>
     </>
   );

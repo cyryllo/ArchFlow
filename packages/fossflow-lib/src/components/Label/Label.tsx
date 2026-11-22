@@ -39,7 +39,10 @@ export const Label = ({
           sx={{
             position: 'absolute',
             top: -labelHeight,
-            left: -CONNECTOR_DOT_SIZE / 2
+            left: -CONNECTOR_DOT_SIZE / 2,
+            // The dotted line runs over the middle of the node's icon; it must
+            // not swallow clicks meant for the node
+            pointerEvents: 'none'
           }}
         >
           <line

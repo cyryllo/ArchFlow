@@ -1,6 +1,6 @@
 {
   "name": "fossflow-desktop",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "private": true,
   "description": "Desktop (Electron) distribution of ArchFlow",
   "main": "src/main.js",
