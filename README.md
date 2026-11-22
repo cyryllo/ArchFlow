@@ -64,7 +64,7 @@ docker compose pull
 docker compose up -d      # then open http://localhost:9500
 ```
 
-Diagrams are saved as JSON files in `./diagrams`. Ports, `docker run`, configuration, backups and how the container works: **[Docker guide](docs/docker.md)**.
+Diagrams are saved as JSON files in `./diagrams`. This `compose.yml` turns on logins: open ArchFlow right after starting it and create the administrator account. Ports, `docker run`, configuration, accounts and sharing, backups and how the container works: **[Docker guide](docs/docker.md)**.
 
 ## 📚 Documentation
 
@@ -73,7 +73,7 @@ Diagrams are saved as JSON files in `./diagrams`. Ports, `docker run`, configura
 | 🚀 [Quick start](docs/quick-start.md) | Your first diagram in ten steps, with screenshots |
 | 📖 [User manual](docs/manual.md) | Everything in detail: nodes, zones, connectors, text, selecting, menus, export, settings, all shortcuts, troubleshooting |
 | 💾 [Saving and opening](docs/saving.md) | Files, My diagrams, export to JSON and PNG, browser-only mode |
-| 🐳 [Docker guide](docs/docker.md) | Installing and running ArchFlow on your server |
+| 🐳 [Docker guide](docs/docker.md) | Installing and running ArchFlow on your server, accounts, roles and sharing |
 | 🤖 [AI assistants (MCP)](docs/mcp.md) | Let Claude and other AI assistants draw diagrams for you |
 | 🛠️ [Development](docs/development.md) | Running from source, project structure, building the desktop app |
 | 📝 [ARCHFLOW_TODO.md](ARCHFLOW_TODO.md) | Known issues and roadmap |

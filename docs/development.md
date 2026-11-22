@@ -29,8 +29,9 @@ This is a monorepo containing several packages:
 
 - `packages/fossflow-lib` - React component library for drawing network diagrams (built with Webpack)
 - `packages/fossflow-app` - Progressive Web App which wraps the lib and presents it (built with RSBuild)
-- `packages/fossflow-backend` - Optional backend server for persistent diagram storage
+- `packages/fossflow-backend` - Backend server for diagram storage on a server, with optional accounts and sharing
 - `packages/fossflow-desktop` - Native desktop app (Electron)
+- `packages/archflow-mcp` - MCP server for AI assistants (published to npm as `archflow-mcp`)
 
 ### Development Commands
 
@@ -58,6 +59,21 @@ cd e2e-tests
 
 # Publishing
 npm run publish:lib  # Publish library to npm
+```
+
+## 🔐 Backend and logins (`packages/fossflow-backend`)
+
+The backend stores diagrams for the Docker image (nginx forwards `/api` to it). From 0.9.0 it also handles accounts.
+
+- `server.js` starts Express, reads the settings and connects the parts below.
+- `auth.js` holds accounts, roles, sessions and personal API tokens (`AUTH_MODE=local`). Everything is stored in `<STORAGE_PATH>/.archflow/auth.json`; passwords use scrypt, sessions are signed cookies and tokens are SHA-256 hashes. With `AUTH_MODE=none` it lets everything through, as before.
+- `diagrams.js` holds `/api/diagrams` with one `permissions(user, diagram)` function (roles, private diagrams, sharing), plus share links (`/api/shared/<token>`). A diagram's owner and sharing live inside its file.
+- Tests run a real server against a temporary folder: `npm test --workspace=packages/fossflow-backend`.
+
+To try logins in development, run the backend with them turned on, then start the app with `npm run dev`. The dev server forwards `/api` to port 3001, so the login cookie works like behind nginx.
+
+```bash
+AUTH_MODE=local ENABLE_SERVER_STORAGE=true STORAGE_PATH=./tmp-diagrams npm run dev:backend
 ```
 
 ## 🤖 MCP server (`packages/archflow-mcp`)

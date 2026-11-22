@@ -29,8 +29,9 @@ To monorepo zawierające kilka pakietów:
 
 - `packages/fossflow-lib` - biblioteka komponentów React do rysowania diagramów sieciowych (budowana Webpackiem)
 - `packages/fossflow-app` - Progressive Web App opakowująca bibliotekę i prezentująca ją użytkownikowi (budowana RSBuildem)
-- `packages/fossflow-backend` - opcjonalny serwer do trwałego zapisu diagramów
+- `packages/fossflow-backend` - serwer do zapisu diagramów na serwerze, z opcjonalnymi kontami i udostępnianiem
 - `packages/fossflow-desktop` - natywna aplikacja okienkowa (Electron)
+- `packages/archflow-mcp` - serwer MCP dla asystentów AI (publikowany na npm jako `archflow-mcp`)
 
 ### Polecenia deweloperskie
 
@@ -56,6 +57,21 @@ cd e2e-tests
 
 # Publikacja
 npm run publish:lib  # Opublikuj bibliotekę na npm
+```
+
+## 🔐 Backend i logowanie (`packages/fossflow-backend`)
+
+Backend przechowuje diagramy w obrazie Dockera (nginx przekazuje do niego `/api`). Od wersji 0.9.0 obsługuje też konta.
+
+- `server.js` uruchamia Express, czyta ustawienia i łączy poniższe części.
+- `auth.js` obsługuje konta, role, sesje i osobiste tokeny API (`AUTH_MODE=local`). Wszystko jest zapisane w `<STORAGE_PATH>/.archflow/auth.json`; hasła używają scrypt, sesje to podpisane ciasteczka, a tokeny są zapisane jako skróty SHA-256. Z `AUTH_MODE=none` przepuszcza wszystko, jak wcześniej.
+- `diagrams.js` obsługuje `/api/diagrams` z jedną funkcją `permissions(user, diagram)` (role, diagramy prywatne, udostępnianie) oraz linki do podglądu (`/api/shared/<token>`). Właściciel diagramu i jego udostępnienia są zapisane w samym pliku diagramu.
+- Testy uruchamiają prawdziwy serwer na tymczasowym folderze: `npm test --workspace=packages/fossflow-backend`.
+
+Żeby wypróbować logowanie podczas pracy nad kodem, uruchom backend z włączonym logowaniem, a potem aplikację przez `npm run dev`. Serwer deweloperski przekazuje `/api` na port 3001, więc ciasteczko logowania działa tak samo jak za nginx.
+
+```bash
+AUTH_MODE=local ENABLE_SERVER_STORAGE=true STORAGE_PATH=./tmp-diagrams npm run dev:backend
 ```
 
 ## 🤖 Serwer MCP (`packages/archflow-mcp`)

@@ -143,11 +143,11 @@ Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` 
 - **`.dockerignore` added:** the build context used to include `diagrams/` and `.env`.
 - **Tests:** 15 backend tests plus a browser run.
 
-**Next (0.10.0)**: groups, OIDC (Google, Microsoft, Keycloak) and an audit log.
+**Next (0.10.0)**: groups and an audit log. No external sign-in (Google, Microsoft, Keycloak, LDAP): ArchFlow keeps its own accounts only (user decision 2026-11-22).
 
 **Why**: the Docker version has no accounts - anyone who can open the address can view, change and delete every diagram in "My diagrams", and the read-only share link isn't access control.
 **Wanted**:
-- log in to ArchFlow (username + password, hashed with bcrypt/argon2; session cookie or token) - optionally single sign-on later (OIDC: Google / Microsoft / Keycloak, maybe LDAP);
+- log in to ArchFlow (username + password, hashed with bcrypt/argon2; session cookie or token). Own accounts only, no external sign-in;
 - user management for an administrator: add / disable / delete users, reset passwords, roles (e.g. admin, editor, viewer);
 - permissions on diagrams: owner, shared with users or groups (view / edit), a private/shared flag;
 - share links with a random token (optionally expiring), read-only by default, instead of guessable `/display/<name>` URLs;

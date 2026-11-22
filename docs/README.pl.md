@@ -64,7 +64,7 @@ docker compose pull
 docker compose up -d      # potem otwórz http://localhost:9500
 ```
 
-Diagramy zapisują się jako pliki JSON w `./diagrams`. Porty, `docker run`, konfiguracja, kopie zapasowe i działanie kontenera: **[instrukcja Dockera](docker.pl.md)**.
+Diagramy zapisują się jako pliki JSON w `./diagrams`. Ten `compose.yml` włącza logowanie: zaraz po uruchomieniu otwórz ArchFlow i utwórz konto administratora. Porty, `docker run`, konfiguracja, konta i udostępnianie, kopie zapasowe i działanie kontenera: **[instrukcja Dockera](docker.pl.md)**.
 
 ## 📚 Dokumentacja
 
@@ -73,7 +73,7 @@ Diagramy zapisują się jako pliki JSON w `./diagrams`. Porty, `docker run`, kon
 | 🚀 [Szybki start](quick-start.pl.md) | Pierwszy diagram w dziesięciu krokach, ze zrzutami ekranu |
 | 📖 [Instrukcja obsługi](manual.pl.md) | Wszystko po kolei: węzły, strefy, połączenia, teksty, zaznaczanie, menu, eksport, ustawienia, wszystkie skróty, problemy |
 | 💾 [Zapisywanie i otwieranie](saving.pl.md) | Pliki, Moje diagramy, eksport do JSON i PNG, tryb tylko w przeglądarce |
-| 🐳 [Instrukcja Dockera](docker.pl.md) | Instalacja i uruchomienie ArchFlow na serwerze |
+| 🐳 [Instrukcja Dockera](docker.pl.md) | Instalacja i uruchomienie ArchFlow na serwerze, konta, role i udostępnianie |
 | 🤖 [Asystenci AI (MCP)](mcp.pl.md) | Claude i inni asystenci AI rysują diagramy za Ciebie |
 | 🛠️ [Dla programistów](development.pl.md) | Uruchamianie ze źródeł, struktura projektu, budowanie aplikacji desktopowej |
 | 📝 [ARCHFLOW_TODO.md](../ARCHFLOW_TODO.md) | Znane problemy i plan rozwoju |

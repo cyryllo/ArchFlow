@@ -25,6 +25,7 @@ Everything ArchFlow can do, chapter by chapter. New here? The [quick start](quic
 15. [Keyboard shortcuts](#15-keyboard-shortcuts)
 16. [Troubleshooting](#16-troubleshooting)
 17. [Accounts and logins](#17-accounts-and-logins)
+18. [AI assistants (MCP)](#18-ai-assistants-mcp)
 
 ---
 
@@ -385,14 +386,32 @@ Shortcuts don't fire while you're typing in a text field.
 
 Only for ArchFlow in Docker with logins (the default `compose.yml` from 0.9.0). The desktop app and ArchFlow without logins don't have accounts.
 
+<img alt="The login screen" src="screenshots/en-m-login.png" width="380">
+
 - **Logging in.** ArchFlow asks for your e-mail and password. On a brand-new ArchFlow, the first person creates the administrator account. If the administrator gave you a temporary password, you set your own after logging in. Forgot your password? The administrator resets it.
 - **Your account.** Click your name at the top (☰ → *Account*) to change your password, create tokens for AI assistants ([AI assistants](mcp.md#mcp-in-docker-over-http)), or log out.
+<img alt="The Account dialog with a new token" src="screenshots/en-m-account.png" width="480">
+
 - **Roles.** *Editors* create and change diagrams; *viewers* only open them (the editor is read-only and there's no *Save*). Everyone logged in sees the team's diagrams, plus private ones shared with them. *My diagrams* shows who changed each one last.
 - **Administrators** manage people in ☰ → *Users and settings*: add users (ArchFlow shows a temporary password once), change roles, reset passwords, disable or delete accounts, and allow API and MCP access.
+<img alt="Users and settings" src="screenshots/en-m-admin.png" width="640">
+
 - **Sharing.** In *My diagrams*, the author (or an administrator) clicks *Share* to make a diagram private, give chosen people view or edit access, or create a read-only link that works without an account. Links can expire and can be revoked.
 - **Public access.** When the administrator turns it on, people who aren't logged in can design too, but save only in their browser or to a file. *Log in* at the top switches to your account.
 
+<img alt="Sharing a diagram" src="screenshots/en-m-share.png" width="480">
+
 Setting it up on a server is described in the [Docker guide](docker.md#accounts-and-logins).
+
+## 18. AI assistants (MCP)
+
+ArchFlow has an MCP server, so AI assistants (Claude Code, Claude Desktop, local models through apps such as Open WebUI) can draw and change diagrams for you from a plain description, e.g. *"draw our shop: browser, load balancer, two app servers, PostgreSQL"*. The assistant picks the icons, lays the diagram out, saves it, and you open it in *My diagrams*.
+
+- **On your computer:** the assistant starts the server itself (`npx -y archflow-mcp@latest`). It works with the desktop app, a folder of files, or ArchFlow in Docker.
+- **ArchFlow in Docker:** the server is built in. With logins, create a personal token in *Account* (it shows the ready command for Claude Code); the assistant then has your rights.
+- **Don't edit one diagram in two places at once:** if the assistant changes a diagram you have open, load it again from *My diagrams* before continuing.
+
+Setup, examples, local models and troubleshooting: [AI assistants (MCP)](mcp.md).
 
 ---
 

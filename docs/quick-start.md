@@ -6,7 +6,7 @@
 
 Ten steps from an empty canvas to a saved diagram: two connected nodes in a zone, with a label. It takes about five minutes.
 
-You can follow along in the [live demo](https://cyryllo.github.io/ArchFlow/app/), in the [desktop app](https://github.com/cyryllo/ArchFlow/releases/latest) or in your own [Docker installation](docker.md).
+You can follow along in the [live demo](https://cyryllo.github.io/ArchFlow/app/), in the [desktop app](https://github.com/cyryllo/ArchFlow/releases/latest) or in your own [Docker installation](docker.md). If your Docker ArchFlow asks you to log in, do that first; on a brand-new one you create the administrator account ([Accounts and logins](docker.md#accounts-and-logins)).
 
 ## 1. Get to know the screen
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ArchFlow – izometryczne diagramy architektury</title>
-  <meta name="description" content="ArchFlow to darmowy edytor open source do izometrycznych diagramów systemów, sieci, infrastruktury chmurowej i procesów biznesowych. Działa w przeglądarce, na Twoim serwerze w Dockerze albo jako aplikacja na Linuksa i Windows.">
+  <meta name="description" content="ArchFlow to darmowy edytor open source do izometrycznych diagramów systemów, sieci, infrastruktury chmurowej i procesów biznesowych. Działa w przeglądarce, na Twoim serwerze w Dockerze z kontami i udostępnianiem, jako aplikacja na Linuksa i Windows, a diagramy może za Ciebie narysować asystent AI.">
   <link rel="alternate" hreflang="en" href="https://cyryllo.github.io/ArchFlow/">
   <link rel="alternate" hreflang="pl" href="https://cyryllo.github.io/ArchFlow/pl/">
   <meta property="og:title" content="ArchFlow – izometryczne diagramy architektury">
@@ -35,6 +35,7 @@
       <a href="#screenshots">Zrzuty ekranu</a>
       <a href="#download">Pobierz</a>
       <a href="#docker">Docker</a>
+      <a href="#ai">AI</a>
       <a href="#saving">Zapisywanie</a>
       <a href="https://github.com/cyryllo/ArchFlow">GitHub</a>
     </nav>
@@ -116,6 +117,16 @@
         <div class="icon">🌍</div>
         <h3>10 języków</h3>
         <p>Polski, angielski, niemiecki, francuski, hiszpański, włoski, portugalski, czeski, niderlandzki i ukraiński. Cały interfejs jest przetłumaczony, łącznie z nazwami ikon, a wybrany język jest zapamiętywany.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🤖</div>
+        <h3>Asystenci AI (MCP)</h3>
+        <p>Opisz system, a Claude albo inny asystent MCP narysuje go za Ciebie: ikony, strefy, połączenia i rozmieszczenie. Działa też z lokalnymi modelami.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🔐</div>
+        <h3>Konta i udostępnianie</h3>
+        <p>Na Twoim serwerze w Dockerze: logowanie, role administratora, edytora i czytelnika, prywatne diagramy udostępniane wybranym osobom oraz linki tylko do odczytu.</p>
       </div>
     </div>
   </div>
@@ -213,14 +224,40 @@ docker compose up -d</code></pre>
         <li><strong>Startuje w kilka sekund, działa offline.</strong> Wszystko jest w obrazie.</li>
         <li><strong>Sam się podnosi</strong> po awarii albo restarcie maszyny.</li>
         <li><strong>Łatwa aktualizacja:</strong> <code>docker compose pull &amp;&amp; docker compose up -d</code>. Diagramy zostają.</li>
+        <li><strong>Konta i udostępnianie:</strong> logowanie z rolami, panel administratora, prywatne diagramy, linki tylko do odczytu i opcjonalny dostęp publiczny bez zapisu na serwer.</li>
+        <li><strong>Asystenci AI</strong> łączą się z wbudowanym serwerem MCP pod <code>/mcp</code> osobistymi tokenami.</li>
       </ul>
-      <p class="note"><strong>Bez logowania.</strong> Każdy, kto otworzy adres, może edytować diagramy w <em>Moich diagramach</em>. Trzymaj ArchFlow w zaufanej sieci albo za reverse proxy z uwierzytelnianiem.</p>
+      <p class="note"><strong>Logowanie.</strong> Powyższy <code>compose.yml</code> je włącza: zaraz po uruchomieniu otwórz ArchFlow i utwórz konto administratora. Przez internet wystaw go za HTTPS (np. Nginx Proxy Manager).</p>
       <p><a href="https://github.com/cyryllo/ArchFlow/blob/master/docs/docker.pl.md">Pełna instrukcja Dockera →</a></p>
     </div>
   </div>
 </section>
 
-<section id="saving">
+<section id="ai">
+  <div class="container split">
+    <div>
+      <div class="section-head">
+        <h2>Niech asystent AI to narysuje</h2>
+        <p>ArchFlow ma serwer MCP. Opisz system zwykłymi słowami, a Claude albo inny asystent obsługujący MCP zbuduje diagram: ikony, strefy, połączenia i rozmieszczenie. Zapisze go tam, gdzie ArchFlow trzyma diagramy, więc otworzysz go w <em>Moich diagramach</em> i dalej poprawisz ręcznie.</p>
+      </div>
+<pre class="code"><code>claude mcp add archflow --scope user \
+  -e ARCHFLOW_URL=http://localhost:9500 \
+  -- npx -y archflow-mcp@latest</code></pre>
+      <p>Tak w Claude Code. Claude Desktop i inne programy wymagają kilku linijek konfiguracji.</p>
+    </div>
+    <div>
+      <ul class="checks">
+        <li><strong>Buduje i zmienia</strong> całe diagramy, odpowiada na pytania o nie i szuka ikon w każdym z 10 języków.</li>
+        <li><strong>Działa z aplikacją desktopową, folderem z plikami albo ArchFlow w Dockerze</strong>, gdzie serwer jest wbudowany, a każdy używa własnego tokenu.</li>
+        <li><strong>Także z lokalnymi modelami:</strong> przez programy takie jak Open WebUI, Continue czy LM Studio, np. z Qwen albo Gemmą z Ollamy.</li>
+        <li><strong>Sprawdza przed zapisem</strong> według zasad samego ArchFlow, więc do diagramów nie trafia nic zepsutego.</li>
+      </ul>
+      <p><a href="https://github.com/cyryllo/ArchFlow/blob/master/docs/mcp.pl.md">Instrukcja asystentów AI →</a></p>
+    </div>
+  </div>
+</section>
+
+<section id="saving" class="alt">
   <div class="container">
     <div class="section-head">
       <h2>Dwa sposoby na zapisanie pracy</h2>
@@ -243,7 +280,7 @@ docker compose up -d</code></pre>
         <ul>
           <li>Docker: pliki w <code>./diagrams</code> na serwerze, wspólne dla zespołu</li>
           <li>Aplikacja desktopowa: pliki w <code>Dokumenty/ArchFlow</code></li>
-          <li>Linki tylko do odczytu (Docker)</li>
+          <li>Docker z logowaniem: prywatne diagramy, udostępnianie osobom, linki tylko do odczytu</li>
           <li>Górny pasek pokazuje <em>Zmodyfikowany</em>, dopóki nie zapiszesz</li>
         </ul>
       </div>
@@ -272,6 +309,7 @@ docker compose up -d</code></pre>
       <a href="https://github.com/cyryllo/ArchFlow">GitHub</a>
       <a href="https://github.com/cyryllo/ArchFlow/releases">Wydania</a>
       <a href="https://github.com/cyryllo/ArchFlow/pkgs/container/archflow">Obraz Dockera</a>
+      <a href="https://www.npmjs.com/package/archflow-mcp">Serwer MCP (npm)</a>
     </nav>
   </div>
 </footer>

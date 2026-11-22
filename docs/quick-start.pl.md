@@ -6,7 +6,7 @@
 
 Dziesięć kroków od pustego płótna do zapisanego diagramu: dwa połączone węzły w strefie i podpis. Zajmie Ci to około pięciu minut.
 
-Możesz robić to równolegle w [demo online](https://cyryllo.github.io/ArchFlow/app/), w [aplikacji na komputer](https://github.com/cyryllo/ArchFlow/releases/latest) albo we własnej [instalacji w Dockerze](docker.pl.md).
+Możesz robić to równolegle w [demo online](https://cyryllo.github.io/ArchFlow/app/), w [aplikacji na komputer](https://github.com/cyryllo/ArchFlow/releases/latest) albo we własnej [instalacji w Dockerze](docker.pl.md). Jeśli Twój ArchFlow w Dockerze prosi o zalogowanie, zrób to najpierw; w zupełnie nowym tworzysz konto administratora ([Konta i logowanie](docker.pl.md#konta-i-logowanie)).
 
 ## 1. Poznaj ekran
 

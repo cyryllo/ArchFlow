@@ -25,6 +25,7 @@ Wszystko, co potrafi ArchFlow, rozdział po rozdziale. Pierwszy raz? [Szybki sta
 15. [Skróty klawiszowe](#15-skróty-klawiszowe)
 16. [Rozwiązywanie problemów](#16-rozwiązywanie-problemów)
 17. [Konta i logowanie](#17-konta-i-logowanie)
+18. [Asystenci AI (MCP)](#18-asystenci-ai-mcp)
 
 ---
 
@@ -385,14 +386,32 @@ Skróty nie działają, gdy piszesz w polu tekstowym.
 
 Tylko w ArchFlow w Dockerze z logowaniem (domyślny `compose.yml` od wersji 0.9.0). Aplikacja desktopowa i ArchFlow bez logowania nie mają kont.
 
+<img alt="Ekran logowania" src="screenshots/pl-m-login.png" width="380">
+
 - **Logowanie.** ArchFlow pyta o e-mail i hasło. W zupełnie nowym ArchFlow pierwsza osoba tworzy konto administratora. Jeśli administrator dał Ci hasło tymczasowe, po zalogowaniu ustawisz własne. Nie pamiętasz hasła? Administrator je zresetuje.
 - **Twoje konto.** Kliknij swoje imię u góry (☰ → *Konto*), żeby zmienić hasło, utworzyć tokeny dla asystentów AI ([Asystenci AI](mcp.pl.md#mcp-w-dockerze-przez-http)) albo się wylogować.
+<img alt="Okno Konto z nowym tokenem" src="screenshots/pl-m-account.png" width="480">
+
 - **Role.** *Edytorzy* tworzą i zmieniają diagramy; *czytelnicy* tylko je otwierają (edytor jest wtedy tylko do podglądu i nie ma *Zapisz*). Każdy zalogowany widzi diagramy zespołu oraz prywatne, które mu udostępniono. *Moje diagramy* pokazują, kto ostatni zmienił każdy z nich.
 - **Administratorzy** zarządzają ludźmi w ☰ → *Użytkownicy i ustawienia*: dodają użytkowników (ArchFlow raz pokazuje hasło tymczasowe), zmieniają role, resetują hasła, wyłączają i usuwają konta oraz pozwalają na dostęp do API i MCP.
+<img alt="Użytkownicy i ustawienia" src="screenshots/pl-m-admin.png" width="640">
+
 - **Udostępnianie.** W *Moich diagramach* autor (albo administrator) klika *Udostępnij*, żeby ustawić diagram jako prywatny, dać wybranym osobom prawo do oglądania albo edycji, albo utworzyć link tylko do odczytu, działający bez konta. Linki mogą wygasać i można je unieważnić.
 - **Dostęp publiczny.** Gdy administrator go włączy, niezalogowani też mogą projektować, ale zapisują tylko w swojej przeglądarce albo do pliku. *Zaloguj się* u góry przełącza na Twoje konto.
 
+<img alt="Udostępnianie diagramu" src="screenshots/pl-m-share.png" width="480">
+
 Konfigurację na serwerze opisuje [instrukcja Dockera](docker.pl.md#konta-i-logowanie).
+
+## 18. Asystenci AI (MCP)
+
+ArchFlow ma serwer MCP, więc asystenci AI (Claude Code, Claude Desktop, lokalne modele przez programy takie jak Open WebUI) narysują i zmienią diagram na podstawie zwykłego opisu, np. *„narysuj nasz sklep: przeglądarka, load balancer, dwa serwery aplikacji, PostgreSQL”*. Asystent dobiera ikony, rozmieszcza diagram i go zapisuje, a Ty otwierasz go w *Moich diagramach*.
+
+- **Na Twoim komputerze:** asystent sam uruchamia serwer (`npx -y archflow-mcp@latest`). Działa z aplikacją desktopową, folderem z plikami albo ArchFlow w Dockerze.
+- **ArchFlow w Dockerze:** serwer jest wbudowany. Przy logowaniu utwórz osobisty token w *Koncie* (okno pokaże gotowe polecenie dla Claude Code); asystent ma wtedy Twoje uprawnienia.
+- **Nie zmieniaj jednego diagramu w dwóch miejscach naraz:** jeśli asystent zmienia diagram, który masz otwarty, wczytaj go ponownie z *Moich diagramów*, zanim zaczniesz dalej pracować.
+
+Konfiguracja, przykłady, lokalne modele i rozwiązywanie problemów: [Asystenci AI (MCP)](mcp.pl.md).
 
 ---
 
