@@ -11,7 +11,7 @@ Requires Node.js 18+.
 **Claude Code**
 
 ~~~bash
-claude mcp add archflow --scope user -e ARCHFLOW_URL=http://localhost:9500 -- npx -y archflow-mcp
+claude mcp add archflow --scope user -e ARCHFLOW_URL=http://localhost:9500 -- npx -y archflow-mcp@latest
 ~~~
 
 **Claude Desktop**: Settings → Developer → Edit Config:
@@ -21,7 +21,7 @@ claude mcp add archflow --scope user -e ARCHFLOW_URL=http://localhost:9500 -- np
   "mcpServers": {
     "archflow": {
       "command": "npx",
-      "args": ["-y", "archflow-mcp"],
+      "args": ["-y", "archflow-mcp@latest"],
       "env": { "ARCHFLOW_URL": "http://localhost:9500" }
     }
   }

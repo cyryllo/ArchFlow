@@ -58,6 +58,22 @@ cd e2e-tests
 npm run publish:lib  # Opublikuj bibliotekę na npm
 ```
 
+## 🤖 Serwer MCP (`packages/archflow-mcp`)
+
+Serwer MCP dla asystentów AI jest publikowany na npm jako [`archflow-mcp`](https://www.npmjs.com/package/archflow-mcp). Instrukcja dla użytkowników to [mcp.pl.md](mcp.pl.md).
+
+```bash
+npm run build --workspace=packages/archflow-mcp   # katalog ikon + TypeScript -> dist/
+npm test --workspace=packages/archflow-mcp        # buduje i uruchamia testy
+```
+
+- W `src/server.ts` są narzędzia i instrukcja dla modelu, `src/builder.ts` buduje i zmienia diagramy, a `src/layout.ts` rozmieszcza je na siatce izometrycznej. `src/storage.ts` zapisuje przez API Dockera albo do folderu, a `src/validate.ts` odwzorowuje schematy z fossflow-lib.
+- `src/catalog.json` (identyfikatory ikon, kategorie, nazwy we wszystkich językach) generuje `scripts/build-catalog.mjs` z zestawu ikon aplikacji. Każde budowanie odtwarza ten plik, więc nowe ikony i tłumaczenia trafiają do serwera MCP same.
+- Testy korzystają z prawdziwego klienta MCP i zapisują też przez prawdziwy backend (`packages/fossflow-backend`). `test/fixtures/shop-diagram.json` to przykładowy diagram; test `mcpDiagram.test.ts` w fossflow-lib sprawdza go schematem `modelSchema` z edytora. Gdy wynik zmienia się celowo, odśwież go przez `UPDATE_FIXTURES=1 node --test test/*.test.mjs` (po zbudowaniu).
+- Żeby wypróbować lokalną wersję w Claude Code, zamiast `npx` wskaż `node /pełna/ścieżka/do/packages/archflow-mcp/dist/index.js`.
+
+**Wydawanie.** Wersja paczki idzie razem z aplikacją (zmienia ją też `scripts/update-version.js`). Tag wersji uruchamia `.github/workflows/npm.yml`, który testuje paczkę i publikuje ją przez **Trusted Publishing** w npm, więc nigdzie nie jest zapisany token npm. Wersja, która już jest na npm, zostaje pominięta. Zaufany wydawca jest ustawiony na npmjs.com → archflow-mcp → Settings: repozytorium `cyryllo/ArchFlow`, workflow `npm.yml`, z dozwolonym *npm publish*. Jeśli npm pokaże go kiedyś jako wygasłego albo niezweryfikowanego, usuń go i dodaj ponownie z tymi samymi danymi przed kolejnym tagiem.
+
 ## 🖥️ Budowanie aplikacji desktopowej
 
 Aplikacja desktopowa (Electron) to ten sam edytor we własnym oknie. **Pobierz ją z [ostatniego wydania](https://github.com/cyryllo/ArchFlow/releases/latest)**: AppImage albo `.deb` dla Linuksa, instalator dla Windows (zobacz [Pobierz](README.pl.md#️-pobierz)).
