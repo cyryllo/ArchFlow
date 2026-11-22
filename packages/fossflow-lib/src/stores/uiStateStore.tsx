@@ -8,13 +8,20 @@ import {
 } from 'src/utils';
 import { UiStateStore } from 'src/types';
 import { INITIAL_UI_STATE } from 'src/config';
-import { DEFAULT_HOTKEY_PROFILE } from 'src/config/hotkeys';
 import { loadPanSettings, savePanSettings } from 'src/config/panSettings';
-import { DEFAULT_ZOOM_SETTINGS } from 'src/config/zoomSettings';
+import { loadEditorPreferences, saveEditorPreferences } from 'src/config/editorPreferences';
 import { DEFAULT_LABEL_SETTINGS } from 'src/config/labelSettings';
 
 const initialState = () => {
+  // Remembered Settings-dialog choices (tool letters, zoom, connector mode)
+  const prefs = loadEditorPreferences();
+
   return createStore<UiStateStore>((set, get) => {
+    const savePrefs = () => {
+      const { hotkeyProfile, zoomSettings, connectorInteractionMode } = get();
+      saveEditorPreferences({ hotkeyProfile, zoomSettings, connectorInteractionMode });
+    };
+
     return {
       zoom: INITIAL_UI_STATE.zoom,
       scroll: INITIAL_UI_STATE.scroll,
@@ -34,11 +41,11 @@ const initialState = () => {
       },
       itemControls: null,
       enableDebugTools: false,
-      hotkeyProfile: DEFAULT_HOTKEY_PROFILE,
+      hotkeyProfile: prefs.hotkeyProfile,
       panSettings: loadPanSettings(),
-      zoomSettings: DEFAULT_ZOOM_SETTINGS,
+      zoomSettings: prefs.zoomSettings,
       labelSettings: DEFAULT_LABEL_SETTINGS,
-      connectorInteractionMode: 'click', // Default to click mode
+      connectorInteractionMode: prefs.connectorInteractionMode,
       expandLabels: false, // Default to collapsed labels
       iconPackManager: null, // Will be set by Isoflow if provided
       exportJsonHandler: null, // Will be set by Isoflow if provided
@@ -114,6 +121,7 @@ const initialState = () => {
         },
         setHotkeyProfile: (hotkeyProfile: any) => {
           set({ hotkeyProfile });
+          savePrefs();
         },
         setPanSettings: (panSettings) => {
           savePanSettings(panSettings);
@@ -121,12 +129,14 @@ const initialState = () => {
         },
         setZoomSettings: (zoomSettings) => {
           set({ zoomSettings });
+          savePrefs();
         },
         setLabelSettings: (labelSettings) => {
           set({ labelSettings });
         },
         setConnectorInteractionMode: (connectorInteractionMode) => {
           set({ connectorInteractionMode });
+          savePrefs();
         },
         setExpandLabels: (expandLabels) => {
           set({ expandLabels });

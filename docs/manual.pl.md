@@ -250,7 +250,7 @@ Jeśli klikasz prawym przyciskiem element, który jest częścią zaznaczenia, K
 W skrócie (szczegóły w [Zapisywaniu i otwieraniu diagramów](saving.pl.md)):
 
 - **Zapisz** (górny pasek, ☰ albo **Ctrl+S**) zapisuje otwarty diagram. Za pierwszym razem pyta o nazwę.
-- **Moje diagramy** (górny pasek, ☰ albo **Ctrl+O**) to lista zapisanych diagramów: **Wczytaj**, **Udostępnij** (link tylko do odczytu, tylko w Dockerze) i **Usuń**.
+- **Moje diagramy** (górny pasek, ☰ albo **Ctrl+O**) to lista zapisanych diagramów: **Wczytaj**, **Usuń**, a w Dockerze także **Udostępnij** (link tylko do odczytu).
 
 <img alt="Moje diagramy" src="screenshots/pl-app-storage.png" width="600">
 
@@ -299,7 +299,7 @@ Eksport obrazu najlepiej działa w Chrome lub Edge; w Firefoksie ma znane proble
 - **Tryb kliknięcia** (domyślny): kliknij pierwszy węzeł, potem drugi;
 - **Tryb przeciągania**: przeciągnij od pierwszego węzła do drugiego.
 
-Gesty myszy do przesuwania widoku są zapamiętywane w tej przeglądarce (albo w aplikacji na komputer). Pozostałe ustawienia na razie wracają do domyślnych po odświeżeniu strony.
+Wszystkie ustawienia są zapamiętywane w tej przeglądarce (albo w aplikacji na komputer).
 
 ## 14. Język
 

@@ -250,7 +250,7 @@ If the element you right-click is part of a selection, Copy, Cut, Duplicate, sta
 The short version (details in [Saving and opening diagrams](saving.md)):
 
 - **Save** (top bar, ☰ or **Ctrl+S**) saves the open diagram. The first time it asks for a name.
-- **My diagrams** (top bar, ☰ or **Ctrl+O**) lists saved diagrams: **Load**, **Share** (a read-only link, Docker only) and **Delete**.
+- **My diagrams** (top bar, ☰ or **Ctrl+O**) lists saved diagrams: **Load**, **Delete**, and with Docker also **Share** (a read-only link).
 
 <img alt="My diagrams" src="screenshots/en-app-storage.png" width="600">
 
@@ -299,7 +299,7 @@ Image export works best in Chrome or Edge; Firefox has known problems with it.
 - **Click mode** (default): click the first node, then the second;
 - **Drag mode**: drag from the first node to the second.
 
-The mouse gestures for moving the view are remembered in this browser (or in the desktop app). The other settings currently go back to their defaults when the page is reloaded.
+All settings are remembered in this browser (or in the desktop app).
 
 ## 14. Language
 

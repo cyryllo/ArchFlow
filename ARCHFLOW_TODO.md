@@ -122,14 +122,11 @@ Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` 
 - an audit trail of who changed what is a nice-to-have.
 **Notes**: everything lives in `packages/fossflow-backend` (Express) - it needs a small user store (SQLite file next to the diagrams is enough), auth middleware on `/api/*`, and login / user-management screens in the app. The desktop app and the plain-website mode stay without logins.
 
-### Share button shows where it can't work
-**Problem**: "Share" in My diagrams copies `<origin>/display/<id>`, which only works with server storage (Docker). In the desktop app it produces an `app://bundle/...` link nobody else can open, and in browser-only mode the link has nothing to load.
-**Fix Strategy**: show the Share button only when `storageKind === 'server'` (`packages/fossflow-app/src/components/DiagramManager.tsx`). Revisit together with stage 7 (token-based share links).
+### Share button only with server storage (released in v0.6.3)
+"Share" in My diagrams is shown only when diagrams are on the server (Docker); in the desktop app and browser-only mode it produced links nobody could open. Token-based share links stay part of stage 7.
 
 ### Slimmer README
 **Done**: README.md and docs/README.pl.md are down from ~400 to ~85 lines (what it is, features, download, Docker in four lines, a documentation table). The rest moved to `docs/docker`, `docs/usage`, `docs/saving` and `docs/development` (`.md` English, `.pl.md` Polish); the website's Docker link points to `docs/docker*.md`.
 
-### Most settings aren't remembered
-**Problem**: only the pan settings are persisted (`config/panSettings.ts`, localStorage). Tool letters (hotkey profile), zoom-to-cursor and the connector mode live only in the in-memory UI store, so they reset on every reload - and also when the language changes, because the editor is remounted.
-**Fix Strategy**: persist them the same way as pan settings (load on store creation, save in the setters in `stores/uiStateStore.tsx`), then update the manual (docs/manual*.md, chapter 13).
-
+### Settings are remembered (released in v0.6.3)
+Tool letters, zoom-to-cursor and the connector mode are now saved in localStorage (`config/editorPreferences.ts`, key `archflow-editor-preferences`), like the pan settings; before, they reset on every reload and on a language change.

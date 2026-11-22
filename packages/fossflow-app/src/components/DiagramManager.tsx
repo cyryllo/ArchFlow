@@ -261,15 +261,21 @@ export const DiagramManager: React.FC<Props> = ({
                       >
                         {loading ? t('diagramManager.btnLoading') : t('diagramManager.btnLoad')}
                       </button>
-                      <button
-                        className="action-button share"
-                        onClick={() => {
-                          return handleCopyShareLink(diagram.id);
-                        }}
-                        title={t('diagramManager.btnShareTitle') as string}
-                      >
-                        {t('diagramManager.btnShare')}
-                      </button>
+                      {/* A share link (/display/<id>) can only be opened by
+                          others when diagrams live on the server (Docker);
+                          in the desktop app or browser-only mode it would
+                          lead nowhere */}
+                      {storageKind === 'server' && (
+                        <button
+                          className="action-button share"
+                          onClick={() => {
+                            return handleCopyShareLink(diagram.id);
+                          }}
+                          title={t('diagramManager.btnShareTitle') as string}
+                        >
+                          {t('diagramManager.btnShare')}
+                        </button>
+                      )}
                       <button
                         className="action-button danger"
                         onClick={() => {
