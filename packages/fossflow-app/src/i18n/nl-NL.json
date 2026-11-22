@@ -1,0 +1,95 @@
+{
+    "nav": {
+        "newDiagram": "Nieuw diagram",
+        "saveSessionOnly": "Opslaan (alleen sessie)",
+        "loadSessionOnly": "Laden (alleen sessie)",
+        "importFile": "Bestand importeren",
+        "quickSaveSession": "Snel opslaan (sessie)",
+        "serverStorage": "App-opslag",
+        "save": "Opslaan",
+        "myDiagrams": "Mijn diagrammen",
+        "language": "Taal"
+    },
+    "status": {
+        "current": "Huidig",
+        "untitled": "Naamloos diagram",
+        "modified": "Gewijzigd",
+        "sessionStorageNote": "Alleen sessieopslag – exporteer om blijvend op te slaan",
+        "saved": "Opgeslagen"
+    },
+    "dialog": {
+        "save": {
+            "title": "Diagram opslaan (alleen huidige sessie)",
+            "warningTitle": "Belangrijk",
+            "warningMessage": "Deze opslag is tijdelijk en gaat verloren als je de browser sluit.",
+            "warningExport": "Gebruik <strong>Exporteren als JSON</strong> in het menu ☰ om je werk blijvend op te slaan.",
+            "placeholder": "Voer de naam van het diagram in",
+            "btnSave": "Opslaan",
+            "btnCancel": "Annuleren"
+        },
+        "load": {
+            "title": "Diagram laden (alleen huidige sessie)",
+            "noteTitle": "Let op",
+            "noteMessage": "Deze opslagen zijn tijdelijk. Exporteer je diagrammen om ze blijvend te bewaren.",
+            "noSavedDiagrams": "Geen opgeslagen diagrammen in deze sessie",
+            "updated": "Bijgewerkt",
+            "btnLoad": "Laden",
+            "btnDelete": "Verwijderen",
+            "btnClose": "Sluiten"
+        },
+        "export": {
+            "title": "Diagram exporteren",
+            "recommendedTitle": "Aanbevolen",
+            "recommendedMessage": "Dit is de beste manier om je werk blijvend op te slaan.",
+            "noteMessage": "Geëxporteerde JSON-bestanden kun je later importeren of met anderen delen.",
+            "btnDownload": "JSON downloaden",
+            "btnCancel": "Annuleren"
+        },
+        "readOnly": {
+            "mode": "Alleen-lezenmodus",
+            "failed": "Diagram kon niet worden geladen"
+        }
+    },
+    "diagramManager": {
+        "title": "Diagrambeheer",
+        "storageServer": "Serveropslag",
+        "storageServerNote": "Diagrammen worden op de server opgeslagen en zijn op alle apparaten beschikbaar",
+        "storageLocalFiles": "Lokale bestanden",
+        "storageLocalFilesNote": "Diagrammen worden als bestanden opgeslagen in je map Documenten/ArchFlow",
+        "storageLocal": "Lokale opslag",
+        "saveCurrent": "Huidig diagram opslaan",
+        "loading": "Diagrammen laden...",
+        "noSavedDiagrams": "Geen opgeslagen diagrammen",
+        "noSavedDiagramsHint": "Sla je huidige diagram op om te beginnen",
+        "btnLoad": "Laden",
+        "btnLoading": "Laden...",
+        "btnShare": "Delen",
+        "btnShareTitle": "Deellink kopiëren",
+        "btnDelete": "Verwijderen",
+        "lastModified": "Laatst gewijzigd",
+        "saveDialogTitle": "Diagram opslaan",
+        "namePlaceholder": "Naam van het diagram",
+        "btnSave": "Opslaan",
+        "btnCancel": "Annuleren",
+        "confirmDelete": "Weet je zeker dat je dit diagram wilt verwijderen?",
+        "enterName": "Voer een naam voor het diagram in",
+        "confirmOverwrite": "Er bestaat al een diagram met de naam ‘{{name}}’. Het wordt overschreven. Weet je zeker dat je wilt doorgaan?",
+        "failedList": "Diagrammen konden niet worden geladen",
+        "failedLoad": "Diagram kon niet worden geladen",
+        "failedDelete": "Diagram kon niet worden verwijderd",
+        "failedSave": "Diagram kon niet worden opgeslagen",
+        "shareLinkCopied": "Deellink gekopieerd naar het klembord:\n{{url}}"
+    },
+    "alert": {
+        "enterDiagramName": "Voer een naam voor het diagram in",
+        "diagramExists": "Er bestaat in deze sessie al een diagram met de naam ‘{{name}}’. Het wordt overschreven. Weet je zeker dat je wilt doorgaan?",
+        "unsavedChanges": "Je hebt niet-opgeslagen wijzigingen. Toch laden?",
+        "createNewDiagram": "Een nieuw diagram maken?",
+        "unsavedChangesExport": "Je hebt niet-opgeslagen wijzigingen. Exporteer je diagram eerst om het op te slaan. Doorgaan?",
+        "confirmDelete": "Weet je zeker dat je dit diagram wilt verwijderen?",
+        "storageFull": "Opslag vol! Opslagbeheer wordt geopend...",
+        "autoSaveFailed": "Opslag vol! Maak ruimte vrij via opslagbeheer.",
+        "beforeUnload": "Je hebt niet-opgeslagen wijzigingen. Weet je zeker dat je wilt vertrekken?",
+        "quotaExceeded": "Opslagquotum overschreden. Exporteer belangrijke diagrammen en maak ruimte vrij."
+    }
+}

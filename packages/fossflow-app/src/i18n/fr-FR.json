@@ -1,0 +1,95 @@
+{
+    "nav": {
+        "newDiagram": "Nouveau diagramme",
+        "saveSessionOnly": "Enregistrer (session uniquement)",
+        "loadSessionOnly": "Charger (session uniquement)",
+        "importFile": "Importer un fichier",
+        "quickSaveSession": "Enregistrement rapide (session)",
+        "serverStorage": "Stockage de l’application",
+        "save": "Enregistrer",
+        "myDiagrams": "Mes diagrammes",
+        "language": "Langue"
+    },
+    "status": {
+        "current": "Actuel",
+        "untitled": "Diagramme sans titre",
+        "modified": "Modifié",
+        "sessionStorageNote": "Stockage de session uniquement – exportez pour enregistrer définitivement",
+        "saved": "Enregistré"
+    },
+    "dialog": {
+        "save": {
+            "title": "Enregistrer le diagramme (session actuelle uniquement)",
+            "warningTitle": "Important",
+            "warningMessage": "Cet enregistrement est temporaire et sera perdu à la fermeture du navigateur.",
+            "warningExport": "Utilisez <strong>Exporter en JSON</strong> dans le menu ☰ pour enregistrer votre travail définitivement.",
+            "placeholder": "Saisissez le nom du diagramme",
+            "btnSave": "Enregistrer",
+            "btnCancel": "Annuler"
+        },
+        "load": {
+            "title": "Charger un diagramme (session actuelle uniquement)",
+            "noteTitle": "Remarque",
+            "noteMessage": "Ces enregistrements sont temporaires. Exportez vos diagrammes pour les conserver définitivement.",
+            "noSavedDiagrams": "Aucun diagramme enregistré dans cette session",
+            "updated": "Mis à jour",
+            "btnLoad": "Charger",
+            "btnDelete": "Supprimer",
+            "btnClose": "Fermer"
+        },
+        "export": {
+            "title": "Exporter le diagramme",
+            "recommendedTitle": "Recommandé",
+            "recommendedMessage": "C’est le meilleur moyen d’enregistrer votre travail définitivement.",
+            "noteMessage": "Les fichiers JSON exportés peuvent être importés plus tard ou partagés avec d’autres.",
+            "btnDownload": "Télécharger le JSON",
+            "btnCancel": "Annuler"
+        },
+        "readOnly": {
+            "mode": "Mode lecture seule",
+            "failed": "Impossible de charger le diagramme"
+        }
+    },
+    "diagramManager": {
+        "title": "Gestionnaire de diagrammes",
+        "storageServer": "Stockage serveur",
+        "storageServerNote": "Les diagrammes sont enregistrés sur le serveur et disponibles sur tous les appareils",
+        "storageLocalFiles": "Fichiers locaux",
+        "storageLocalFilesNote": "Les diagrammes sont enregistrés comme fichiers dans votre dossier Documents/ArchFlow",
+        "storageLocal": "Stockage local",
+        "saveCurrent": "Enregistrer le diagramme actuel",
+        "loading": "Chargement des diagrammes...",
+        "noSavedDiagrams": "Aucun diagramme enregistré",
+        "noSavedDiagramsHint": "Enregistrez votre diagramme actuel pour commencer",
+        "btnLoad": "Charger",
+        "btnLoading": "Chargement...",
+        "btnShare": "Partager",
+        "btnShareTitle": "Copier le lien de partage",
+        "btnDelete": "Supprimer",
+        "lastModified": "Dernière modification",
+        "saveDialogTitle": "Enregistrer le diagramme",
+        "namePlaceholder": "Nom du diagramme",
+        "btnSave": "Enregistrer",
+        "btnCancel": "Annuler",
+        "confirmDelete": "Voulez-vous vraiment supprimer ce diagramme ?",
+        "enterName": "Veuillez saisir un nom de diagramme",
+        "confirmOverwrite": "Un diagramme nommé « {{name}} » existe déjà et sera remplacé. Voulez-vous vraiment continuer ?",
+        "failedList": "Impossible de charger les diagrammes",
+        "failedLoad": "Impossible de charger le diagramme",
+        "failedDelete": "Impossible de supprimer le diagramme",
+        "failedSave": "Impossible d’enregistrer le diagramme",
+        "shareLinkCopied": "Lien de partage copié dans le presse-papiers :\n{{url}}"
+    },
+    "alert": {
+        "enterDiagramName": "Veuillez saisir un nom de diagramme",
+        "diagramExists": "Un diagramme nommé « {{name}} » existe déjà dans cette session et sera remplacé. Voulez-vous vraiment continuer ?",
+        "unsavedChanges": "Vous avez des modifications non enregistrées. Continuer le chargement ?",
+        "createNewDiagram": "Créer un nouveau diagramme ?",
+        "unsavedChangesExport": "Vous avez des modifications non enregistrées. Exportez d’abord votre diagramme pour l’enregistrer. Continuer ?",
+        "confirmDelete": "Voulez-vous vraiment supprimer ce diagramme ?",
+        "storageFull": "Stockage plein ! Ouverture du gestionnaire de stockage...",
+        "autoSaveFailed": "Stockage plein ! Libérez de l’espace dans le gestionnaire de stockage.",
+        "beforeUnload": "Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter ?",
+        "quotaExceeded": "Quota de stockage dépassé. Exportez les diagrammes importants et libérez de l’espace."
+    }
+}

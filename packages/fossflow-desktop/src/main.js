@@ -24,6 +24,54 @@ const DIALOG_STRINGS = {
     unsavedMessage: 'Masz niezapisane zmiany. Czy na pewno chcesz zamknąć?',
     close: 'Zamknij',
     cancel: 'Anuluj'
+  },
+  'de-DE': {
+    unsavedTitle: 'Ungespeicherte Änderungen',
+    unsavedMessage: 'Sie haben ungespeicherte Änderungen. Trotzdem schließen?',
+    close: 'Schließen',
+    cancel: 'Abbrechen'
+  },
+  'fr-FR': {
+    unsavedTitle: 'Modifications non enregistrées',
+    unsavedMessage: 'Vous avez des modifications non enregistrées. Fermer quand même ?',
+    close: 'Fermer',
+    cancel: 'Annuler'
+  },
+  'es-ES': {
+    unsavedTitle: 'Cambios sin guardar',
+    unsavedMessage: 'Tienes cambios sin guardar. ¿Cerrar de todos modos?',
+    close: 'Cerrar',
+    cancel: 'Cancelar'
+  },
+  'it-IT': {
+    unsavedTitle: 'Modifiche non salvate',
+    unsavedMessage: 'Ci sono modifiche non salvate. Chiudere comunque?',
+    close: 'Chiudi',
+    cancel: 'Annulla'
+  },
+  'pt-BR': {
+    unsavedTitle: 'Alterações não salvas',
+    unsavedMessage: 'Você tem alterações não salvas. Fechar mesmo assim?',
+    close: 'Fechar',
+    cancel: 'Cancelar'
+  },
+  'cs-CZ': {
+    unsavedTitle: 'Neuložené změny',
+    unsavedMessage: 'Máte neuložené změny. Přesto zavřít?',
+    close: 'Zavřít',
+    cancel: 'Zrušit'
+  },
+  'nl-NL': {
+    unsavedTitle: 'Niet-opgeslagen wijzigingen',
+    unsavedMessage: 'Je hebt niet-opgeslagen wijzigingen. Toch sluiten?',
+    close: 'Sluiten',
+    cancel: 'Annuleren'
+  },
+  'uk-UA': {
+    unsavedTitle: 'Незбережені зміни',
+    unsavedMessage: 'Є незбережені зміни. Все одно закрити?',
+    close: 'Закрити',
+    cancel: 'Скасувати'
   }
 };
 let currentLanguage = 'en-US';

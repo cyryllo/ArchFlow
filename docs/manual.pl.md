@@ -303,7 +303,9 @@ Wszystkie ustawienia są zapamiętywane w tej przeglądarce (albo w aplikacji na
 
 ## 14. Język
 
-**☰ → Język** przełącza między polskim a angielskim. Zmienia się wszystko, łącznie z nazwami ikon i kategorii. Wybór jest zapamiętywany.
+**☰ → Język** otwiera listę języków interfejsu: English, Polski, Deutsch, Français, Español, Italiano, Português (Brasil), Čeština, Nederlands i Українська. Kliknij jeden, żeby przełączyć. Zmienia się wszystko, łącznie z nazwami ikon i kategorii. Wybór jest zapamiętywany.
+
+<img alt="Lista języków" src="screenshots/pl-m-language.png" width="420">
 
 ## 15. Skróty klawiszowe
 

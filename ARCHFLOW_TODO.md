@@ -85,7 +85,7 @@ The property panels (node, connector, rectangle, text, icon picker), the export-
 ## 🔴 Known Issues
 
 ### Stage 3: desktop builds
-**Status**: Linux AppImage + .deb build locally (`npm run build:desktop`) and the AppImage was checked on a virtual display (new UI, disk storage). The Windows installer can't be built here (electron-builder needs wine to stamp the .exe), so `.github/workflows/desktop.yml` builds Linux (ubuntu runner) and Windows NSIS (windows runner) on every `v*.*.*` tag and attaches them to the GitHub release; it can also be run manually. Still to do: first CI run (needs a new tag - the workflow isn't in v0.6.0), try the .exe on Windows, describe downloads in README/site (stage 4).
+**Status**: Linux AppImage + .deb build locally (`npm run build:desktop`) and the AppImage was checked on a virtual display (new UI, disk storage). The Windows installer can't be built here (electron-builder needs wine to stamp the .exe), so `.github/workflows/desktop.yml` builds Linux (ubuntu runner) and Windows NSIS (windows runner) on every `v*.*.*` tag and attaches them to the GitHub release; it can also be run manually. CI has built and attached the AppImage, .deb and .exe on every release since v0.6.1, and downloads are described in the README and on the site. Still open: code signing for the Windows installer (SmartScreen warns on first run).
 Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` before starting the AppImage, otherwise it starts as plain Node ("bad option").
 
 ### Stage 4: docs and website
@@ -99,9 +99,9 @@ Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` 
 - The dotted line from a label to its node swallowed clicks in the middle of the icon (`components/Label/Label.tsx`, `pointer-events: none`).
 - The right-click menu only appeared on the next re-render (e.g. after moving the mouse), because its anchor was a ref; it's state now (`components/UiOverlay/UiOverlay.tsx`).
 
-### Stage 5: more interface languages
-**Wanted**: besides Polish and English, translate the UI into the popular languages: Portuguese (Brazil, pt-BR), German (de-DE), Spanish (es-ES), Italian (it-IT), French (fr-FR), plus other widely used ones - e.g. Chinese (zh-CN), Japanese (ja-JP), Ukrainian (uk-UA), Russian (ru-RU), Dutch (nl-NL), Turkish (tr-TR), Korean (ko-KR), Czech (cs-CZ).
-**What it covers**: the library locale (`packages/fossflow-lib/src/i18n/*.ts`, typed by `LocaleProps`), the app strings (`packages/fossflow-app/src/i18n/*.json`), the language list (`supportedLanguages` in the app's `i18n.ts`; the ☰ menu "Language" entry should become a picker once there are more than two), icon names and categories in the generated icon set (`names` per language in `scripts/icons`), and the desktop app's native dialogs. The upstream project had some of these locales once (e.g. es-ES) - check git history for anything reusable, but all new UI strings need translating.
+### Stage 5: more interface languages (v0.7.0)
+**Done**: de-DE, fr-FR, es-ES, it-IT, pt-BR, cs-CZ, nl-NL, uk-UA besides en-US and pl-PL. Each has a library locale (`packages/fossflow-lib/src/i18n/<code>.ts`), app strings (`packages/fossflow-app/src/i18n/<code>.json`), icon and category names (`packages/fossflow-app/src/icons/iconNames.ts`; PL/EN stay in `archflowIcons.ts`) and desktop dialog strings (`DIALOG_STRINGS` in `packages/fossflow-desktop/src/main.js`). ☰ → Language opens a picker dialog. Sections the UI never shows (old hint tooltips, lazy-loading welcome, icon-pack settings) stay English.
+**Still open**: a review of the translations by native speakers; maybe more languages later (zh-CN, ja-JP, ko-KR, tr-TR, ru-RU) - adding one means the four places above plus `supportedLanguages` in the app's `i18n.ts`.
 
 ### Stage 6: MCP server so AI assistants can create diagrams
 **Wanted**: an MCP (Model Context Protocol) server for ArchFlow, so AI assistants (Claude and other MCP clients) can use the tool directly: build and change diagrams, then the user opens them in ArchFlow.

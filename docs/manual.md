@@ -303,7 +303,9 @@ All settings are remembered in this browser (or in the desktop app).
 
 ## 14. Language
 
-**☰ → Language** switches between English and Polish. Everything follows, including icon names and categories. Your choice is remembered.
+**☰ → Language** opens a list of the interface languages: English, Polski, Deutsch, Français, Español, Italiano, Português (Brasil), Čeština, Nederlands and Українська. Click one to switch. Everything follows, including icon names and categories. Your choice is remembered.
+
+<img alt="The language list" src="screenshots/en-m-language.png" width="420">
 
 ## 15. Keyboard shortcuts
 

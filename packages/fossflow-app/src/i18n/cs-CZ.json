@@ -1,0 +1,95 @@
+{
+    "nav": {
+        "newDiagram": "Nový diagram",
+        "saveSessionOnly": "Uložit (jen relace)",
+        "loadSessionOnly": "Načíst (jen relace)",
+        "importFile": "Importovat soubor",
+        "quickSaveSession": "Rychlé uložení (relace)",
+        "serverStorage": "Úložiště aplikace",
+        "save": "Uložit",
+        "myDiagrams": "Moje diagramy",
+        "language": "Jazyk"
+    },
+    "status": {
+        "current": "Aktuální",
+        "untitled": "Diagram bez názvu",
+        "modified": "Změněno",
+        "sessionStorageNote": "Jen úložiště relace – pro trvalé uložení exportujte",
+        "saved": "Uloženo"
+    },
+    "dialog": {
+        "save": {
+            "title": "Uložit diagram (jen aktuální relace)",
+            "warningTitle": "Důležité",
+            "warningMessage": "Toto uložení je dočasné a po zavření prohlížeče se ztratí.",
+            "warningExport": "Pro trvalé uložení práce použijte <strong>Exportovat jako JSON</strong> v nabídce ☰.",
+            "placeholder": "Zadejte název diagramu",
+            "btnSave": "Uložit",
+            "btnCancel": "Zrušit"
+        },
+        "load": {
+            "title": "Načíst diagram (jen aktuální relace)",
+            "noteTitle": "Poznámka",
+            "noteMessage": "Tato uložení jsou dočasná. Pro trvalé uchování diagramy exportujte.",
+            "noSavedDiagrams": "V této relaci nejsou žádné uložené diagramy",
+            "updated": "Aktualizováno",
+            "btnLoad": "Načíst",
+            "btnDelete": "Smazat",
+            "btnClose": "Zavřít"
+        },
+        "export": {
+            "title": "Exportovat diagram",
+            "recommendedTitle": "Doporučeno",
+            "recommendedMessage": "Toto je nejlepší způsob, jak práci trvale uložit.",
+            "noteMessage": "Exportované soubory JSON lze později importovat nebo sdílet s ostatními.",
+            "btnDownload": "Stáhnout JSON",
+            "btnCancel": "Zrušit"
+        },
+        "readOnly": {
+            "mode": "Režim jen pro čtení",
+            "failed": "Diagram se nepodařilo načíst"
+        }
+    },
+    "diagramManager": {
+        "title": "Správce diagramů",
+        "storageServer": "Úložiště na serveru",
+        "storageServerNote": "Diagramy se ukládají na server a jsou dostupné na všech zařízeních",
+        "storageLocalFiles": "Místní soubory",
+        "storageLocalFilesNote": "Diagramy se ukládají jako soubory do složky Dokumenty/ArchFlow",
+        "storageLocal": "Místní úložiště",
+        "saveCurrent": "Uložit aktuální diagram",
+        "loading": "Načítání diagramů...",
+        "noSavedDiagrams": "Žádné uložené diagramy",
+        "noSavedDiagramsHint": "Začněte uložením aktuálního diagramu",
+        "btnLoad": "Načíst",
+        "btnLoading": "Načítání...",
+        "btnShare": "Sdílet",
+        "btnShareTitle": "Zkopírovat odkaz ke sdílení",
+        "btnDelete": "Smazat",
+        "lastModified": "Naposledy změněno",
+        "saveDialogTitle": "Uložit diagram",
+        "namePlaceholder": "Název diagramu",
+        "btnSave": "Uložit",
+        "btnCancel": "Zrušit",
+        "confirmDelete": "Opravdu chcete tento diagram smazat?",
+        "enterName": "Zadejte název diagramu",
+        "confirmOverwrite": "Diagram s názvem „{{name}}“ už existuje a bude přepsán. Opravdu chcete pokračovat?",
+        "failedList": "Diagramy se nepodařilo načíst",
+        "failedLoad": "Diagram se nepodařilo načíst",
+        "failedDelete": "Diagram se nepodařilo smazat",
+        "failedSave": "Diagram se nepodařilo uložit",
+        "shareLinkCopied": "Odkaz ke sdílení byl zkopírován do schránky:\n{{url}}"
+    },
+    "alert": {
+        "enterDiagramName": "Zadejte název diagramu",
+        "diagramExists": "Diagram s názvem „{{name}}“ už v této relaci existuje a bude přepsán. Opravdu chcete pokračovat?",
+        "unsavedChanges": "Máte neuložené změny. Pokračovat v načítání?",
+        "createNewDiagram": "Vytvořit nový diagram?",
+        "unsavedChangesExport": "Máte neuložené změny. Diagram nejprve exportujte, abyste ho uložili. Pokračovat?",
+        "confirmDelete": "Opravdu chcete tento diagram smazat?",
+        "storageFull": "Úložiště je plné! Otevírá se správce úložiště...",
+        "autoSaveFailed": "Úložiště je plné! Uvolněte místo ve správci úložiště.",
+        "beforeUnload": "Máte neuložené změny. Opravdu chcete odejít?",
+        "quotaExceeded": "Kvóta úložiště byla překročena. Exportujte důležité diagramy a uvolněte místo."
+    }
+}

@@ -58,6 +58,8 @@ export const Icon = ({ icon, onClick, onMouseDown, onDoubleClick }: Props) => {
           variant="body2"
           color="text.secondary"
           textOverflow="ellipsis"
+          // Long single words (German, Dutch...) wrap instead of being cut off
+          sx={{ overflowWrap: 'anywhere', hyphens: 'auto' }}
         >
           {icon.name}
         </Typography>

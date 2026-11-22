@@ -158,8 +158,8 @@ const want = (name) => {
 // ---------------------------------------------------------------------------
 
 const L = {
-  en: { addLabel: 'Add label', selectionModes: 'Selection mode', cacheName: 'Cache', dwhName: 'Data warehouse', save: 'Save', saveCurrent: 'Save Current Diagram', server: 'Server', database: 'Database', nameWeb: 'Web server', nameDb: 'Customer database', zoneText: 'Production', diagramName: 'My first diagram', cancel: 'Cancel', load: 'Load', myDiagrams: 'My diagrams', settings: 'Settings', exportJson: 'Export as JSON', exportImage: 'Export as image', orders: 'Orders', db: 'Orders DB', dbFull: 'Orders DB', payments: 'Payments', queue: 'Event queue' },
-  pl: { addLabel: 'Dodaj etykietę', selectionModes: 'Sposób zaznaczania', cacheName: 'Cache', dwhName: 'Hurtownia danych', save: 'Zapisz', saveCurrent: 'Zapisz bieżący diagram', server: 'Serwer', database: 'Baza danych', nameWeb: 'Serwer WWW', nameDb: 'Baza klientów', zoneText: 'Produkcja', diagramName: 'Mój pierwszy diagram', cancel: 'Anuluj', load: 'Wczytaj', myDiagrams: 'Moje diagramy', settings: 'Ustawienia', exportJson: 'Eksportuj do JSON', exportImage: 'Eksportuj do obrazu', orders: 'Zamówienia', db: 'Baza zamówień', dbFull: 'Baza zamówień', payments: 'Płatności', queue: 'Kolejka zdarzeń' }
+  en: { addLabel: 'Add label', selectionModes: 'Selection mode', cacheName: 'Cache', dwhName: 'Data warehouse', save: 'Save', saveCurrent: 'Save Current Diagram', server: 'Server', database: 'Database', nameWeb: 'Web server', nameDb: 'Customer database', zoneText: 'Production', diagramName: 'My first diagram', cancel: 'Cancel', load: 'Load', myDiagrams: 'My diagrams', settings: 'Settings', exportJson: 'Export as JSON', exportImage: 'Export as image', languageEntry: 'Language: English', orders: 'Orders', db: 'Orders DB', dbFull: 'Orders DB', payments: 'Payments', queue: 'Event queue' },
+  pl: { addLabel: 'Dodaj etykietę', selectionModes: 'Sposób zaznaczania', cacheName: 'Cache', dwhName: 'Hurtownia danych', save: 'Zapisz', saveCurrent: 'Zapisz bieżący diagram', server: 'Serwer', database: 'Baza danych', nameWeb: 'Serwer WWW', nameDb: 'Baza klientów', zoneText: 'Produkcja', diagramName: 'Mój pierwszy diagram', cancel: 'Anuluj', load: 'Wczytaj', myDiagrams: 'Moje diagramy', settings: 'Ustawienia', exportJson: 'Eksportuj do JSON', exportImage: 'Eksportuj do obrazu', languageEntry: 'Język: Polski', orders: 'Zamówienia', db: 'Baza zamówień', dbFull: 'Baza zamówień', payments: 'Płatności', queue: 'Kolejka zdarzeń' }
 };
 
 async function api(path, init) {
@@ -238,6 +238,15 @@ async function run(l) {
   if (want('main-menu')) {
     await openMainMenu();
     await shoot('main-menu', union({ x: 30, y: 60, width: 60, height: 60 }, await menuBox()));
+    await esc();
+  }
+
+  if (want('m-language')) {
+    // Escape may leave the ☰ menu open after the shot above (wait for its fade-out)
+    await sleep(600);
+    if (!(await menuBox())) await openMainMenu();
+    await menuItem(t.languageEntry);
+    await shoot('m-language', await box('.language-dialog', 12));
     await esc();
   }
 

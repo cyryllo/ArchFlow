@@ -67,6 +67,7 @@ function EditorPage() {
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [showLoadDialog, setShowLoadDialog] = useState(false);
   const [showExportDialog, setShowExportDialog] = useState(false);
+  const [showLanguageDialog, setShowLanguageDialog] = useState(false);
   const [fossflowKey, setFossflowKey] = useState(0); // Key to force re-render of FossFLOW
   // Bumped whenever a different diagram is put into the editor. Model updates
   // still coming from the previous editor instance carry an older generation
@@ -770,10 +771,6 @@ function EditorPage() {
 
   // Entries the app adds to the editor's ☰ menu
   const menuItems = useMemo((): HostMenuItem[] => {
-    const nextLanguage =
-      supportedLanguages[
-        (supportedLanguages.indexOf(currentLanguage) + 1) % supportedLanguages.length
-      ];
     return [
       {
         id: 'new-diagram',
@@ -807,15 +804,21 @@ function EditorPage() {
       {
         id: 'language',
         group: 'app',
-        label: `${t('nav.language')}: ${currentLanguage.label} → ${nextLanguage.label}`,
+        label: `${t('nav.language')}: ${currentLanguage.label}`,
         icon: 'language',
         onClick: () => {
-          i18n.changeLanguage(nextLanguage.value);
-          localStorage.setItem('i18nextLng', nextLanguage.value);
+          setShowLanguageDialog(true);
         }
       }
     ];
-  }, [t, i18n, currentLanguage]);
+  }, [t, currentLanguage]);
+
+  const changeLanguage = (lng: string) => {
+    setShowLanguageDialog(false);
+    if (lng === i18n.language) return;
+    i18n.changeLanguage(lng);
+    localStorage.setItem('i18nextLng', lng);
+  };
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -1069,6 +1072,47 @@ function EditorPage() {
               >
                 {t('dialog.export.btnCancel')}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showLanguageDialog && (
+        <div
+          className="dialog-overlay"
+          onClick={() => {
+            setShowLanguageDialog(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setShowLanguageDialog(false);
+          }}
+        >
+          <div
+            className="dialog language-dialog"
+            role="dialog"
+            aria-label={t('nav.language')}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <h2>{t('nav.language')}</h2>
+            <div className="language-list">
+              {supportedLanguages.map((lang) => {
+                const active = lang.value === currentLanguage.value;
+                return (
+                  <button
+                    key={lang.value}
+                    className={active ? 'active' : undefined}
+                    aria-pressed={active}
+                    autoFocus={active}
+                    onClick={() => {
+                      changeLanguage(lang.value);
+                    }}
+                  >
+                    {lang.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

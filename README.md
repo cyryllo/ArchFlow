@@ -33,7 +33,7 @@ ArchFlow is a free, open-source editor for clear, good-looking **isometric diagr
 - **Keyboard shortcuts** for copy, cut, paste, duplicate, select all, delete, zoom, fit, rename and every tool (press F1 for the list).
 - **Export** to a portable JSON file (every icon included) or to a PNG image with your choice of resolution, background and cropping.
 - **Save where you like:** files on your computer, a shared list on your Docker server, or the desktop app's `Documents/ArchFlow` folder.
-- **English and Polish** interface, icon names included.
+- **10 interface languages**: English, Polish, German, French, Spanish, Italian, Portuguese (Brazil), Czech, Dutch and Ukrainian, icon names included.
 
 ## ⬇️ Download
 

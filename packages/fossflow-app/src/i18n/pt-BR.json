@@ -1,0 +1,95 @@
+{
+    "nav": {
+        "newDiagram": "Novo diagrama",
+        "saveSessionOnly": "Salvar (só na sessão)",
+        "loadSessionOnly": "Carregar (só da sessão)",
+        "importFile": "Importar arquivo",
+        "quickSaveSession": "Salvamento rápido (sessão)",
+        "serverStorage": "Armazenamento do app",
+        "save": "Salvar",
+        "myDiagrams": "Meus diagramas",
+        "language": "Idioma"
+    },
+    "status": {
+        "current": "Atual",
+        "untitled": "Diagrama sem título",
+        "modified": "Modificado",
+        "sessionStorageNote": "Somente armazenamento da sessão – exporte para salvar permanentemente",
+        "saved": "Salvo"
+    },
+    "dialog": {
+        "save": {
+            "title": "Salvar diagrama (somente sessão atual)",
+            "warningTitle": "Importante",
+            "warningMessage": "Este salvamento é temporário e será perdido quando você fechar o navegador.",
+            "warningExport": "Use <strong>Exportar como JSON</strong> no menu ☰ para salvar seu trabalho permanentemente.",
+            "placeholder": "Digite o nome do diagrama",
+            "btnSave": "Salvar",
+            "btnCancel": "Cancelar"
+        },
+        "load": {
+            "title": "Carregar diagrama (somente sessão atual)",
+            "noteTitle": "Observação",
+            "noteMessage": "Estes salvamentos são temporários. Exporte seus diagramas para mantê-los permanentemente.",
+            "noSavedDiagrams": "Nenhum diagrama salvo nesta sessão",
+            "updated": "Atualizado",
+            "btnLoad": "Carregar",
+            "btnDelete": "Excluir",
+            "btnClose": "Fechar"
+        },
+        "export": {
+            "title": "Exportar diagrama",
+            "recommendedTitle": "Recomendado",
+            "recommendedMessage": "Esta é a melhor forma de salvar seu trabalho permanentemente.",
+            "noteMessage": "Os arquivos JSON exportados podem ser importados depois ou compartilhados com outras pessoas.",
+            "btnDownload": "Baixar JSON",
+            "btnCancel": "Cancelar"
+        },
+        "readOnly": {
+            "mode": "Modo somente leitura",
+            "failed": "Não foi possível carregar o diagrama"
+        }
+    },
+    "diagramManager": {
+        "title": "Gerenciador de diagramas",
+        "storageServer": "Armazenamento no servidor",
+        "storageServerNote": "Os diagramas são salvos no servidor e ficam disponíveis em todos os dispositivos",
+        "storageLocalFiles": "Arquivos locais",
+        "storageLocalFilesNote": "Os diagramas são salvos como arquivos na sua pasta Documentos/ArchFlow",
+        "storageLocal": "Armazenamento local",
+        "saveCurrent": "Salvar o diagrama atual",
+        "loading": "Carregando diagramas...",
+        "noSavedDiagrams": "Nenhum diagrama salvo",
+        "noSavedDiagramsHint": "Salve seu diagrama atual para começar",
+        "btnLoad": "Carregar",
+        "btnLoading": "Carregando...",
+        "btnShare": "Compartilhar",
+        "btnShareTitle": "Copiar link de compartilhamento",
+        "btnDelete": "Excluir",
+        "lastModified": "Última modificação",
+        "saveDialogTitle": "Salvar diagrama",
+        "namePlaceholder": "Nome do diagrama",
+        "btnSave": "Salvar",
+        "btnCancel": "Cancelar",
+        "confirmDelete": "Tem certeza de que deseja excluir este diagrama?",
+        "enterName": "Digite um nome para o diagrama",
+        "confirmOverwrite": "Já existe um diagrama chamado “{{name}}”, que será substituído. Tem certeza de que deseja continuar?",
+        "failedList": "Não foi possível carregar os diagramas",
+        "failedLoad": "Não foi possível carregar o diagrama",
+        "failedDelete": "Não foi possível excluir o diagrama",
+        "failedSave": "Não foi possível salvar o diagrama",
+        "shareLinkCopied": "Link de compartilhamento copiado para a área de transferência:\n{{url}}"
+    },
+    "alert": {
+        "enterDiagramName": "Digite um nome para o diagrama",
+        "diagramExists": "Já existe um diagrama chamado “{{name}}” nesta sessão, que será substituído. Tem certeza de que deseja continuar?",
+        "unsavedChanges": "Você tem alterações não salvas. Continuar carregando?",
+        "createNewDiagram": "Criar um novo diagrama?",
+        "unsavedChangesExport": "Você tem alterações não salvas. Exporte primeiro seu diagrama para salvá-lo. Continuar?",
+        "confirmDelete": "Tem certeza de que deseja excluir este diagrama?",
+        "storageFull": "Armazenamento cheio! Abrindo o gerenciador de armazenamento...",
+        "autoSaveFailed": "Armazenamento cheio! Use o gerenciador de armazenamento para liberar espaço.",
+        "beforeUnload": "Você tem alterações não salvas. Tem certeza de que deseja sair?",
+        "quotaExceeded": "Cota de armazenamento excedida. Exporte os diagramas importantes e libere espaço."
+    }
+}

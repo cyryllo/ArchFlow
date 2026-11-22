@@ -27,26 +27,32 @@ i18n
     }
   });
 
-// Let the Electron main process know the current language, so native dialogs
+// Tell the Electron main process the current language, so native dialogs
 // (which have no access to i18next) can show text in the right language.
-const notifyElectronOfLanguage = (lng: string) => {
+const applyLanguage = (lng: string) => {
   (window as any).electronAPI?.setLanguage?.(lng);
+  // Page language for screen readers and hyphenation of long words
+  document.documentElement.lang = lng;
 };
 
-i18n.on('languageChanged', notifyElectronOfLanguage);
+i18n.on('languageChanged', applyLanguage);
 i18n.on('initialized', () => {
-  notifyElectronOfLanguage(i18n.language);
+  applyLanguage(i18n.language);
 });
 
+// Each language has app strings in src/i18n/<code>.json and editor strings
+// in fossflow-lib/src/i18n/<code>.ts
 export const supportedLanguages = [
-  {
-    label: 'English',
-    value: 'en-US'
-  },
-  {
-    label: 'Polski',
-    value: 'pl-PL'
-  }
+  { label: 'English', value: 'en-US' },
+  { label: 'Polski', value: 'pl-PL' },
+  { label: 'Deutsch', value: 'de-DE' },
+  { label: 'Français', value: 'fr-FR' },
+  { label: 'Español', value: 'es-ES' },
+  { label: 'Italiano', value: 'it-IT' },
+  { label: 'Português (Brasil)', value: 'pt-BR' },
+  { label: 'Čeština', value: 'cs-CZ' },
+  { label: 'Nederlands', value: 'nl-NL' },
+  { label: 'Українська', value: 'uk-UA' }
 ];
 
 export default i18n;
