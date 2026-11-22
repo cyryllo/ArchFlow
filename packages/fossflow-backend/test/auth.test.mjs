@@ -110,13 +110,17 @@ describe('logins on (AUTH_MODE=local)', () => {
     assert.equal((await users.viewer.b('DELETE', `/api/diagrams/${encodeURIComponent(id)}`)).status, 403);
     const read = await users.viewer.b('GET', `/api/diagrams/${encodeURIComponent(id)}`);
     assert.equal(read.status, 200);
-    assert.equal(read.body.owner, users.editor.id);
+    // The owner's id stays on the server; the author's e-mail is shown
+    assert.equal(read.body.owner, undefined);
     assert.equal(read.body.createdBy, 'editor@x.pl');
+    assert.equal(read.body._permissions.canEdit, false);
     // The admin changes it: the author stays, the last editor changes
     await admin('PUT', `/api/diagrams/${encodeURIComponent(id)}`, { ...diagram('Team plan'), owner: 'forged' });
     const after = (await admin('GET', `/api/diagrams/${encodeURIComponent(id)}`)).body;
-    assert.equal(after.owner, users.editor.id);
+    assert.equal(after.createdBy, 'editor@x.pl');
     assert.equal(after.modifiedBy, 'admin@x.pl');
+    // The file on disk keeps the real owner, not the forged one
+    assert.equal(JSON.parse(readFileSync(join(srv.dir, `${id}.json`), 'utf8')).owner, users.editor.id);
     assert.equal((await users.viewer.b('GET', '/api/diagrams')).body.length, 1);
   });
 
@@ -209,6 +213,75 @@ describe('logins on (AUTH_MODE=local)', () => {
     // Guests still can't touch the server's diagrams
     assert.equal((await fetch(`${srv.base}/api/diagrams`)).status, 401);
     await admin('PATCH', '/api/admin/settings', { publicAccess: false });
+  });
+
+  test('sharing: private diagrams, people, read-only and edit access', async () => {
+    // A second editor and the viewer log in fresh
+    const r1 = await admin('POST', '/api/admin/users', { email: 'ola@x.pl', name: 'Ola', role: 'editor' });
+    const ola = browser(srv.base);
+    await ola('POST', '/api/auth/login', { email: 'ola@x.pl', password: r1.body.temporaryPassword });
+    const r2 = await admin('POST', `/api/admin/users/${users.viewer.id}/reset-password`);
+    const jan = browser(srv.base);
+    await jan('POST', '/api/auth/login', { email: 'viewer@x.pl', password: r2.body.temporaryPassword });
+
+    // Ola makes a private diagram
+    const id = (await ola('POST', '/api/diagrams', diagram('Secret plan'))).body.id;
+    const path = `/api/diagrams/${encodeURIComponent(id)}`;
+    assert.equal((await ola('PUT', `${path}/sharing`, { visibility: 'private' })).status, 200);
+    const names = async (b) => {
+      const r = await b('GET', '/api/diagrams');
+      assert.ok(Array.isArray(r.body), `list: ${r.status} ${JSON.stringify(r.body)}`);
+      return r.body.map((d) => d.name);
+    };
+    assert.ok(!(await names(jan)).includes('Secret plan'));
+    assert.equal((await jan('GET', path)).status, 404);
+    assert.ok((await names(admin)).includes('Secret plan'), 'admins see everything');
+    // Only the owner or an admin manages sharing
+    assert.equal((await jan('GET', `${path}/sharing`)).status, 404);
+    // Shared with the viewer to view, and with editor@x.pl to edit
+    const sharing = (await ola('GET', `${path}/sharing`)).body;
+    assert.ok(sharing.people.some((p) => p.email === 'viewer@x.pl'));
+    await ola('PUT', `${path}/sharing`, { users: [{ id: users.viewer.id, access: 'view' }, { id: users.editor.id, access: 'edit' }] });
+    const listed = (await jan('GET', '/api/diagrams')).body.find((d) => d.name === 'Secret plan');
+    assert.equal(listed.sharedWithMe, true);
+    assert.equal(listed.canEdit, false);
+    assert.equal((await jan('GET', path)).status, 200);
+    assert.equal((await jan('PUT', path, diagram('Secret plan'))).status, 403);
+    // The edit share works for an editor, but they can't re-share or delete it
+    const ed = browser(srv.base);
+    const r3 = await admin('POST', `/api/admin/users/${users.editor.id}/reset-password`);
+    await ed('POST', '/api/auth/login', { email: 'editor@x.pl', password: r3.body.temporaryPassword });
+    assert.equal((await ed('PUT', path, { ...diagram('Secret plan'), items: [] })).status, 200);
+    assert.equal((await ed('GET', `${path}/sharing`)).status, 403);
+    assert.equal((await ed('DELETE', path)).status, 403);
+    // A normal save can't change the sharing
+    await ed('PUT', path, { ...diagram('Secret plan'), access: { visibility: 'team' } });
+    assert.equal((await ola('GET', `${path}/sharing`)).body.visibility, 'private');
+  });
+
+  test('share links: view without logging in, expire, revoke', async () => {
+    const ola = browser(srv.base);
+    const r = await admin('POST', '/api/admin/users', { email: 'link@x.pl', role: 'editor' });
+    await ola('POST', '/api/auth/login', { email: 'link@x.pl', password: r.body.temporaryPassword });
+    const id = (await ola('POST', '/api/diagrams', diagram('Linked'))).body.id;
+    const path = `/api/diagrams/${encodeURIComponent(id)}`;
+    await ola('PUT', `${path}/sharing`, { visibility: 'private' });
+    const link = (await ola('POST', `${path}/links`, { expiresInDays: 7 })).body;
+    assert.match(link.token, /^afs_/);
+    const anon = browser(srv.base);
+    const seen = await anon('GET', `/api/shared/${link.token}`);
+    assert.equal(seen.status, 200);
+    assert.equal(seen.body.title, 'Linked');
+    assert.equal(seen.body.access, undefined);
+    assert.equal(seen.body._permissions.canEdit, false);
+    // The token isn't stored or listed
+    assert.doesNotMatch(readFileSync(join(srv.dir, `${id}.json`), 'utf8'), new RegExp(link.token));
+    const links = (await ola('GET', `${path}/sharing`)).body.links;
+    assert.equal(links.length, 1);
+    assert.equal(links[0].token, undefined);
+    assert.equal((await anon('GET', '/api/shared/afs_made-up')).status, 404);
+    await ola('DELETE', `${path}/links/${link.id}`);
+    assert.equal((await anon('GET', `/api/shared/${link.token}`)).status, 404);
   });
 
   test('too many failed logins are slowed down', async () => {

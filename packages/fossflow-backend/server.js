@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { createAuth } from './auth.js';
+import { createDiagramRouter } from './diagrams.js';
 
 // Load environment variables
 dotenv.config();
@@ -43,10 +44,6 @@ app.use('/api', auth.attach);
 app.use('/api/auth', auth.router);
 app.use('/api/admin', auth.adminRouter);
 
-// Reading diagrams: any logged-in user; changing them: editors and admins
-const canRead = auth.requireUser;
-const canWrite = auth.requireRole('admin', 'editor');
-
 // Health check / Storage status endpoint
 app.get('/api/storage/status', (req, res) => {
   res.json({
@@ -57,257 +54,13 @@ app.get('/api/storage/status', (req, res) => {
   });
 });
 
-// A diagram id is a file name stem: no folders, no hidden files
-const validId = (id) => {
-  return typeof id === 'string' && id.length > 0 && id.length <= 200 && !/[\\/\x00]/.test(id) && !id.startsWith('.');
-};
-const checkId = (req, res, next) => {
-  if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid diagram id' });
-  next();
-};
-
-// Who saved what: kept in the diagram file, never taken from the client
-const AUTHOR_FIELDS = ['owner', 'createdBy', 'modifiedBy'];
-const withoutAuthorFields = (body) => {
-  const copy = { ...body };
-  AUTHOR_FIELDS.forEach((f) => {
-    delete copy[f];
-  });
-  return copy;
-};
-
-// Turn a diagram name into a filesystem-safe filename stem: strips characters
-// invalid on Windows/Linux/macOS, collapses whitespace, and caps the length.
-function sanitizeFilename(name) {
-  const cleaned = (name || 'Untitled Diagram')
-    .replace(/[\\/?%*:|"<>\x00-\x1f]/g, '')
-    .trim()
-    .replace(/\s+/g, ' ')
-    .slice(0, 150);
-  return cleaned || 'Untitled Diagram';
-}
-
-async function fileExists(filePath) {
-  try {
-    await fs.access(filePath);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 // Only enable storage endpoints if storage is enabled
 if (STORAGE_ENABLED) {
-  // Ensure storage directory exists
-  async function ensureStorageDir() {
-    try {
-      await fs.access(STORAGE_PATH);
-      console.log(`Storage directory exists: ${STORAGE_PATH}`);
-
-      // Log current files
-      const files = await fs.readdir(STORAGE_PATH);
-      console.log(`Current files in storage: ${files.length} files`);
-      if (files.length > 0) {
-        console.log('Files:', files.join(', '));
-      }
-    } catch {
-      console.log(`Creating storage directory: ${STORAGE_PATH}`);
-      await fs.mkdir(STORAGE_PATH, { recursive: true });
-      console.log(`Created storage directory: ${STORAGE_PATH}`);
-    }
-  }
-
-  // Initialize storage
-  ensureStorageDir().catch((err) => {
-    console.error('Failed to initialize storage:', err);
+  fs.mkdir(STORAGE_PATH, { recursive: true }).catch((err) => {
+    console.error('Failed to create the storage directory:', err);
   });
-
-  const diagramPath = (id) => path.join(STORAGE_PATH, `${id}.json`);
-
-  // Picks a filename stem for `name`, appending " (2)", " (3)", ... if it
-  // collides with a different diagram. `keepId`, if given, is treated as
-  // "this is the diagram being saved" - reusing its own current name is not
-  // a collision.
-  const uniqueDiagramId = async (name, keepId) => {
-    const base = sanitizeFilename(name);
-    if (base === keepId) return base;
-
-    let candidate = base;
-    let n = 2;
-    while (candidate !== keepId && (await fileExists(diagramPath(candidate)))) {
-      candidate = `${base} (${n})`;
-      n += 1;
-    }
-    return candidate;
-  };
-
-  // List all diagrams
-  app.get('/api/diagrams', canRead, async (req, res) => {
-    try {
-      // First check if storage directory exists
-      try {
-        await fs.access(STORAGE_PATH);
-      } catch (err) {
-        console.error(`Storage directory does not exist: ${STORAGE_PATH}`);
-        return res.json([]); // Return empty array if directory doesn't exist
-      }
-
-      const files = await fs.readdir(STORAGE_PATH);
-      console.log(`Found ${files.length} files in ${STORAGE_PATH}:`, files);
-      const diagrams = [];
-
-      for (const file of files) {
-        if (file.endsWith('.json') && file !== 'metadata.json') {
-          try {
-            const filePath = path.join(STORAGE_PATH, file);
-            const stats = await fs.stat(filePath);
-            const content = await fs.readFile(filePath, 'utf-8');
-            const data = JSON.parse(content);
-
-            // Extract name from various possible locations
-            const name = data.name || data.title || 'Untitled Diagram';
-
-            console.log(`Successfully read diagram: ${file} (name: ${name})`);
-
-            diagrams.push({
-              id: file.replace('.json', ''),
-              name: name,
-              lastModified: stats.mtime,
-              size: stats.size,
-              ...(data.modifiedBy ? { modifiedBy: data.modifiedBy } : {})
-            });
-          } catch (fileError) {
-            console.error(`Error reading diagram file ${file}:`, fileError.message);
-            // Skip this file and continue with others
-            continue;
-          }
-        }
-      }
-
-      console.log(`Returning ${diagrams.length} diagrams`);
-      res.json(diagrams);
-    } catch (error) {
-      console.error('Error listing diagrams:', error);
-      res.status(500).json({ error: 'Failed to list diagrams', details: error.message });
-    }
-  });
-
-  // Get specific diagram
-  app.get('/api/diagrams/:id', canRead, checkId, async (req, res) => {
-    const diagramId = req.params.id;
-    console.log(`[GET /api/diagrams/${diagramId}] Loading diagram...`);
-
-    try {
-      const filePath = path.join(STORAGE_PATH, `${diagramId}.json`);
-      console.log(`[GET /api/diagrams/${diagramId}] Reading from: ${filePath}`);
-
-      const content = await fs.readFile(filePath, 'utf-8');
-      const data = JSON.parse(content);
-
-      console.log(`[GET /api/diagrams/${diagramId}] Successfully loaded, size: ${content.length} bytes, items: ${data.items?.length || 0}`);
-      res.json(data);
-    } catch (error) {
-      if (error.code === 'ENOENT') {
-        console.error(`[GET /api/diagrams/${diagramId}] Diagram not found`);
-        res.status(404).json({ error: 'Diagram not found' });
-      } else {
-        console.error(`[GET /api/diagrams/${diagramId}] Error reading diagram:`, error);
-        res.status(500).json({ error: 'Failed to read diagram' });
-      }
-    }
-  });
-
-  // Save or update diagram
-  app.put('/api/diagrams/:id', canWrite, checkId, async (req, res) => {
-    const diagramId = req.params.id;
-    console.log(`[PUT /api/diagrams/${diagramId}] Saving diagram...`);
-
-    try {
-      const newId = await uniqueDiagramId(req.body.name || req.body.title, diagramId);
-      const filePath = diagramPath(newId);
-      // Keep who created it; note who changed it
-      const previous = await fs
-        .readFile(diagramPath(diagramId), 'utf-8')
-        .then((c) => {
-          return JSON.parse(c);
-        })
-        .catch(() => {
-          return {};
-        });
-      const data = {
-        ...withoutAuthorFields(req.body),
-        id: newId,
-        ...(previous.created ? { created: previous.created } : {}),
-        ...(previous.owner ? { owner: previous.owner, createdBy: previous.createdBy } : {}),
-        ...(req.user?.email ? { modifiedBy: req.user.email } : {}),
-        lastModified: new Date().toISOString()
-      };
-
-      const iconCount = data.icons?.length || 0;
-      const importedIconCount = (data.icons || []).filter(icon => icon.collection === 'imported').length;
-      console.log(`[PUT /api/diagrams/${diagramId}] Writing to: ${filePath}`);
-      console.log(`[PUT /api/diagrams/${diagramId}]   Items: ${data.items?.length || 0}, Icons: ${iconCount} (${importedIconCount} imported)`);
-
-      await fs.writeFile(filePath, JSON.stringify(data, null, 2));
-      console.log(`[PUT /api/diagrams/${diagramId}] Successfully saved`);
-
-      if (newId !== diagramId) {
-        await fs.unlink(diagramPath(diagramId)).catch(() => {});
-        console.log(`[PUT /api/diagrams/${diagramId}] Renamed to ${newId}`);
-      }
-
-      // Git backup if enabled
-      if (ENABLE_GIT_BACKUP) {
-        // TODO: Implement git commit
-        console.log('[PUT] Git backup not yet implemented');
-      }
-
-      res.json({ success: true, id: newId });
-    } catch (error) {
-      console.error(`[PUT /api/diagrams/${diagramId}] Error saving diagram:`, error);
-      res.status(500).json({ error: 'Failed to save diagram' });
-    }
-  });
-
-  // Delete diagram
-  app.delete('/api/diagrams/:id', canWrite, checkId, async (req, res) => {
-    try {
-      const filePath = path.join(STORAGE_PATH, `${req.params.id}.json`);
-      await fs.unlink(filePath);
-      
-      res.json({ success: true });
-    } catch (error) {
-      if (error.code === 'ENOENT') {
-        res.status(404).json({ error: 'Diagram not found' });
-      } else {
-        console.error('Error deleting diagram:', error);
-        res.status(500).json({ error: 'Failed to delete diagram' });
-      }
-    }
-  });
-
-  // Create a new diagram
-  app.post('/api/diagrams', canWrite, async (req, res) => {
-    try {
-      const id = await uniqueDiagramId(req.body.name || req.body.title);
-      const filePath = diagramPath(id);
-
-      const data = {
-        ...withoutAuthorFields(req.body),
-        id,
-        ...(req.user?.email ? { owner: req.user.id, createdBy: req.user.email, modifiedBy: req.user.email } : {}),
-        created: new Date().toISOString(),
-        lastModified: new Date().toISOString()
-      };
-      
-      await fs.writeFile(filePath, JSON.stringify(data, null, 2));
-      res.status(201).json({ success: true, id });
-    } catch (error) {
-      console.error('Error creating diagram:', error);
-      res.status(500).json({ error: 'Failed to create diagram' });
-    }
-  });
-
+  // /api/diagrams (with roles and sharing) and /api/shared/<token>
+  app.use('/api', createDiagramRouter({ storagePath: STORAGE_PATH, auth }));
 } else {
   // Storage disabled - return appropriate responses
   app.get('/api/diagrams', (req, res) => {

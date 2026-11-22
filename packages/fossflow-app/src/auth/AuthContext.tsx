@@ -50,6 +50,11 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     let cancelled = false;
     const start = async () => {
+      // A share link (/view/<token>) opens read-only for anyone, logged in or not
+      if (window.location.pathname.includes('/view/')) {
+        storageManager.setGuest(true);
+        return setScreen('app');
+      }
       const s = await storageManager.serverAuthStatus();
       if (cancelled) return;
       setStatus(s);

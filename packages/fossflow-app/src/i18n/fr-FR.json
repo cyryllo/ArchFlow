@@ -183,5 +183,31 @@
         "self": "Vous ne pouvez pas désactiver, rétrograder ni supprimer votre propre compte",
         "tokenName": "Donnez un nom au jeton",
         "noApi": "L’accès à l’API et au MCP n’est pas activé pour votre compte"
+    },
+    "share": {
+        "title": "Partager « {{name}} »",
+        "whoSees": "Qui le voit",
+        "team": "Équipe",
+        "teamHint": "Toutes les personnes connectées le voient ; les éditeurs peuvent le modifier.",
+        "private": "Privé",
+        "privateHint": "Seulement vous, les administrateurs et les personnes ci-dessous.",
+        "people": "Personnes",
+        "peopleHintPrivate": "Elles le voient même s’il est privé ; avec « Peut modifier », elles peuvent aussi le changer.",
+        "peopleHintTeam": "Toute l’équipe le voit de toute façon. Les personnes ajoutées ici gardent l’accès si vous le rendez privé plus tard.",
+        "access": "Accès",
+        "canView": "Peut voir",
+        "canEdit": "Peut modifier",
+        "remove": "Retirer",
+        "person": "Personne",
+        "choosePerson": "Choisir une personne…",
+        "add": "Ajouter",
+        "links": "Liens",
+        "linksHint": "Toute personne disposant d’un lien peut voir le diagramme sans se connecter. Un lien ne permet rien modifier.",
+        "noExpiry": "Sans expiration",
+        "createLink": "Créer un lien",
+        "newLink": "Nouveau lien",
+        "linkOnce": "Copiez-le maintenant : il ne sera plus affiché. Révoquez-le ci-dessous quand il n’est plus utile.",
+        "sharedWithYou": "Partagé avec vous",
+        "linkFailed": "Ce lien ne fonctionne pas. Il a peut-être expiré ou été révoqué."
     }
 }

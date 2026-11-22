@@ -1,0 +1,9 @@
+# Kept out of the Docker build: your diagrams and accounts, local secrets,
+# and dependencies (the image installs its own)
+diagrams
+.env
+.env.*
+node_modules
+packages/*/node_modules
+packages/*/build
+packages/fossflow-desktop/dist

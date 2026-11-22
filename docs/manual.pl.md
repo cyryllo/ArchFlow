@@ -251,7 +251,7 @@ Jeśli klikasz prawym przyciskiem element, który jest częścią zaznaczenia, K
 W skrócie (szczegóły w [Zapisywaniu i otwieraniu diagramów](saving.pl.md)):
 
 - **Zapisz** (górny pasek, ☰ albo **Ctrl+S**) zapisuje otwarty diagram. Za pierwszym razem pyta o nazwę.
-- **Moje diagramy** (górny pasek, ☰ albo **Ctrl+O**) to lista zapisanych diagramów: **Wczytaj**, **Usuń**, a w Dockerze także **Udostępnij** (link tylko do odczytu).
+- **Moje diagramy** (górny pasek, ☰ albo **Ctrl+O**) to lista zapisanych diagramów: **Wczytaj**, **Usuń**, a w Dockerze także **Udostępnij** (link tylko do odczytu; przy logowaniu udostępnianie osobom i linki: [rozdział 17](#17-konta-i-logowanie)).
 
 <img alt="Moje diagramy" src="screenshots/pl-app-storage.png" width="600">
 
@@ -387,8 +387,9 @@ Tylko w ArchFlow w Dockerze z logowaniem (domyślny `compose.yml` od wersji 0.9.
 
 - **Logowanie.** ArchFlow pyta o e-mail i hasło. W zupełnie nowym ArchFlow pierwsza osoba tworzy konto administratora. Jeśli administrator dał Ci hasło tymczasowe, po zalogowaniu ustawisz własne. Nie pamiętasz hasła? Administrator je zresetuje.
 - **Twoje konto.** Kliknij swoje imię u góry (☰ → *Konto*), żeby zmienić hasło, utworzyć tokeny dla asystentów AI ([Asystenci AI](mcp.pl.md#mcp-w-dockerze-przez-http)) albo się wylogować.
-- **Role.** *Edytorzy* tworzą i zmieniają diagramy; *czytelnicy* tylko je otwierają (edytor jest wtedy tylko do podglądu i nie ma *Zapisz*). Każdy zalogowany widzi wszystkie diagramy, a *Moje diagramy* pokazują, kto ostatni zmienił każdy z nich.
+- **Role.** *Edytorzy* tworzą i zmieniają diagramy; *czytelnicy* tylko je otwierają (edytor jest wtedy tylko do podglądu i nie ma *Zapisz*). Każdy zalogowany widzi diagramy zespołu oraz prywatne, które mu udostępniono. *Moje diagramy* pokazują, kto ostatni zmienił każdy z nich.
 - **Administratorzy** zarządzają ludźmi w ☰ → *Użytkownicy i ustawienia*: dodają użytkowników (ArchFlow raz pokazuje hasło tymczasowe), zmieniają role, resetują hasła, wyłączają i usuwają konta oraz pozwalają na dostęp do API i MCP.
+- **Udostępnianie.** W *Moich diagramach* autor (albo administrator) klika *Udostępnij*, żeby ustawić diagram jako prywatny, dać wybranym osobom prawo do oglądania albo edycji, albo utworzyć link tylko do odczytu, działający bez konta. Linki mogą wygasać i można je unieważnić.
 - **Dostęp publiczny.** Gdy administrator go włączy, niezalogowani też mogą projektować, ale zapisują tylko w swojej przeglądarce albo do pliku. *Zaloguj się* u góry przełącza na Twoje konto.
 
 Konfigurację na serwerze opisuje [instrukcja Dockera](docker.pl.md#konta-i-logowanie).

@@ -183,5 +183,31 @@
         "self": "Vlastní účet nemůžete vypnout, ponížit ani smazat",
         "tokenName": "Pojmenujte token",
         "noApi": "Přístup k API a MCP není pro váš účet zapnutý"
+    },
+    "share": {
+        "title": "Sdílet „{{name}}“",
+        "whoSees": "Kdo ho vidí",
+        "team": "Tým",
+        "teamHint": "Vidí ho všichni přihlášení; editoři ho mohou měnit.",
+        "private": "Soukromý",
+        "privateHint": "Jen vy, správci a lidé níže.",
+        "people": "Lidé",
+        "peopleHintPrivate": "Vidí ho, i když je soukromý; s „Může upravovat“ ho mohou i měnit.",
+        "peopleHintTeam": "Celý tým ho vidí tak jako tak. Lidé přidaní sem si přístup ponechají, pokud ho později nastavíte jako soukromý.",
+        "access": "Přístup",
+        "canView": "Může prohlížet",
+        "canEdit": "Může upravovat",
+        "remove": "Odebrat",
+        "person": "Osoba",
+        "choosePerson": "Vyberte osobu…",
+        "add": "Přidat",
+        "links": "Odkazy",
+        "linksHint": "Kdo má odkaz, uvidí diagram bez přihlášení. Přes odkaz nelze nic změnit.",
+        "noExpiry": "Bez vypršení",
+        "createLink": "Vytvořit odkaz",
+        "newLink": "Nový odkaz",
+        "linkOnce": "Zkopírujte ho teď: znovu se nezobrazí. Až ho nebudete potřebovat, zneplatněte ho níže.",
+        "sharedWithYou": "Sdíleno s vámi",
+        "linkFailed": "Tento odkaz nefunguje. Možná vypršel nebo byl zneplatněn."
     }
 }

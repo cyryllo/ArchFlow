@@ -28,13 +28,13 @@ ArchFlow ma **dwa niezależne sposoby** na zachowanie pracy. Możesz używać ob
 **Moje diagramy** (górny pasek, menu ☰ albo **Ctrl+O**) otwierają listę zapisanych diagramów:
 
 - **Zapisz bieżący diagram** zapisuje diagram pod nazwą. Jeśli diagram o tej nazwie już istnieje, ArchFlow zapyta przed nadpisaniem. Każdy diagram staje się plikiem nazwanym tak jak on, np. `./diagrams/Sklep internetowy.json`.
-- **Wczytaj** otwiera zapisany diagram, **Udostępnij** kopiuje link tylko do odczytu (`http://twoj-serwer:9500/display/<nazwa>`, tylko Docker), **Usuń** usuwa diagram i jego plik po potwierdzeniu.
+- **Wczytaj** otwiera zapisany diagram, **Udostępnij** kopiuje link tylko do odczytu (`http://twoj-serwer:9500/display/<nazwa>`, tylko Docker; przy logowaniu otwiera okno udostępniania z osobami i linkami, zobacz [instrukcję Dockera](docker.pl.md#konta-i-logowanie)), **Usuń** usuwa diagram i jego plik po potwierdzeniu.
 - **Zapisz** na górnym pasku (albo **Ctrl+S**) zapisuje otwarty diagram ponownie pod tą samą nazwą.
 
 Ważne:
 
 - **Zapis jest ręczny.** Górny pasek pokazuje **Zmodyfikowany**, dopóki nie zapiszesz, a przeglądarka ostrzeże Cię przy zamykaniu karty z niezapisanymi zmianami.
-- **W Dockerze lista jest wspólna.** Każdy, kto otworzy ten sam adres ArchFlow, widzi i edytuje te same diagramy. Nie ma kont użytkowników.
+- **W Dockerze lista jest wspólna.** Każdy, kto otworzy ten sam adres ArchFlow, widzi i edytuje te same diagramy. Przy logowaniu (od wersji 0.9.0) o tym, kto co widzi i zmienia, decydują role i diagramy prywatne: zobacz [Konta i logowanie](docker.pl.md#konta-i-logowanie).
 
 ## Tylko przeglądarka (bez zapisu na serwerze)
 

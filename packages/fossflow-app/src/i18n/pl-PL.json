@@ -183,5 +183,31 @@
         "self": "Nie możesz wyłączyć, zdegradować ani usunąć własnego konta",
         "tokenName": "Nadaj tokenowi nazwę",
         "noApi": "Dostęp do API i MCP nie jest włączony dla Twojego konta"
+    },
+    "share": {
+        "title": "Udostępnij „{{name}}”",
+        "whoSees": "Kto widzi",
+        "team": "Zespół",
+        "teamHint": "Widzą go wszyscy zalogowani; edytorzy mogą go zmieniać.",
+        "private": "Prywatny",
+        "privateHint": "Tylko Ty, administratorzy i osoby poniżej.",
+        "people": "Osoby",
+        "peopleHintPrivate": "Widzą go mimo trybu prywatnego; z „Może edytować” mogą też go zmieniać.",
+        "peopleHintTeam": "Widzi go i tak cały zespół. Dodane tu osoby zachowają dostęp, jeśli później ustawisz diagram jako prywatny.",
+        "access": "Dostęp",
+        "canView": "Może oglądać",
+        "canEdit": "Może edytować",
+        "remove": "Usuń",
+        "person": "Osoba",
+        "choosePerson": "Wybierz osobę…",
+        "add": "Dodaj",
+        "links": "Linki",
+        "linksHint": "Każdy, kto ma link, obejrzy diagram bez logowania. Przez link nie da się niczego zmienić.",
+        "noExpiry": "Bez wygasania",
+        "createLink": "Utwórz link",
+        "newLink": "Nowy link",
+        "linkOnce": "Skopiuj go teraz: nie zobaczysz go ponownie. Gdy nie będzie potrzebny, unieważnij go poniżej.",
+        "sharedWithYou": "Udostępniony Tobie",
+        "linkFailed": "Ten link nie działa. Mógł wygasnąć albo zostać unieważniony."
     }
 }

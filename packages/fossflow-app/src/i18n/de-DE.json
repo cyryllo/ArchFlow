@@ -183,5 +183,31 @@
         "self": "Sie können Ihr eigenes Konto nicht deaktivieren, herabstufen oder löschen",
         "tokenName": "Geben Sie dem Token einen Namen",
         "noApi": "Der Zugriff auf API und MCP ist für Ihr Konto nicht freigeschaltet"
+    },
+    "share": {
+        "title": "„{{name}}“ teilen",
+        "whoSees": "Wer es sieht",
+        "team": "Team",
+        "teamHint": "Alle Angemeldeten sehen es; Bearbeiter können es ändern.",
+        "private": "Privat",
+        "privateHint": "Nur Sie, Administratoren und die Personen unten.",
+        "people": "Personen",
+        "peopleHintPrivate": "Sie sehen es, obwohl es privat ist; mit „Darf bearbeiten“ können sie es auch ändern.",
+        "peopleHintTeam": "Das ganze Team sieht es ohnehin. Hier hinzugefügte Personen behalten den Zugriff, falls Sie es später privat stellen.",
+        "access": "Zugriff",
+        "canView": "Darf ansehen",
+        "canEdit": "Darf bearbeiten",
+        "remove": "Entfernen",
+        "person": "Person",
+        "choosePerson": "Person auswählen…",
+        "add": "Hinzufügen",
+        "links": "Links",
+        "linksHint": "Wer einen Link hat, kann das Diagramm ohne Anmeldung ansehen. Über einen Link lässt sich nichts ändern.",
+        "noExpiry": "Ohne Ablauf",
+        "createLink": "Link erstellen",
+        "newLink": "Neuer Link",
+        "linkOnce": "Kopieren Sie ihn jetzt: Er wird nicht noch einmal angezeigt. Widerrufen Sie ihn unten, wenn er nicht mehr gebraucht wird.",
+        "sharedWithYou": "Mit Ihnen geteilt",
+        "linkFailed": "Dieser Link funktioniert nicht. Er ist vielleicht abgelaufen oder wurde widerrufen."
     }
 }

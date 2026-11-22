@@ -130,11 +130,19 @@ Od wersji 0.9.0 ArchFlow w Dockerze może wymagać logowania. Włącza je `compo
 | Edytor | Tworzyć, zmieniać i usuwać diagramy |
 | Czytelnik | Otwierać diagramy bez ich zmieniania |
 
-Każdy zalogowany widzi wszystkie diagramy. Każdy diagram zapamiętuje, kto go utworzył i kto zmienił ostatni; *Moje diagramy* pokazują tę drugą osobę.
+Każdy zalogowany widzi wszystkie diagramy *zespołu*, a *prywatne* tylko wtedy, gdy zostały mu udostępnione (niżej). Administratorzy widzą wszystko. Każdy diagram zapamiętuje, kto go utworzył i kto zmienił ostatni; *Moje diagramy* pokazują tę drugą osobę.
 
 **Dodawanie osób.** W ☰ → *Użytkownicy i ustawienia* wpisz e-mail, imię i rolę, a potem kliknij *Dodaj użytkownika*. ArchFlow raz pokaże hasło tymczasowe. Przekaż je tej osobie; przy pierwszym logowaniu ustawi własne. W tym samym panelu resetujesz hasła, zmieniasz role oraz wyłączasz i usuwasz użytkowników. ArchFlow zawsze zostawia co najmniej jednego aktywnego administratora.
 
 **Dostęp publiczny.** Gdy włączysz *Ustawienia* → *Dostęp publiczny*, niezalogowani mogą otworzyć ArchFlow i projektować. Zapisują tylko w swojej przeglądarce albo do pliku, nigdy na serwer, i mogą się zalogować przyciskiem u góry.
+
+**Udostępnianie diagramu** (0.9.1). W *Moich diagramach* autor diagramu albo administrator klika *Udostępnij*:
+- **Zespół** (domyślnie): widzą go wszyscy zalogowani, a edytorzy mogą go zmieniać.
+- **Prywatny**: tylko autor, administratorzy i osoby dodane w oknie.
+- **Osoby**: każda z *Może oglądać* albo *Może edytować*. Czytelnik może tylko oglądać, niezależnie od wyboru.
+- **Linki**: każdy, kto ma link, zobaczy diagram tylko do odczytu, bez konta. Link może wygasnąć po 7, 30 albo 90 dniach i można go w każdej chwili unieważnić. Przy logowaniu linki zastępują stare adresy `/display/<nazwa>`, które wymagają teraz zalogowania.
+
+*Moje diagramy* oznaczają diagramy prywatne, udostępnione Tobie i takie, które możesz tylko oglądać.
 
 **Tokeny dla asystentów AI i skryptów.**
 - Każdy użytkownik tworzy własne tokeny w *Konto* → *Tokeny*: tylko do odczytu albo do odczytu i zmian, z opcjonalną datą wygaśnięcia. Token działa z uprawnieniami właściciela.

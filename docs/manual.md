@@ -251,7 +251,7 @@ If the element you right-click is part of a selection, Copy, Cut, Duplicate, sta
 The short version (details in [Saving and opening diagrams](saving.md)):
 
 - **Save** (top bar, ☰ or **Ctrl+S**) saves the open diagram. The first time it asks for a name.
-- **My diagrams** (top bar, ☰ or **Ctrl+O**) lists saved diagrams: **Load**, **Delete**, and with Docker also **Share** (a read-only link).
+- **My diagrams** (top bar, ☰ or **Ctrl+O**) lists saved diagrams: **Load**, **Delete**, and with Docker also **Share** (a read-only link; with logins, sharing with people and links: [chapter 17](#17-accounts-and-logins)).
 
 <img alt="My diagrams" src="screenshots/en-app-storage.png" width="600">
 
@@ -387,8 +387,9 @@ Only for ArchFlow in Docker with logins (the default `compose.yml` from 0.9.0). 
 
 - **Logging in.** ArchFlow asks for your e-mail and password. On a brand-new ArchFlow, the first person creates the administrator account. If the administrator gave you a temporary password, you set your own after logging in. Forgot your password? The administrator resets it.
 - **Your account.** Click your name at the top (☰ → *Account*) to change your password, create tokens for AI assistants ([AI assistants](mcp.md#mcp-in-docker-over-http)), or log out.
-- **Roles.** *Editors* create and change diagrams; *viewers* only open them (the editor is read-only and there's no *Save*). Everyone logged in sees all diagrams, and *My diagrams* shows who changed each one last.
+- **Roles.** *Editors* create and change diagrams; *viewers* only open them (the editor is read-only and there's no *Save*). Everyone logged in sees the team's diagrams, plus private ones shared with them. *My diagrams* shows who changed each one last.
 - **Administrators** manage people in ☰ → *Users and settings*: add users (ArchFlow shows a temporary password once), change roles, reset passwords, disable or delete accounts, and allow API and MCP access.
+- **Sharing.** In *My diagrams*, the author (or an administrator) clicks *Share* to make a diagram private, give chosen people view or edit access, or create a read-only link that works without an account. Links can expire and can be revoked.
 - **Public access.** When the administrator turns it on, people who aren't logged in can design too, but save only in their browser or to a file. *Log in* at the top switches to your account.
 
 Setting it up on a server is described in the [Docker guide](docker.md#accounts-and-logins).

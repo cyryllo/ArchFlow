@@ -28,13 +28,13 @@ ArchFlow has **two independent ways** to keep your work. You can use both at the
 **My diagrams** (top bar, ☰ menu or **Ctrl+O**) opens the list of saved diagrams:
 
 - **Save Current Diagram** saves the diagram under a name. If a diagram with that name already exists, ArchFlow asks before overwriting it. Each diagram becomes a file named after it, e.g. `./diagrams/Online shop.json`.
-- **Load** opens a saved diagram, **Share** copies a read-only link (`http://your-server:9500/display/<name>`, Docker only), **Delete** removes the diagram and its file after a confirmation.
+- **Load** opens a saved diagram, **Share** copies a read-only link (`http://your-server:9500/display/<name>`, Docker only; with logins it opens the sharing dialog with people and links, see the [Docker guide](docker.md#accounts-and-logins)), **Delete** removes the diagram and its file after a confirmation.
 - **Save** in the top bar (or **Ctrl+S**) saves the open diagram again under the same name.
 
 Important:
 
 - **Saving is manual.** The top bar shows **Modified** until you save, and the browser warns you if you try to close the tab with unsaved changes.
-- **In Docker, the list is shared.** Everyone who opens the same ArchFlow address sees and edits the same diagrams. There are no user accounts.
+- **In Docker, the list is shared.** Everyone who opens the same ArchFlow address sees and edits the same diagrams. With logins (from 0.9.0), roles and private diagrams decide who sees and changes what: see [Accounts and logins](docker.md#accounts-and-logins).
 
 ## Browser only (no server storage)
 

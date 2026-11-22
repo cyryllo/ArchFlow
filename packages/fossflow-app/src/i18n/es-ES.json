@@ -183,5 +183,31 @@
         "self": "No puedes desactivar, degradar ni eliminar tu propia cuenta",
         "tokenName": "Pon un nombre al token",
         "noApi": "El acceso a la API y al MCP no está activado para tu cuenta"
+    },
+    "share": {
+        "title": "Compartir «{{name}}»",
+        "whoSees": "Quién lo ve",
+        "team": "Equipo",
+        "teamHint": "Lo ve todo el que haya iniciado sesión; los editores pueden cambiarlo.",
+        "private": "Privado",
+        "privateHint": "Solo tú, los administradores y las personas de abajo.",
+        "people": "Personas",
+        "peopleHintPrivate": "Lo ven aunque sea privado; con «Puede editar» también pueden cambiarlo.",
+        "peopleHintTeam": "Todo el equipo lo ve de todos modos. Las personas añadidas aquí conservarán el acceso si luego lo haces privado.",
+        "access": "Acceso",
+        "canView": "Puede ver",
+        "canEdit": "Puede editar",
+        "remove": "Quitar",
+        "person": "Persona",
+        "choosePerson": "Elige una persona…",
+        "add": "Añadir",
+        "links": "Enlaces",
+        "linksHint": "Cualquiera con un enlace puede ver el diagrama sin iniciar sesión. Con un enlace no se puede cambiar nada.",
+        "noExpiry": "Sin caducidad",
+        "createLink": "Crear enlace",
+        "newLink": "Nuevo enlace",
+        "linkOnce": "Cópialo ahora: no se volverá a mostrar. Revócalo abajo cuando ya no haga falta.",
+        "sharedWithYou": "Compartido contigo",
+        "linkFailed": "Este enlace no funciona. Puede que haya caducado o se haya revocado."
     }
 }

@@ -136,7 +136,14 @@ Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` 
 - **Tests:** 13 backend tests (`npm test -w packages/fossflow-backend`) and 21 MCP tests, plus a browser end-to-end run.
 - **Docker:** the image defaults to `AUTH_MODE=none`; `compose.yml` uses `local`.
 
-**Next (0.9.1)**: private diagrams and sharing with people, and share links with a random token instead of `/display/<name>`.
+**0.9.1 done**:
+- **Sharing:** diagram routes moved to `packages/fossflow-backend/diagrams.js`, with one `permissions(user, diagram)` function. Sharing lives in the diagram file (`access`: `team`/`private` visibility, `users` with view or edit, `links` as SHA-256 hashes of `afs_` tokens). The client can't set it with a normal save, and only managers see it. Admins see everything; viewers never edit.
+- **Links:** `/view/<token>` opens read-only without a login, through the public `GET /api/shared/<token>`. Links can expire and be revoked.
+- **App:** a Share dialog, badges in *My diagrams*, and a diagram shared view-only opens read-only.
+- **`.dockerignore` added:** the build context used to include `diagrams/` and `.env`.
+- **Tests:** 15 backend tests plus a browser run.
+
+**Next (0.10.0)**: groups, OIDC (Google, Microsoft, Keycloak) and an audit log.
 
 **Why**: the Docker version has no accounts - anyone who can open the address can view, change and delete every diagram in "My diagrams", and the read-only share link isn't access control.
 **Wanted**:

@@ -54,6 +54,8 @@ function App() {
         <Routes>
           <Route path="/" element={<EditorPage />} />
           <Route path="/display/:readonlyDiagramId" element={<EditorPage />} />
+          {/* Share links (ArchFlow with logins): read-only, no login needed */}
+          <Route path="/view/:shareToken" element={<EditorPage />} />
         </Routes>
       </AuthGate>
     </BrowserRouter>
@@ -63,7 +65,7 @@ function App() {
 function EditorPage() {
   // Initialize icon pack manager with core icons
   const iconPackManager = useIconPackManager(coreIcons);
-  const { readonlyDiagramId } = useParams<{ readonlyDiagramId: string }>();
+  const { readonlyDiagramId, shareToken } = useParams<{ readonlyDiagramId: string; shareToken: string }>();
 
   const [diagrams, setDiagrams] = useState<SavedDiagram[]>([]);
   const [currentDiagram, setCurrentDiagram] = useState<SavedDiagram | null>(
@@ -105,7 +107,9 @@ function EditorPage() {
     expectingSyncRef.current = true;
   };
   const isReadonlyUrl =
-    window.location.pathname.startsWith('/display/') && readonlyDiagramId;
+    (window.location.pathname.startsWith('/display/') && readonlyDiagramId) || !!shareToken;
+  // A diagram opened with view-only access (shared to view, ArchFlow with logins)
+  const [diagramCanEdit, setDiagramCanEdit] = useState(true);
 
   // Initialize with empty diagram data
   // Create default colors for connectors
@@ -162,9 +166,35 @@ function EditorPage() {
       .catch(console.error);
   }, []);
 
+  // A share link: load the diagram it points to, read-only
+  useEffect(() => {
+    if (!shareToken) return;
+    const loadShared = async () => {
+      try {
+        const res = await fetch(`/api/shared/${encodeURIComponent(shareToken)}`);
+        if (!res.ok) throw new Error(String(res.status));
+        const { _permissions, ...data } = await res.json();
+        await loadDiagram(
+          {
+            id: 'shared',
+            name: data.name || data.title || t('status.untitled'),
+            data,
+            createdAt: data.created || new Date().toISOString(),
+            updatedAt: data.lastModified || new Date().toISOString()
+          },
+          true
+        );
+      } catch {
+        alert(t('share.linkFailed'));
+      }
+    };
+    void loadShared();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shareToken]);
+
   // Check if readonlyDiagramId exists - if exists, load diagram in view-only mode
   useEffect(() => {
-    if (!isReadonlyUrl || !serverStorageAvailable) return;
+    if (!isReadonlyUrl || !readonlyDiagramId || !serverStorageAvailable) return;
     const loadReadonlyDiagram = async () => {
       try {
         const storage = storageManager.getStorage();
@@ -174,7 +204,7 @@ function EditorPage() {
           return d.id === readonlyDiagramId;
         });
         // Load the diagram data from server storage
-        const data = await storage.loadDiagram(readonlyDiagramId);
+        const { _permissions, ...data } = (await storage.loadDiagram(readonlyDiagramId)) as any;
         // Convert to SavedDiagram interface format
         const readonlyDiagram: SavedDiagram = {
           id: readonlyDiagramId,
@@ -435,6 +465,7 @@ function EditorPage() {
         fitToScreen: true
       };
       beginEditorReload();
+      setDiagramCanEdit(true);
       setCurrentDiagram(null);
       setDiagramName('');
       setDiagramData(emptyDiagram);
@@ -577,8 +608,11 @@ function EditorPage() {
     const finalIcons = withCurrentBuiltInIcons(loadedIcons, iconPackManager.loadedIcons);
     console.log(`App: Using ${finalIcons.length} icons (current built-in + kept from file)`);
 
+    // The server says whether this user may change this diagram
+    setDiagramCanEdit(data._permissions?.canEdit !== false);
+    const { _permissions, ...fileData } = data;
     const mergedData: DiagramData = {
-      ...data,
+      ...fileData,
       title: data.title || data.name || 'Loaded Diagram',
       icons: finalIcons,
       colors: data.colors?.length ? data.colors : defaultColors,
@@ -714,8 +748,8 @@ function EditorPage() {
   // "Save" (top bar, ☰ menu, Ctrl+S): quick-save the open diagram, or ask
   // for a name when it has never been saved
   const handleSave = async () => {
-    // Viewers (ArchFlow with logins) can't save
-    if (!auth.canEdit) return;
+    // Viewers, and diagrams shared to view only, can't be saved
+    if (!auth.canEdit || !diagramCanEdit) return;
     if (serverStorageAvailable) {
       if (!currentDiagram) {
         setShowDiagramManager(true);
@@ -873,9 +907,9 @@ function EditorPage() {
     ];
     // Viewers don't get "Save"
     return items.filter((item) => {
-      return auth.canEdit || item.id !== 'save';
+      return (auth.canEdit && diagramCanEdit) || item.id !== 'save';
     });
-  }, [t, currentLanguage, auth]);
+  }, [t, currentLanguage, auth, diagramCanEdit]);
 
   const changeLanguage = (lng: string) => {
     setShowLanguageDialog(false);
@@ -946,13 +980,13 @@ function EditorPage() {
             {t('dialog.readOnly.mode')}
           </div>
         )}
-        {!isReadonlyUrl && auth.mode === 'local' && !auth.canEdit && (
+        {!isReadonlyUrl && auth.mode === 'local' && (!auth.canEdit || !diagramCanEdit) && (
           <span className="guest-note">{t('auth.viewerNote')}</span>
         )}
         {auth.guest && <span className="guest-note">{t('auth.guestNote')}</span>}
         {!isReadonlyUrl && (
           <>
-            {auth.canEdit && (
+            {auth.canEdit && diagramCanEdit && (
               <button
                 className={`toolbar-btn ${hasUnsavedChanges ? 'primary' : ''}`}
                 onClick={handleSave}
@@ -993,7 +1027,7 @@ function EditorPage() {
           initialData={editorInitialData}
           iconCategoryLabels={iconCategoryLabels}
           onModelUpdated={onEditorModelUpdated}
-          editorMode={isReadonlyUrl || !auth.canEdit ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
+          editorMode={isReadonlyUrl || !auth.canEdit || !diagramCanEdit ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
           mainMenuOptions={MAIN_MENU_OPTIONS}
           onExportJson={openExportDialog}
           menuItems={menuItems}

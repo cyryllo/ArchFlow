@@ -7,6 +7,12 @@ export interface DiagramInfo {
   size?: number;
   // Who saved it last (ArchFlow with logins)
   modifiedBy?: string;
+  // ArchFlow with logins: sharing and what this user may do
+  createdBy?: string | null;
+  visibility?: 'team' | 'private';
+  canEdit?: boolean;
+  canManage?: boolean;
+  sharedWithMe?: boolean;
 }
 
 export interface StorageService {

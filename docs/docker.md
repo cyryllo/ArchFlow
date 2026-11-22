@@ -130,11 +130,19 @@ From 0.9.0, ArchFlow in Docker can ask for a login. `compose.yml` turns this on 
 | Editor | Create, change and delete diagrams |
 | Viewer | Open diagrams without changing them |
 
-Every logged-in user sees all diagrams. Each diagram records who created it and who changed it last; *My diagrams* shows the last one.
+Every logged-in user sees all *team* diagrams; *private* ones only when they're shared with them (see below). Administrators see everything. Each diagram records who created it and who changed it last; *My diagrams* shows the last one.
 
 **Adding people.** In ☰ → *Users and settings*, enter an e-mail, a name and a role, then click *Add user*. ArchFlow shows a temporary password once. Give it to the person; they choose their own password at their first login. The same panel resets passwords, changes roles, and disables or deletes users. ArchFlow always keeps at least one active administrator.
 
 **Public access.** In *Settings* → *Public access*, people who aren't logged in can open ArchFlow and design. They save only in their browser or to a file, never to the server, and can log in with the button at the top.
+
+**Sharing a diagram** (0.9.1). In *My diagrams*, the author of a diagram or an administrator clicks *Share*:
+- **Team** (the default): everyone logged in sees it, and editors can change it.
+- **Private**: only the author, administrators and the people added in the dialog.
+- **People**: each with *Can view* or *Can edit*. A viewer can only view, whatever is chosen.
+- **Links**: anyone with the link sees the diagram read-only, without an account. A link can expire after 7, 30 or 90 days, and can be revoked at any time. With logins, links replace the old `/display/<name>` addresses, which now need a login.
+
+*My diagrams* marks private diagrams, diagrams shared with you and diagrams you can only view.
 
 **Tokens for AI assistants and scripts.**
 - Each user creates their own tokens in *Account* → *Tokens*: read-only or read-and-change, with an optional expiry date. A token acts with its owner's rights.

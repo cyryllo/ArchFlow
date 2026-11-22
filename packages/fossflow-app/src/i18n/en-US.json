@@ -183,5 +183,31 @@
         "self": "You can't disable, demote or delete your own account",
         "tokenName": "Give the token a name",
         "noApi": "API and MCP access isn't turned on for your account"
+    },
+    "share": {
+        "title": "Share “{{name}}”",
+        "whoSees": "Who sees it",
+        "team": "Team",
+        "teamHint": "Everyone logged in sees it; editors can change it.",
+        "private": "Private",
+        "privateHint": "Only you, administrators and the people below.",
+        "people": "People",
+        "peopleHintPrivate": "They see it even though it's private; with “Can edit” they can also change it.",
+        "peopleHintTeam": "The whole team sees it anyway. People added here keep access if you make it private later.",
+        "access": "Access",
+        "canView": "Can view",
+        "canEdit": "Can edit",
+        "remove": "Remove",
+        "person": "Person",
+        "choosePerson": "Choose a person…",
+        "add": "Add",
+        "links": "Links",
+        "linksHint": "Anyone with a link can view the diagram, without logging in. A link can't change anything.",
+        "noExpiry": "No expiry",
+        "createLink": "Create link",
+        "newLink": "New link",
+        "linkOnce": "Copy it now: it won't be shown again. Revoke it below when it's no longer needed.",
+        "sharedWithYou": "Shared with you",
+        "linkFailed": "This link doesn't work. It may have expired or been revoked."
     }
 }

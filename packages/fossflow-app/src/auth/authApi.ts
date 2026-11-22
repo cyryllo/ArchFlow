@@ -134,3 +134,47 @@ export const adminApi = {
     return call<{ success: boolean }>('DELETE', `/api/admin/tokens/${encodeURIComponent(id)}`);
   }
 };
+
+// Sharing a diagram (its owner or an administrator)
+export interface SharePerson {
+  id: string;
+  email: string;
+  name: string;
+  role: Role;
+  access?: 'view' | 'edit';
+}
+
+export interface ShareLink {
+  id: string;
+  prefix: string;
+  createdAt: string;
+  createdBy: string;
+  expiresAt: string | null;
+}
+
+export interface Sharing {
+  visibility: 'team' | 'private';
+  owner: string | null;
+  users: SharePerson[];
+  links: ShareLink[];
+  people: SharePerson[];
+}
+
+const diagramPath = (id: string) => {
+  return `/api/diagrams/${encodeURIComponent(id)}`;
+};
+
+export const sharingApi = {
+  get: (id: string) => {
+    return call<Sharing>('GET', `${diagramPath(id)}/sharing`);
+  },
+  update: (id: string, change: { visibility?: 'team' | 'private'; users?: { id: string; access: 'view' | 'edit' }[] }) => {
+    return call<Sharing>('PUT', `${diagramPath(id)}/sharing`, change);
+  },
+  createLink: (id: string, expiresInDays: number | null) => {
+    return call<{ id: string; token: string; expiresAt: string | null }>('POST', `${diagramPath(id)}/links`, { expiresInDays });
+  },
+  revokeLink: (id: string, linkId: string) => {
+    return call<{ success: boolean }>('DELETE', `${diagramPath(id)}/links/${encodeURIComponent(linkId)}`);
+  }
+};

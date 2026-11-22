@@ -183,5 +183,31 @@
         "self": "Je kunt je eigen account niet uitschakelen, degraderen of verwijderen",
         "tokenName": "Geef het token een naam",
         "noApi": "Toegang tot API en MCP staat niet aan voor je account"
+    },
+    "share": {
+        "title": "‘{{name}}’ delen",
+        "whoSees": "Wie het ziet",
+        "team": "Team",
+        "teamHint": "Iedereen die is ingelogd ziet het; bewerkers kunnen het wijzigen.",
+        "private": "Privé",
+        "privateHint": "Alleen jij, beheerders en de mensen hieronder.",
+        "people": "Mensen",
+        "peopleHintPrivate": "Zij zien het ook al is het privé; met ‘Mag bewerken’ kunnen ze het ook wijzigen.",
+        "peopleHintTeam": "Het hele team ziet het toch al. Mensen die je hier toevoegt, houden toegang als je het later privé maakt.",
+        "access": "Toegang",
+        "canView": "Mag bekijken",
+        "canEdit": "Mag bewerken",
+        "remove": "Verwijderen",
+        "person": "Persoon",
+        "choosePerson": "Kies een persoon…",
+        "add": "Toevoegen",
+        "links": "Links",
+        "linksHint": "Iedereen met een link kan het diagram bekijken zonder in te loggen. Via een link kan niets worden gewijzigd.",
+        "noExpiry": "Verloopt niet",
+        "createLink": "Link maken",
+        "newLink": "Nieuwe link",
+        "linkOnce": "Kopieer hem nu: hij wordt niet opnieuw getoond. Trek hem hieronder in als hij niet meer nodig is.",
+        "sharedWithYou": "Met jou gedeeld",
+        "linkFailed": "Deze link werkt niet. Misschien is hij verlopen of ingetrokken."
     }
 }

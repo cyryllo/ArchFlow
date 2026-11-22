@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { storageManager, DiagramInfo } from '../services/storageService';
 import { useAuth } from '../auth/AuthContext';
+import { ShareDialog } from '../auth/ShareDialog';
 import './DiagramManager.css';
 
 interface Props {
@@ -23,7 +24,9 @@ export const DiagramManager: React.FC<Props> = ({
 }) => {
   const { t } = useTranslation('app');
   // Viewers (ArchFlow with logins) only open diagrams
-  const { canEdit } = useAuth();
+  const { canEdit, mode } = useAuth();
+  // ArchFlow with logins: share one diagram with people or a link
+  const [sharing, setSharing] = useState<DiagramInfo | null>(null);
   const [diagrams, setDiagrams] = useState<DiagramInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -247,7 +250,12 @@ export const DiagramManager: React.FC<Props> = ({
                 return (
                   <div key={diagram.id} className="diagram-item">
                     <div className="diagram-info">
-                      <h3>{diagram.name}</h3>
+                      <h3>
+                        {diagram.name}
+                        {diagram.visibility === 'private' && <span className="diagram-badge">🔒 {t('share.private')}</span>}
+                        {diagram.sharedWithMe && <span className="diagram-badge">{t('share.sharedWithYou')}</span>}
+                        {mode === 'local' && diagram.canEdit === false && <span className="diagram-badge">{t('auth.viewerNote')}</span>}
+                      </h3>
                       <span className="diagram-meta">
                         {t('diagramManager.lastModified')}: {diagram.lastModified.toLocaleString()}
                         {diagram.size &&
@@ -257,7 +265,7 @@ export const DiagramManager: React.FC<Props> = ({
                     </div>
                     <div className="diagram-actions">
                       <button
-                        className="action-button"
+                        className="action-button primary"
                         onClick={() => {
                           return handleLoad(diagram.id);
                         }}
@@ -269,7 +277,17 @@ export const DiagramManager: React.FC<Props> = ({
                           others when diagrams live on the server (Docker);
                           in the desktop app or browser-only mode it would
                           lead nowhere */}
-                      {storageKind === 'server' && (
+                      {mode === 'local' && diagram.canManage && (
+                        <button
+                          className="action-button share"
+                          onClick={() => {
+                            setSharing(diagram);
+                          }}
+                        >
+                          {t('diagramManager.btnShare')}
+                        </button>
+                      )}
+                      {storageKind === 'server' && mode !== 'local' && (
                         <button
                           className="action-button share"
                           onClick={() => {
@@ -280,7 +298,9 @@ export const DiagramManager: React.FC<Props> = ({
                           {t('diagramManager.btnShare')}
                         </button>
                       )}
-                      {canEdit && (
+                      {canEdit &&
+                        diagram.canEdit !== false &&
+                        (diagram.visibility !== 'private' || diagram.canManage !== false) && (
                         <button
                           className="action-button danger"
                           onClick={() => {
@@ -328,6 +348,16 @@ export const DiagramManager: React.FC<Props> = ({
           </div>
         )}
       </div>
+      {sharing && (
+        <ShareDialog
+          diagramId={sharing.id}
+          diagramName={sharing.name}
+          onClose={() => {
+            setSharing(null);
+            void loadDiagrams();
+          }}
+        />
+      )}
     </div>
   );
 };
