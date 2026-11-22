@@ -47,18 +47,31 @@ const searchText = (icon: CatalogIcon) => {
   return fold([icon.id, ...Object.values(icon.names)].join(' '));
 };
 
+// Icons for a search: every word in the query is tried; icons matching more
+// words come first (so "raspberry pi" or "Home Assistant" still find something)
 export const findIcons = (opts: { query?: string; category?: string; lang?: string }) => {
   const lang = languageOf(opts.lang);
-  const words = opts.query ? fold(opts.query).split(/\s+/).filter(Boolean) : [];
+  const words = opts.query ? fold(opts.query).split(/[\s,/_-]+/).filter((w) => w.length > 1) : [];
   return catalog.icons
-    .filter((icon) => {
-      if (opts.category && icon.category !== opts.category) return false;
-      const text = searchText(icon);
-      return words.every((w) => {
-        return text.includes(w);
-      });
-    })
     .map((icon) => {
+      const text = searchText(icon);
+      const tokens = new Set(text.split(/[^\p{L}\p{N}]+/u));
+      return {
+        icon,
+        // Short words ("pi", "db") count only as whole words
+        score: words.filter((w) => {
+          return w.length <= 2 ? tokens.has(w) : text.includes(w);
+        }).length
+      };
+    })
+    .filter(({ icon, score }) => {
+      if (opts.category && icon.category !== opts.category) return false;
+      return words.length === 0 || score > 0;
+    })
+    .sort((a, b) => {
+      return b.score - a.score;
+    })
+    .map(({ icon }) => {
       return { id: icon.id, name: icon.names[lang] ?? icon.names.en, category: icon.category };
     });
 };
@@ -89,7 +102,8 @@ const distance = (a: string, b: string) => {
   return d[a.length][b.length];
 };
 
-// Up to three icon ids that look like what was meant by an unknown id
+// Up to three icon ids that look like what was meant by an unknown id: close
+// spelling first, then icons sharing a word, then generic ones
 export const suggestIcons = (wanted: string): string[] => {
   const w = fold(wanted).replace(/[-_]/g, ' ').trim();
   const scored = catalog.icons.map((icon) => {
@@ -104,15 +118,27 @@ export const suggestIcons = (wanted: string): string[] => {
     );
     return { id: icon.id, score: contains ? -1 : best };
   });
-  return scored
+  const close = scored
     .filter((s) => {
       return s.score <= Math.max(2, Math.floor(w.length / 3));
     })
     .sort((a, b) => {
       return a.score - b.score;
     })
-    .slice(0, 3)
     .map((s) => {
       return s.id;
     });
+  const byWord = findIcons({ query: w }).map((i) => {
+    return i.id;
+  });
+  return [...new Set([...close, ...byWord, ...GENERIC_ICONS])].slice(0, 3);
+};
+
+// For things with no icon of their own (products, apps)
+export const GENERIC_ICONS = ['server', 'vm', 'container'];
+
+// A known icon id for `wanted`: itself, or the closest match
+export const resolveIcon = (wanted: string): { icon: string; replaced: boolean } => {
+  if (isKnownIcon(wanted)) return { icon: wanted, replaced: false };
+  return { icon: suggestIcons(wanted)[0], replaced: true };
 };

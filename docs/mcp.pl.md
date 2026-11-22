@@ -15,7 +15,12 @@ Asystent potrafi:
 
 Niczego nie trzeba ustawiać ręcznie: serwer ArchFlow sam rozmieszcza węzły na siatce izometrycznej. Strefy układa od lewej do prawej, jak warstwy architektury. Potem możesz wszystko poprzesuwać w ArchFlow jak zwykle.
 
-Na komputerze, na którym działa asystent, potrzebny jest [Node.js](https://nodejs.org/) w wersji 18 lub nowszej.
+Serwer można uruchomić na dwa sposoby:
+
+- **Na Twoim komputerze** (kroki 1–4 poniżej). Asystent sam uruchamia serwer. Potrzebny jest [Node.js](https://nodejs.org/) w wersji 18 lub nowszej. Działa z aplikacją desktopową, folderem z plikami i ArchFlow w Dockerze.
+- **W obrazie Dockera** ([MCP w Dockerze](#mcp-w-dockerze-przez-http)). Włączasz go jednym ustawieniem na serwerze, a asystenci łączą się przez HTTP z tokenem. Na swoim komputerze niczego nie instalujesz. Działa z asystentami obsługującymi zdalne serwery MCP, np. Claude Code.
+
+Działa też z lokalnymi modelami, np. przez Ollamę: zobacz [Lokalne modele](#lokalne-modele-ollama-i-inne).
 
 ## 1. Wybierz, gdzie trafią diagramy
 
@@ -115,6 +120,91 @@ Asystent napisze, gdzie zapisał diagram. Zwykle najpierw szuka ikon przez `list
 
 > **Nie zmieniaj jednego diagramu w dwóch miejscach naraz.** Każda zmiana asystenta zapisuje się od razu. Jeśli masz ten diagram otwarty w ArchFlow, gdy asystent go zmienia, wczytaj go ponownie z *Moich diagramów*, zanim zaczniesz dalej pracować. Inaczej zapis Twojej otwartej kopii nadpisze zmiany asystenta.
 
+## MCP w Dockerze (przez HTTP)
+
+Obraz Dockera (od wersji 0.8.1) zawiera serwer MCP. Jest wyłączony, dopóki nie dostanie tokenu.
+
+1. **Wygeneruj token**, czyli długi losowy ciąg znaków:
+
+   ~~~bash
+   openssl rand -hex 32
+   ~~~
+
+2. **Przekaż go kontenerowi.** W folderze z `compose.yml` dopisz go do `.env` i uruchom kontener ponownie:
+
+   ~~~bash
+   echo "MCP_TOKEN=wklej-tu-token" >> .env
+   docker compose up -d
+   ~~~
+
+   Przy `docker run` dodaj `-e MCP_TOKEN=…`. Serwer MCP zapisuje przez zapis na serwerze ArchFlow, więc `ENABLE_SERVER_STORAGE` musi zostać `true` (tak jest domyślnie).
+
+3. **Sprawdź.** `curl -X POST http://twoj-serwer:9500/mcp` powinien odpowiedzieć *Missing or wrong token*. To znaczy, że serwer działa i czeka na token. *The ArchFlow MCP server is off* oznacza, że kontener nie dostał `MCP_TOKEN`.
+
+4. **Podłącz asystenta.** W Claude Code:
+
+   ~~~bash
+   claude mcp add --transport http archflow --scope user http://twoj-serwer:9500/mcp \
+     --header "Authorization: Bearer wklej-tu-token"
+   ~~~
+
+   Albo dla jednego projektu, w `.mcp.json`:
+
+   ~~~json
+   {
+     "mcpServers": {
+       "archflow": {
+         "type": "http",
+         "url": "http://twoj-serwer:9500/mcp",
+         "headers": { "Authorization": "Bearer wklej-tu-token" }
+       }
+     }
+   }
+   ~~~
+
+   Inni asystenci muszą obsługiwać zdalne serwery MCP przez **Streamable HTTP** z własnym nagłówkiem. Plik konfiguracyjny Claude Desktop uruchamia tylko lokalne serwery, więc tam skonfiguruj go jak w kroku 2 wyżej (`npx` z `ARCHFLOW_URL`).
+
+Potem przejdź do [Wypróbuj](#3-wypróbuj). Linki od asystenta używają adresu, pod którym się połączył.
+
+**Trzymaj token w tajemnicy.** Daje pełny dostęp do wszystkich diagramów. Nie dodawaj `.env` do gita. Używaj HTTPS (reverse proxy przed ArchFlow), jeśli łączysz się z serwerem przez internet. Żeby zmienić token, popraw `.env`, uruchom ponownie `docker compose up -d` i zaktualizuj asystenta.
+
+Ten sam serwer HTTP działa też poza Dockerem: `MCP_TOKEN=… npx -y archflow-mcp@latest --http --port 3002`. Domyślnie słucha na `127.0.0.1`, a `--host 0.0.0.0` udostępnia go na wszystkich adresach. `--help` pokazuje wszystkie opcje.
+
+## Lokalne modele (Ollama i inne)
+
+Tak, serwer MCP ArchFlow działa też z modelem na Twoim komputerze. Potrzebny jest program pośrodku. Ollama, LM Studio czy llama.cpp tylko uruchamiają model i nie łączą się z serwerami MCP. Robi to **klient MCP**: przekazuje Twoją prośbę lokalnemu modelowi i wywołuje narzędzia, o które model poprosi.
+
+| Program | Model uruchamia | Dodanie ArchFlow |
+|---|---|---|
+| [Open WebUI](https://docs.openwebui.com/features/extensibility/mcp) (0.6.31+) | Ollama | *Admin Settings → External Tools → Add Server*, typ **MCP (Streamable HTTP)**, adres `http://twoj-serwer:9500/mcp`, uwierzytelnianie Bearer z Twoim tokenem. Łączy się tylko z [MCP w Dockerze](#mcp-w-dockerze-przez-http). Jeśli sam Open WebUI działa w Dockerze, podaj adres IP serwera, nie `localhost`. |
+| [Continue](https://docs.continue.dev/customize/deep-dives/mcp) (VS Code, JetBrains) | Ollama | W trybie **agent**; plik `.continue/mcpServers/archflow.yaml` (poniżej) |
+| [Goose](https://block.github.io/goose/) (aplikacja, terminal) | Ollama | Dodaj własne rozszerzenie **wiersza poleceń (stdio)**: polecenie `npx -y archflow-mcp@latest`, zmienna środowiskowa `ARCHFLOW_URL` |
+| [MCPHost](https://github.com/mark3labs/mcphost) (terminal) | Ollama | `mcphost --model ollama:<model> --config <plik>`; format pliku w jego README |
+| [LM Studio](https://lmstudio.ai/docs/app/mcp) | samo | *Program → Install → Edit mcp.json*, ten sam format co Claude Desktop (krok 2) |
+
+Continue, `.continue/mcpServers/archflow.yaml`:
+
+~~~yaml
+name: ArchFlow
+version: 0.0.1
+schema: v1
+mcpServers:
+  - name: archflow
+    command: npx
+    args: ["-y", "archflow-mcp@latest"]
+    env:
+      ARCHFLOW_URL: http://localhost:9500
+~~~
+
+**Wybór modelu**
+
+- Model musi obsługiwać **wywoływanie narzędzi** (tool calling). Ollama oznacza takie modele w swojej bibliotece etykietą *tools*.
+- **Większe modele radzą sobie lepiej.** Przykład z homelabem („router, switch, Proxmox z trzema VM, NAS, Raspberry Pi; pogrupuj w strefy”) wypróbowaliśmy na `qwen3:30b-a3b` i `gemma4:26b`. Oba zbudowały poprawny diagram w kilka minut na domowej karcie graficznej; gemma sama poprawiła swój błąd po pierwszej próbie. Modele 7–8B często gubią się w długim opisie `build_diagram`.
+- **Daj mu dość kontekstu**, co najmniej 16–32 tysiące tokenów. Opisy narzędzi i lista ikon zajmują kilka tysięcy, a domyślny kontekst Ollamy jest mniejszy. Ustaw `num_ctx` w programie albo uruchom Ollamę z `OLLAMA_CONTEXT_LENGTH=32768 ollama serve`.
+- Lokalne modele lubią wymyślać identyfikatory ikon, np. `raspberry-pi`. Serwer zamienia nieznany identyfikator na najbliższą ikonę i mówi modelowi, której użył.
+
+Sam serwer MCP ArchFlow jest przetestowany z Claude Code oraz z lokalnym modelem przez nasz własny klient testowy. Programy z tabeli są wymienione, bo obsługują MCP; ich menu mogą się zmieniać między wersjami.
+
 ## Narzędzia
 
 | Narzędzie | Co robi |
@@ -136,7 +226,7 @@ Przed każdym zapisem diagram przechodzi takie samo sprawdzenie, jakie robi Arch
 
 - **Rozmieszczanie** jest automatyczne, ale proste. Strefy idą w rzędach od lewej do prawej, węzły w strefie tworzą małą siatkę, a strefa może też być jednym wierszem, co pasuje do procesu. Możesz poprosić o dokładne pozycje albo poprzesuwać elementy później w ArchFlow.
 - **Docker i dostęp:** serwer MCP korzysta z tego samego API co ArchFlow w przeglądarce. ArchFlow w Dockerze nie ma jeszcze logowania, więc każdy, kto może go otworzyć, może też zmieniać diagramy. Trzymaj go w zaufanej sieci. Logowanie jest w planach.
-- **Wkrótce:** serwer MCP wbudowany w obraz Dockera (przez HTTP), żeby nie musiał działać na Twoim komputerze.
+- **Logowanie** do ArchFlow w Dockerze jest w planach. Serwer MCP też będzie z niego korzystał.
 
 ## Rozwiązywanie problemów
 
@@ -147,6 +237,8 @@ Przed każdym zapisem diagram przechodzi takie samo sprawdzenie, jakie robi Arch
 | *Can't reach ArchFlow at …* | Sprawdź adres: otwórz go w przeglądarce. `curl http://localhost:9500/api/storage/status` powinien odpowiedzieć `{"enabled":true,…}`. ArchFlow z `compose.yml` słucha na porcie 9500, wersja deweloperska (`compose.dev.yml`) na 3000. |
 | *Server storage is turned off* | Ustaw `ENABLE_SERVER_STORAGE=true` dla kontenera (w obrazie to wartość domyślna). |
 | Diagramu nie ma w *Moich diagramach* | Zamknij *Moje diagramy* i otwórz ponownie. Upewnij się, że patrzysz na ten ArchFlow, do którego zapisuje serwer: ten sam adres albo aplikację desktopową, gdy nie ma `ARCHFLOW_URL`. |
+| *The ArchFlow MCP server is off* (z `/mcp` w Dockerze) | Ustaw `MCP_TOKEN` dla kontenera i uruchom go ponownie (`docker compose up -d`). `ENABLE_SERVER_STORAGE` musi być `true`. |
+| *Missing or wrong token* | Asystent musi wysyłać `Authorization: Bearer <token>` z dokładnie tym samym tokenem co `MCP_TOKEN` kontenera. |
 | Asystent pisze pliki albo kod zamiast używać narzędzi | Poproś go, żeby „użył narzędzi archflow”, i sprawdź `/mcp`. |
 
 ## Bez MCP

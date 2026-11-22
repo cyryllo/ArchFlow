@@ -55,6 +55,7 @@ describe('tools with a folder', () => {
     assert.equal(built.error, false, built.text);
     assert.match(built.text, /Id: Online shop/);
     assert.ok(existsSync(join(dir, 'Online shop.json')));
+    assert.equal(JSON.parse(readFileSync(join(dir, 'Online shop.json'), 'utf8')).name, 'Online shop');
 
     const listed = await call('list_diagrams');
     assert.match(listed.text, /Online shop/);
@@ -79,6 +80,7 @@ describe('tools with a folder', () => {
     const renamed = await call('rename_diagram', { diagram: 'Online shop', title: 'Shop v2' });
     assert.equal(renamed.error, false);
     assert.deepEqual(readdirSync(dir).sort(), ['Shop v2.json']);
+    assert.equal(JSON.parse(readFileSync(join(dir, 'Shop v2.json'), 'utf8')).name, 'Shop v2');
 
     const out = join(dir, 'export');
     assert.equal((await call('export_json', { diagram: 'Shop v2', path: out })).error, false);
@@ -92,10 +94,27 @@ describe('tools with a folder', () => {
     assert.match((await call('build_diagram', { ...spec, replace: 'Twice' })).text, /Id: Twice\n/);
   });
 
+  test('unknown icons are replaced with the closest one, and the assistant is told', async () => {
+    const r = await call('build_diagram', {
+      title: 'Guessed icons',
+      nodes: [{ name: 'DB', icon: 'databse' }, { name: 'Pi', icon: 'raspberry-pi' }, { name: 'Nextcloud', icon: 'nextcloud' }]
+    });
+    assert.equal(r.error, false, r.text);
+    assert.match(r.text, /no icon "databse", used "storage"/);
+    assert.match(r.text, /no icon "nextcloud", used "(server|vm|container|cloud)/);
+    const saved = JSON.parse(readFileSync(join(dir, 'Guessed icons.json'), 'utf8'));
+    assert.deepEqual(saved.items.map((i) => i.icon)[0], 'storage');
+    // Several words: icons matching any of them; none at all -> generic icons
+    assert.match((await call('list_icons', { query: 'load balancer' })).text, /"id": "loadbalancer"/);
+    assert.match((await call('list_icons', { query: 'raspberry pi' })).text, /Closest: server/);
+    const none = await call('list_icons', { query: 'zzzz' });
+    assert.match(none.text, /not product logos.*Closest/);
+  });
+
   test('errors come back as tool errors with a hint, and nothing is saved', async () => {
-    const bad = await call('build_diagram', { title: 'Broken', nodes: [{ name: 'DB', icon: 'databse' }] });
+    const bad = await call('build_diagram', { title: 'Broken', nodes: [{ id: 'a', name: 'A', icon: 'server' }], connectors: [{ from: 'a', to: 'nope' }] });
     assert.equal(bad.error, true);
-    assert.match(bad.text, /Did you mean: storage/);
+    assert.match(bad.text, /no node "nope"/);
     assert.ok(!existsSync(join(dir, 'Broken.json')));
     const missing = await call('get_diagram', { diagram: 'nope' });
     assert.equal(missing.error, true);

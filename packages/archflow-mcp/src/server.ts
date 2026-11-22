@@ -19,7 +19,7 @@ import {
   updateNode,
   type DiagramSpec
 } from './builder.js';
-import { categoryList, findIcons } from './catalog.js';
+import { GENERIC_ICONS, categoryList, findIcons, resolveIcon, suggestIcons } from './catalog.js';
 import { COLOR_NAMES, TEXT_SIZES, type Diagram } from './model.js';
 import { StoreError, storeFromEnv, type DiagramStore } from './storage.js';
 import { validateDiagram } from './validate.js';
@@ -31,7 +31,7 @@ const INSTRUCTIONS = `ArchFlow draws isometric (3D-looking) architecture and pro
 A diagram has nodes (an icon with a name and optional description), zones (coloured areas under groups of nodes, with a title), connectors (arrows between nodes, optionally labelled) and free texts.
 
 How to work:
-- Find icon ids with list_icons (search in any language, e.g. "database", "baza"). Every node needs a valid icon id.
+- Find icon ids with list_icons (search in any language, e.g. "database", "baza"). Icons are generic (server, vm, container, storage, router...), there are no product logos: pick what a thing is, not its brand. An unknown id is replaced with the closest icon and the result says so.
 - Build a new diagram with ONE build_diagram call. Don't compute coordinates: put nodes into zones and the server lays them out. Zones are placed left to right in the order given (use them as layers or tiers: clients, entry, services, data...); zones with a higher "row" go in a line below. Nodes without a zone go in a row below the zones.
 - For exact placement give a node a "position" in slots: {col, row}, col grows to the right, row grows downwards, 1 slot = the normal distance between two nodes.
 - Change an existing diagram with the small tools (add_nodes, add_connectors, update_node, add_zone...). They take the diagram id or name; get_diagram shows ids and positions.
@@ -68,6 +68,20 @@ const ok = (text: string, data?: unknown) => {
 };
 const fail = (text: string) => {
   return { content: [{ type: 'text' as const, text }], isError: true };
+};
+
+// Unknown icon ids become the closest known icon, so a slightly wrong guess
+// doesn't block the whole diagram; the assistant is told what was used
+const fixIcons = <T extends { icon?: string; name?: string }>(nodes: T[], notes: string[]): T[] => {
+  return nodes.map((n) => {
+    if (!n.icon) return n;
+    const { icon, replaced } = resolveIcon(n.icon);
+    if (replaced) notes.push(`"${n.name ?? n.icon}": no icon "${n.icon}", used "${icon}" (change it with update_node if needed)`);
+    return { ...n, icon };
+  });
+};
+const withNotes = (text: string, notes: string[]) => {
+  return notes.length ? `${text}\nIcons replaced:\n- ${notes.join('\n- ')}` : text;
 };
 
 // Runs a tool body; known problems go back to the assistant as tool errors
@@ -146,7 +160,13 @@ export const createServer = (store: DiagramStore = storeFromEnv()) => {
           )
         });
       }
-      if (icons.length === 0) return ok('No icons match. Try another word or list_icons without arguments.');
+      if (icons.length === 0) {
+        const near = suggestIcons(query ?? '');
+        return ok(
+          `No icon matches "${query}". ArchFlow has generic icons, not product logos: for an app or product use what it is ` +
+            `(e.g. ${GENERIC_ICONS.join(', ')}, storage, cloud). Closest: ${near.join(', ')}. list_icons without arguments shows all.`
+        );
+      }
       return ok(`${icons.length} icon(s):`, icons);
     })
   );
@@ -228,14 +248,16 @@ export const createServer = (store: DiagramStore = storeFromEnv()) => {
     },
     guard(async (args) => {
       const { replace, ...spec } = args;
-      const diagram = buildDiagram(spec as DiagramSpec);
+      const notes: string[] = [];
+      const diagram = buildDiagram({ ...spec, nodes: fixIcons(spec.nodes, notes) } as DiagramSpec);
       check(diagram);
       const id = replace ? await store.save(await resolveId(replace), diagram) : await store.create(diagram);
       const view = diagram.views[0];
-      return ok(
+      return ok(withNotes(
         `Diagram "${diagram.title}" saved with ${diagram.items.length} nodes, ${view.rectangles?.length ?? 0} zones, ${view.connectors?.length ?? 0} connectors.\n` +
-          `Id: ${id}\nWhere: ${store.locate(id)}\nIn ArchFlow: open "My diagrams" and load "${id}".`
-      );
+          `Id: ${id}\nWhere: ${store.locate(id)}\nIn ArchFlow: open "My diagrams" and load "${id}".`,
+        notes
+      ));
     })
   );
 
@@ -261,7 +283,8 @@ export const createServer = (store: DiagramStore = storeFromEnv()) => {
     },
     guard(async ({ diagram, nodes }) => {
       return edit(diagram, (d) => {
-        return `Added: ${addNodes(d, nodes).join(', ')}`;
+        const notes: string[] = [];
+        return withNotes(`Added: ${addNodes(d, fixIcons(nodes, notes)).join(', ')}`, notes);
       });
     })
   );
@@ -282,8 +305,10 @@ export const createServer = (store: DiagramStore = storeFromEnv()) => {
     },
     guard(async ({ diagram, node, ...changes }) => {
       return edit(diagram, (d) => {
-        updateNode(d, node, changes);
-        return `Changed node "${node}".`;
+        const notes: string[] = [];
+        const [fixed] = fixIcons([{ ...changes, name: node }], notes);
+        updateNode(d, node, { ...changes, icon: fixed.icon });
+        return withNotes(`Changed node "${node}".`, notes);
       });
     })
   );

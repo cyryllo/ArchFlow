@@ -123,6 +123,7 @@ Warto wiedzieć, zanim uruchomisz go na serwerze:
 | `ARCHFLOW_VERSION` | `latest` | Tag obrazu używany przez `compose.yml`. |
 | `ENABLE_SERVER_STORAGE` | `true` | Zapis diagramów jako plików na serwerze (Moje diagramy). `false` przełącza na zapis tylko w przeglądarce (sesja). |
 | `STORAGE_PATH` | `/data/diagrams` | Gdzie w kontenerze zapisywane są diagramy. Tu montuj katalog z hosta albo wolumen. |
+| `MCP_TOKEN` | *(puste)* | Włącza serwer MCP dla asystentów AI pod `/mcp`. Klienci wysyłają go jako `Authorization: Bearer <token>`. Zobacz [Asystenci AI (MCP)](mcp.pl.md#mcp-w-dockerze-przez-http). |
 
 Aby wyłączyć zapis serwerowy i wrócić do zapisu tylko w przeglądarce (sesja), ustaw `ENABLE_SERVER_STORAGE=false`:
 ```bash

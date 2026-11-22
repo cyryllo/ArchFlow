@@ -37,6 +37,8 @@ claude mcp add archflow --scope user -e ARCHFLOW_URL=http://localhost:9500 -- np
 | *(neither)* | `Documents/ArchFlow`, the folder of the ArchFlow desktop app |
 | `ARCHFLOW_TOKEN` | Access token, for ArchFlow instances that require one |
 
+**Over HTTP**, e.g. on a server next to ArchFlow: `MCP_TOKEN=… archflow-mcp --http --port 3002`. Clients send `Authorization: Bearer <token>`. The ArchFlow Docker image has this built in: set `MCP_TOKEN` for the container and connect to `http://your-server:9500/mcp`.
+
 ## Tools
 
 `list_icons`, `list_diagrams`, `get_diagram`, `build_diagram`, `add_nodes`, `update_node`, `remove_node`, `add_connectors`, `remove_connector`, `add_zone`, `remove_zone`, `add_text`, `rename_diagram`, `export_json`.

@@ -114,7 +114,7 @@ Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` 
 - Docs: `docs/mcp*.md`; `LLM-GENERATION-GUIDE.md` was rewritten for the compact format and the ArchFlow icon ids.
 - `.github/workflows/npm.yml` publishes to npm on tags with Trusted Publishing. The first version has to be published by hand.
 
-**Next (0.8.1)**: the same server over HTTP at `/mcp` in the Docker image, off by default and enabled with `MCP_TOKEN`.
+**0.8.1 done**: `archflow-mcp --http` (Streamable HTTP, stateless, `src/http.ts`, Bearer `MCP_TOKEN` required) is built into the Docker image. `docker-entrypoint.sh` starts it on 127.0.0.1:3002 only when `MCP_TOKEN` is set, and it saves through the backend API. nginx proxies `/mcp` and answers with a JSON "off" message when the server isn't running. Links use the address the client came from (`X-Forwarded-Host/Proto`, or `ARCHFLOW_PUBLIC_URL`). Tested with a real container and Claude Code over HTTP.
 
 **Original plan:**
 **Wanted**: an MCP (Model Context Protocol) server for ArchFlow, so AI assistants (Claude and other MCP clients) can use the tool directly: build and change diagrams, then the user opens them in ArchFlow.

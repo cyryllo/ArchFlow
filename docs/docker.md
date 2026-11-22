@@ -123,6 +123,7 @@ Good to know before you run it on a server:
 | `ARCHFLOW_VERSION` | `latest` | Image tag used by `compose.yml`. |
 | `ENABLE_SERVER_STORAGE` | `true` | Save diagrams as files on the server (My diagrams). Set to `false` for browser-only (session) storage. |
 | `STORAGE_PATH` | `/data/diagrams` | Where diagrams are stored inside the container. Mount a host folder or volume here. |
+| `MCP_TOKEN` | *(empty)* | Turns on the MCP server for AI assistants at `/mcp`. Clients send it as `Authorization: Bearer <token>`. See [AI assistants (MCP)](mcp.md#mcp-in-docker-over-http). |
 
 To disable server storage and fall back to browser-only (session) storage, set `ENABLE_SERVER_STORAGE=false`:
 ```bash

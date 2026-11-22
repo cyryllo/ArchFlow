@@ -253,6 +253,8 @@ export const buildDiagram = (spec: DiagramSpec): Diagram => {
   if (spec.nodes.length === 0) throw new SpecError('A diagram needs at least one node');
   const diagram: Diagram = {
     title: spec.title,
+    // The app shows "name" in its title bar
+    name: spec.title,
     ...(spec.description ? { description: spec.description } : {}),
     icons: [],
     colors: paletteColors(),

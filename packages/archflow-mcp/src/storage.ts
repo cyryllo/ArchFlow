@@ -46,13 +46,18 @@ const nameOf = (d: Diagram) => {
 export class HttpStore implements DiagramStore {
   readonly where: string;
   private base: string;
+  private publicUrl: string;
 
+  // `url` is where the API is reached; `publicUrl` is the address people open
+  // ArchFlow at, for links (they differ inside the Docker container)
   constructor(
     url: string,
-    private token?: string
+    private token?: string,
+    publicUrl?: string
   ) {
     this.base = url.replace(/\/+$/, '');
-    this.where = `ArchFlow server at ${this.base}`;
+    this.publicUrl = (publicUrl || url).replace(/\/+$/, '');
+    this.where = `ArchFlow server at ${this.publicUrl}`;
   }
 
   private async call(path: string, init: RequestInit = {}) {
@@ -109,7 +114,7 @@ export class HttpStore implements DiagramStore {
 
   locate(id: string) {
     // Read-only view; to edit, open it in "My diagrams"
-    return `${this.base}/display/${encodeURIComponent(id)}`;
+    return `${this.publicUrl}/display/${encodeURIComponent(id)}`;
   }
 }
 
@@ -173,7 +178,10 @@ export class FolderStore implements DiagramStore {
     await mkdir(this.dir, { recursive: true });
     const id = await this.uniqueId(nameOf(diagram));
     const now = new Date().toISOString();
-    await writeFile(this.path(id), JSON.stringify({ ...diagram, id, created: now, lastModified: now }, null, 2));
+    await writeFile(
+      this.path(id),
+      JSON.stringify({ ...diagram, name: nameOf(diagram), id, created: now, lastModified: now }, null, 2)
+    );
     return id;
   }
 
@@ -181,7 +189,7 @@ export class FolderStore implements DiagramStore {
     const newId = await this.uniqueId(nameOf(diagram), id);
     await writeFile(
       this.path(newId),
-      JSON.stringify({ ...diagram, id: newId, lastModified: new Date().toISOString() }, null, 2)
+      JSON.stringify({ ...diagram, name: nameOf(diagram), id: newId, lastModified: new Date().toISOString() }, null, 2)
     );
     if (newId !== id) await unlink(this.path(id)).catch(() => {});
     return newId;
@@ -208,7 +216,9 @@ export const documentsDir = () => {
   return join(home, 'Documents');
 };
 
-export const storeFromEnv = (env = process.env): DiagramStore => {
-  if (env.ARCHFLOW_URL) return new HttpStore(env.ARCHFLOW_URL, env.ARCHFLOW_TOKEN);
+export const storeFromEnv = (env = process.env, publicUrl?: string): DiagramStore => {
+  if (env.ARCHFLOW_URL) {
+    return new HttpStore(env.ARCHFLOW_URL, env.ARCHFLOW_TOKEN, env.ARCHFLOW_PUBLIC_URL || publicUrl);
+  }
   return new FolderStore(resolve(env.ARCHFLOW_DIR || join(documentsDir(), 'ArchFlow')));
 };

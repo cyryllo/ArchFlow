@@ -10,5 +10,7 @@ services:
       - ENABLE_SERVER_STORAGE=${ENABLE_SERVER_STORAGE:-true}
       - STORAGE_PATH=/data/diagrams
       - ENABLE_GIT_BACKUP=${ENABLE_GIT_BACKUP:-false}
+      # Turns on the MCP server for AI assistants at /mcp (see docs/mcp.md)
+      - MCP_TOKEN=${MCP_TOKEN:-}
     volumes:
       - ./diagrams:/data/diagrams
