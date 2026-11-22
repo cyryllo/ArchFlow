@@ -1,0 +1,48 @@
+{
+  "name": "archflow-mcp",
+  "version": "0.8.0",
+  "description": "MCP server for ArchFlow: lets AI assistants (Claude and other MCP clients) build isometric architecture diagrams",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "archflow",
+    "diagram",
+    "isometric",
+    "architecture",
+    "claude"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cyryllo/ArchFlow.git",
+    "directory": "packages/archflow-mcp"
+  },
+  "homepage": "https://github.com/cyryllo/ArchFlow/blob/master/docs/mcp.md",
+  "type": "module",
+  "bin": {
+    "archflow-mcp": "dist/index.js"
+  },
+  "main": "dist/server.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "catalog": "node scripts/build-catalog.mjs",
+    "build": "node scripts/build-catalog.mjs && tsc -p tsconfig.json",
+    "test": "node scripts/run-tests.mjs",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.129",
+    "typescript": "^5.9.3"
+  }
+}

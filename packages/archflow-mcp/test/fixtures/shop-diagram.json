@@ -1,0 +1,644 @@
+{
+  "title": "Online shop",
+  "icons": [],
+  "colors": [
+    {
+      "id": "blue",
+      "value": "#9ebcf5"
+    },
+    {
+      "id": "green",
+      "value": "#9fdcbf"
+    },
+    {
+      "id": "amber",
+      "value": "#f6c66b"
+    },
+    {
+      "id": "violet",
+      "value": "#b9a6f3"
+    },
+    {
+      "id": "pink",
+      "value": "#e59cc0"
+    },
+    {
+      "id": "red",
+      "value": "#f19a9a"
+    },
+    {
+      "id": "orange",
+      "value": "#f5b47e"
+    },
+    {
+      "id": "teal",
+      "value": "#8fd3d6"
+    },
+    {
+      "id": "gray",
+      "value": "#c3c9d3"
+    }
+  ],
+  "items": [
+    {
+      "id": "customer",
+      "name": "Customer",
+      "icon": "customer"
+    },
+    {
+      "id": "mobile",
+      "name": "Mobile app",
+      "icon": "mobiledevice"
+    },
+    {
+      "id": "browser",
+      "name": "Browser",
+      "icon": "laptop"
+    },
+    {
+      "id": "lb",
+      "name": "Load balancer",
+      "icon": "loadbalancer"
+    },
+    {
+      "id": "web",
+      "name": "Web shop",
+      "icon": "web-app"
+    },
+    {
+      "id": "api",
+      "name": "API",
+      "icon": "api-gateway"
+    },
+    {
+      "id": "orders",
+      "name": "Orders",
+      "icon": "microservice",
+      "description": "<p>Cart and orders.</p><p>Written in Go.</p>"
+    },
+    {
+      "id": "payments",
+      "name": "Payments",
+      "icon": "paymentcard"
+    },
+    {
+      "id": "queue",
+      "name": "Event queue",
+      "icon": "queue"
+    },
+    {
+      "id": "db",
+      "name": "Orders DB",
+      "icon": "storage",
+      "description": "<p>PostgreSQL, hourly backup</p>"
+    },
+    {
+      "id": "cache",
+      "name": "Cache",
+      "icon": "cache"
+    },
+    {
+      "id": "dwh",
+      "name": "Data warehouse",
+      "icon": "data-warehouse"
+    },
+    {
+      "id": "start",
+      "name": "New order",
+      "icon": "start"
+    },
+    {
+      "id": "accept",
+      "name": "Accept order",
+      "icon": "process"
+    },
+    {
+      "id": "paid",
+      "name": "Paid?",
+      "icon": "diamond"
+    },
+    {
+      "id": "ship",
+      "name": "Shipping",
+      "icon": "truck"
+    },
+    {
+      "id": "end",
+      "name": "Delivered",
+      "icon": "end"
+    }
+  ],
+  "views": [
+    {
+      "id": "main",
+      "name": "Online shop",
+      "items": [
+        {
+          "id": "customer",
+          "tile": {
+            "x": 1,
+            "y": -1
+          }
+        },
+        {
+          "id": "mobile",
+          "tile": {
+            "x": 3,
+            "y": -1
+          }
+        },
+        {
+          "id": "browser",
+          "tile": {
+            "x": 1,
+            "y": -3
+          }
+        },
+        {
+          "id": "lb",
+          "tile": {
+            "x": 6,
+            "y": -6
+          }
+        },
+        {
+          "id": "web",
+          "tile": {
+            "x": 8,
+            "y": -6
+          }
+        },
+        {
+          "id": "api",
+          "tile": {
+            "x": 6,
+            "y": -8
+          }
+        },
+        {
+          "id": "orders",
+          "tile": {
+            "x": 11,
+            "y": -11
+          }
+        },
+        {
+          "id": "payments",
+          "tile": {
+            "x": 13,
+            "y": -11
+          }
+        },
+        {
+          "id": "queue",
+          "tile": {
+            "x": 11,
+            "y": -13
+          }
+        },
+        {
+          "id": "db",
+          "tile": {
+            "x": 16,
+            "y": -16
+          }
+        },
+        {
+          "id": "cache",
+          "tile": {
+            "x": 18,
+            "y": -16
+          }
+        },
+        {
+          "id": "dwh",
+          "tile": {
+            "x": 16,
+            "y": -18
+          }
+        },
+        {
+          "id": "start",
+          "tile": {
+            "x": -4,
+            "y": -6
+          }
+        },
+        {
+          "id": "accept",
+          "tile": {
+            "x": -1,
+            "y": -9
+          }
+        },
+        {
+          "id": "paid",
+          "tile": {
+            "x": 2,
+            "y": -12
+          }
+        },
+        {
+          "id": "ship",
+          "tile": {
+            "x": 5,
+            "y": -15
+          }
+        },
+        {
+          "id": "end",
+          "tile": {
+            "x": 8,
+            "y": -18
+          }
+        }
+      ],
+      "rectangles": [
+        {
+          "id": "customers",
+          "color": "amber",
+          "from": {
+            "x": 1,
+            "y": -3
+          },
+          "to": {
+            "x": 3,
+            "y": -1
+          }
+        },
+        {
+          "id": "entry",
+          "color": "violet",
+          "from": {
+            "x": 6,
+            "y": -8
+          },
+          "to": {
+            "x": 8,
+            "y": -6
+          }
+        },
+        {
+          "id": "services",
+          "color": "blue",
+          "from": {
+            "x": 11,
+            "y": -13
+          },
+          "to": {
+            "x": 13,
+            "y": -11
+          }
+        },
+        {
+          "id": "data",
+          "color": "green",
+          "from": {
+            "x": 16,
+            "y": -18
+          },
+          "to": {
+            "x": 18,
+            "y": -16
+          }
+        }
+      ],
+      "connectors": [
+        {
+          "id": "customer-to-lb",
+          "color": "amber",
+          "anchors": [
+            {
+              "id": "customer-to-lb-from",
+              "ref": {
+                "item": "customer"
+              }
+            },
+            {
+              "id": "customer-to-lb-to",
+              "ref": {
+                "item": "lb"
+              }
+            }
+          ]
+        },
+        {
+          "id": "browser-to-lb",
+          "color": "amber",
+          "anchors": [
+            {
+              "id": "browser-to-lb-from",
+              "ref": {
+                "item": "browser"
+              }
+            },
+            {
+              "id": "browser-to-lb-to",
+              "ref": {
+                "item": "lb"
+              }
+            }
+          ]
+        },
+        {
+          "id": "mobile-to-api",
+          "color": "amber",
+          "anchors": [
+            {
+              "id": "mobile-to-api-from",
+              "ref": {
+                "item": "mobile"
+              }
+            },
+            {
+              "id": "mobile-to-api-to",
+              "ref": {
+                "item": "api"
+              }
+            }
+          ]
+        },
+        {
+          "id": "lb-to-web",
+          "color": "violet",
+          "anchors": [
+            {
+              "id": "lb-to-web-from",
+              "ref": {
+                "item": "lb"
+              }
+            },
+            {
+              "id": "lb-to-web-to",
+              "ref": {
+                "item": "web"
+              }
+            }
+          ]
+        },
+        {
+          "id": "web-to-orders",
+          "color": "violet",
+          "anchors": [
+            {
+              "id": "web-to-orders-from",
+              "ref": {
+                "item": "web"
+              }
+            },
+            {
+              "id": "web-to-orders-to",
+              "ref": {
+                "item": "orders"
+              }
+            }
+          ]
+        },
+        {
+          "id": "api-to-orders",
+          "color": "violet",
+          "anchors": [
+            {
+              "id": "api-to-orders-from",
+              "ref": {
+                "item": "api"
+              }
+            },
+            {
+              "id": "api-to-orders-to",
+              "ref": {
+                "item": "orders"
+              }
+            }
+          ],
+          "labels": [
+            {
+              "id": "api-to-orders-label",
+              "text": "REST",
+              "position": 50
+            }
+          ]
+        },
+        {
+          "id": "orders-to-payments",
+          "color": "blue",
+          "anchors": [
+            {
+              "id": "orders-to-payments-from",
+              "ref": {
+                "item": "orders"
+              }
+            },
+            {
+              "id": "orders-to-payments-to",
+              "ref": {
+                "item": "payments"
+              }
+            }
+          ]
+        },
+        {
+          "id": "orders-to-queue",
+          "color": "blue",
+          "anchors": [
+            {
+              "id": "orders-to-queue-from",
+              "ref": {
+                "item": "orders"
+              }
+            },
+            {
+              "id": "orders-to-queue-to",
+              "ref": {
+                "item": "queue"
+              }
+            }
+          ],
+          "style": "DASHED"
+        },
+        {
+          "id": "orders-to-db",
+          "color": "blue",
+          "anchors": [
+            {
+              "id": "orders-to-db-from",
+              "ref": {
+                "item": "orders"
+              }
+            },
+            {
+              "id": "orders-to-db-to",
+              "ref": {
+                "item": "db"
+              }
+            }
+          ]
+        },
+        {
+          "id": "db-to-cache",
+          "color": "green",
+          "anchors": [
+            {
+              "id": "db-to-cache-from",
+              "ref": {
+                "item": "db"
+              }
+            },
+            {
+              "id": "db-to-cache-to",
+              "ref": {
+                "item": "cache"
+              }
+            }
+          ]
+        },
+        {
+          "id": "db-to-dwh",
+          "color": "green",
+          "anchors": [
+            {
+              "id": "db-to-dwh-from",
+              "ref": {
+                "item": "db"
+              }
+            },
+            {
+              "id": "db-to-dwh-to",
+              "ref": {
+                "item": "dwh"
+              }
+            }
+          ],
+          "style": "DOTTED"
+        },
+        {
+          "id": "start-to-accept",
+          "color": "pink",
+          "anchors": [
+            {
+              "id": "start-to-accept-from",
+              "ref": {
+                "item": "start"
+              }
+            },
+            {
+              "id": "start-to-accept-to",
+              "ref": {
+                "item": "accept"
+              }
+            }
+          ]
+        },
+        {
+          "id": "accept-to-paid",
+          "color": "pink",
+          "anchors": [
+            {
+              "id": "accept-to-paid-from",
+              "ref": {
+                "item": "accept"
+              }
+            },
+            {
+              "id": "accept-to-paid-to",
+              "ref": {
+                "item": "paid"
+              }
+            }
+          ]
+        },
+        {
+          "id": "paid-to-ship",
+          "color": "pink",
+          "anchors": [
+            {
+              "id": "paid-to-ship-from",
+              "ref": {
+                "item": "paid"
+              }
+            },
+            {
+              "id": "paid-to-ship-to",
+              "ref": {
+                "item": "ship"
+              }
+            }
+          ],
+          "labels": [
+            {
+              "id": "paid-to-ship-label",
+              "text": "yes",
+              "position": 50
+            }
+          ]
+        },
+        {
+          "id": "ship-to-end",
+          "color": "pink",
+          "anchors": [
+            {
+              "id": "ship-to-end-from",
+              "ref": {
+                "item": "ship"
+              }
+            },
+            {
+              "id": "ship-to-end-to",
+              "ref": {
+                "item": "end"
+              }
+            }
+          ]
+        }
+      ],
+      "textBoxes": [
+        {
+          "id": "customers-title",
+          "tile": {
+            "x": 0,
+            "y": 1
+          },
+          "content": "Customers",
+          "fontSize": 0.4
+        },
+        {
+          "id": "entry-title",
+          "tile": {
+            "x": 5,
+            "y": -4
+          },
+          "content": "Entry",
+          "fontSize": 0.4
+        },
+        {
+          "id": "services-title",
+          "tile": {
+            "x": 10,
+            "y": -9
+          },
+          "content": "Services",
+          "fontSize": 0.4
+        },
+        {
+          "id": "data-title",
+          "tile": {
+            "x": 15,
+            "y": -14
+          },
+          "content": "Data",
+          "fontSize": 0.4
+        },
+        {
+          "id": "process-title",
+          "tile": {
+            "x": -5,
+            "y": -4
+          },
+          "content": "Order process",
+          "fontSize": 0.4
+        }
+      ]
+    }
+  ],
+  "fitToScreen": true
+}

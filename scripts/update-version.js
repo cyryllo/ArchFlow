@@ -23,7 +23,8 @@ const packageFiles = [
   'packages/fossflow-lib/package.json',
   'packages/fossflow-app/package.json',
   'packages/fossflow-backend/package.json',
-  'packages/fossflow-desktop/package.json'
+  'packages/fossflow-desktop/package.json',
+  'packages/archflow-mcp/package.json'
 ];
 
 packageFiles.forEach(file => {

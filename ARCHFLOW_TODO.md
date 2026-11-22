@@ -104,6 +104,19 @@ Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` 
 **Still open**: a review of the translations by native speakers; maybe more languages later (zh-CN, ja-JP, ko-KR, tr-TR, ru-RU) - adding one means the four places above plus `supportedLanguages` in the app's `i18n.ts`.
 
 ### Stage 6: MCP server so AI assistants can create diagrams
+**0.8.0 done** (plan: https://claude.ai/artifact/XVMvSzkPdNMRREwSJ9QBF4). `packages/archflow-mcp` (npm `archflow-mcp`, stdio):
+- Tools: list_icons, list_diagrams, get_diagram, build_diagram, add_nodes, update_node, remove_node, add_connectors, remove_connector, add_zone, remove_zone, add_text, rename_diagram, export_json.
+- Storage: Docker API (`ARCHFLOW_URL`) or a folder (`ARCHFLOW_DIR`, default Documents/ArchFlow like the desktop app). Every change is saved at once.
+- Automatic layout in `src/layout.ts`: zones as blocks left to right, rows of zones, a "line" zone for processes, slots for exact positions.
+- The icon catalogue `src/catalog.json` is generated from the app's icon set by `scripts/build-catalog.mjs`.
+- Validation mirrors fossflow-lib's schemas. `fossflow-lib/src/schemas/__tests__/mcpDiagram.test.ts` checks the MCP fixture with the real `modelSchema`.
+- Tests: `npm test --workspace=packages/archflow-mcp`, including tools over MCP and saving through the real backend.
+- Docs: `docs/mcp*.md`; `LLM-GENERATION-GUIDE.md` was rewritten for the compact format and the ArchFlow icon ids.
+- `.github/workflows/npm.yml` publishes to npm on tags with Trusted Publishing. The first version has to be published by hand.
+
+**Next (0.8.1)**: the same server over HTTP at `/mcp` in the Docker image, off by default and enabled with `MCP_TOKEN`.
+
+**Original plan:**
 **Wanted**: an MCP (Model Context Protocol) server for ArchFlow, so AI assistants (Claude and other MCP clients) can use the tool directly: build and change diagrams, then the user opens them in ArchFlow.
 **Idea for the tools it exposes**:
 - read: list the icon set (ids, names, categories - from `scripts/icons` / `archflowIcons.ts`), list diagrams, read a diagram;

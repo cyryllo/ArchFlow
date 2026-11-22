@@ -1,0 +1,61 @@
+name: Publish MCP server to npm
+
+# Publishes packages/archflow-mcp to npm as "archflow-mcp" on every version
+# tag, using npm Trusted Publishing (OIDC): no token is stored in the repo.
+# npmjs.com -> archflow-mcp -> Settings -> Trusted Publisher must name this
+# repository and this workflow file (npm.yml).
+# A version that is already on npm is skipped, so re-running is safe.
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: npm-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22.x
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      # Trusted Publishing needs npm 11.5.1 or newer
+      - name: Update npm
+        run: npm install -g npm@11
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test (builds the package too)
+        run: npm test --workspace=packages/archflow-mcp
+
+      - name: Check if this version is already published
+        id: check
+        working-directory: packages/archflow-mcp
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if npm view "archflow-mcp@$VERSION" version >/dev/null 2>&1; then
+            echo "archflow-mcp@$VERSION is already on npm - skipping"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish
+        if: steps.check.outputs.skip != 'true'
+        working-directory: packages/archflow-mcp
+        run: npm publish --access public

@@ -34,6 +34,7 @@ ArchFlow to darmowy edytor open source do czytelnych, ładnych **diagramów izom
 - **Eksport** do przenośnego pliku JSON (ze wszystkimi ikonami) albo obrazu PNG z wyborem rozdzielczości, tła i przycięcia.
 - **Zapis tam, gdzie wolisz:** pliki na komputerze, wspólna lista na serwerze w Dockerze albo folder `Dokumenty/ArchFlow` aplikacji desktopowej.
 - **Interfejs w 10 językach**: polskim, angielskim, niemieckim, francuskim, hiszpańskim, włoskim, portugalskim (Brazylia), czeskim, niderlandzkim i ukraińskim, łącznie z nazwami ikon.
+- **Asystenci AI (MCP):** Claude i inni asystenci obsługujący MCP narysują i zmienią diagram na podstawie zwykłego opisu. Zobacz [Asystenci AI](mcp.pl.md).
 
 ## ⬇️ Pobierz
 
@@ -72,6 +73,7 @@ Diagramy zapisują się jako pliki JSON w `./diagrams`. Porty, `docker run`, kon
 | 📖 [Instrukcja obsługi](manual.pl.md) | Wszystko po kolei: węzły, strefy, połączenia, teksty, zaznaczanie, menu, eksport, ustawienia, wszystkie skróty, problemy |
 | 💾 [Zapisywanie i otwieranie](saving.pl.md) | Pliki, Moje diagramy, eksport do JSON i PNG, tryb tylko w przeglądarce |
 | 🐳 [Instrukcja Dockera](docker.pl.md) | Instalacja i uruchomienie ArchFlow na serwerze |
+| 🤖 [Asystenci AI (MCP)](mcp.pl.md) | Claude i inni asystenci AI rysują diagramy za Ciebie |
 | 🛠️ [Dla programistów](development.pl.md) | Uruchamianie ze źródeł, struktura projektu, budowanie aplikacji desktopowej |
 | 📝 [ARCHFLOW_TODO.md](../ARCHFLOW_TODO.md) | Znane problemy i plan rozwoju |
 

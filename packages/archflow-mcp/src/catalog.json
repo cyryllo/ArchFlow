@@ -1,0 +1,2967 @@
+{
+ "languages": [
+  "en",
+  "pl",
+  "de",
+  "fr",
+  "es",
+  "it",
+  "pt",
+  "cs",
+  "nl",
+  "uk"
+ ],
+ "categories": [
+  {
+   "id": "af-compute",
+   "pl": "Serwery i komputery",
+   "en": "Servers & computers",
+   "de": "Server & Computer",
+   "fr": "Serveurs et ordinateurs",
+   "es": "Servidores y ordenadores",
+   "it": "Server e computer",
+   "pt": "Servidores e computadores",
+   "cs": "Servery a počítače",
+   "nl": "Servers en computers",
+   "uk": "Сервери та комп’ютери"
+  },
+  {
+   "id": "af-network",
+   "pl": "Sieć",
+   "en": "Network",
+   "de": "Netzwerk",
+   "fr": "Réseau",
+   "es": "Red",
+   "it": "Rete",
+   "pt": "Rede",
+   "cs": "Síť",
+   "nl": "Netwerk",
+   "uk": "Мережа"
+  },
+  {
+   "id": "af-communication",
+   "pl": "Komunikacja",
+   "en": "Communication",
+   "de": "Kommunikation",
+   "fr": "Communication",
+   "es": "Comunicación",
+   "it": "Comunicazione",
+   "pt": "Comunicação",
+   "cs": "Komunikace",
+   "nl": "Communicatie",
+   "uk": "Комунікація"
+  },
+  {
+   "id": "af-data",
+   "pl": "Dane",
+   "en": "Data",
+   "de": "Daten",
+   "fr": "Données",
+   "es": "Datos",
+   "it": "Dati",
+   "pt": "Dados",
+   "cs": "Data",
+   "nl": "Gegevens",
+   "uk": "Дані"
+  },
+  {
+   "id": "af-security",
+   "pl": "Bezpieczeństwo",
+   "en": "Security",
+   "de": "Sicherheit",
+   "fr": "Sécurité",
+   "es": "Seguridad",
+   "it": "Sicurezza",
+   "pt": "Segurança",
+   "cs": "Bezpečnost",
+   "nl": "Beveiliging",
+   "uk": "Безпека"
+  },
+  {
+   "id": "af-people",
+   "pl": "Ludzie i organizacja",
+   "en": "People & organisation",
+   "de": "Personen & Organisation",
+   "fr": "Personnes et organisation",
+   "es": "Personas y organización",
+   "it": "Persone e organizzazione",
+   "pt": "Pessoas e organização",
+   "cs": "Lidé a organizace",
+   "nl": "Mensen en organisatie",
+   "uk": "Люди та організація"
+  },
+  {
+   "id": "af-flow",
+   "pl": "Przepływ i procesy",
+   "en": "Flow & process",
+   "de": "Ablauf & Prozess",
+   "fr": "Flux et processus",
+   "es": "Flujo y procesos",
+   "it": "Flussi e processi",
+   "pt": "Fluxo e processos",
+   "cs": "Toky a procesy",
+   "nl": "Stroom en proces",
+   "uk": "Потоки та процеси"
+  },
+  {
+   "id": "af-business",
+   "pl": "Biznes i logistyka",
+   "en": "Business & logistics",
+   "de": "Geschäft & Logistik",
+   "fr": "Commerce et logistique",
+   "es": "Negocio y logística",
+   "it": "Commercio e logistica",
+   "pt": "Negócios e logística",
+   "cs": "Obchod a logistika",
+   "nl": "Zakelijk en logistiek",
+   "uk": "Бізнес і логістика"
+  },
+  {
+   "id": "af-shapes",
+   "pl": "Kształty",
+   "en": "Shapes",
+   "de": "Formen",
+   "fr": "Formes",
+   "es": "Formas",
+   "it": "Forme",
+   "pt": "Formas",
+   "cs": "Tvary",
+   "nl": "Vormen",
+   "uk": "Фігури"
+  }
+ ],
+ "icons": [
+  {
+   "id": "server",
+   "category": "af-compute",
+   "names": {
+    "pl": "Serwer",
+    "en": "Server",
+    "de": "Server",
+    "fr": "Serveur",
+    "es": "Servidor",
+    "it": "Server",
+    "pt": "Servidor",
+    "cs": "Server",
+    "nl": "Server",
+    "uk": "Сервер"
+   }
+  },
+  {
+   "id": "server-rack",
+   "category": "af-compute",
+   "names": {
+    "pl": "Szafa serwerowa",
+    "en": "Server rack",
+    "de": "Serverschrank",
+    "fr": "Baie de serveurs",
+    "es": "Rack de servidores",
+    "it": "Armadio rack",
+    "pt": "Rack de servidores",
+    "cs": "Serverový rack",
+    "nl": "Serverrek",
+    "uk": "Серверна стійка"
+   }
+  },
+  {
+   "id": "mainframe",
+   "category": "af-compute",
+   "names": {
+    "pl": "Mainframe",
+    "en": "Mainframe",
+    "de": "Großrechner",
+    "fr": "Ordinateur central",
+    "es": "Mainframe",
+    "it": "Mainframe",
+    "pt": "Mainframe",
+    "cs": "Sálový počítač",
+    "nl": "Mainframe",
+    "uk": "Мейнфрейм"
+   }
+  },
+  {
+   "id": "desktop",
+   "category": "af-compute",
+   "names": {
+    "pl": "Komputer",
+    "en": "Desktop computer",
+    "de": "Desktop-Computer",
+    "fr": "Ordinateur de bureau",
+    "es": "Ordenador de sobremesa",
+    "it": "Computer desktop",
+    "pt": "Computador de mesa",
+    "cs": "Stolní počítač",
+    "nl": "Desktopcomputer",
+    "uk": "Настільний комп’ютер"
+   }
+  },
+  {
+   "id": "workstation",
+   "category": "af-compute",
+   "names": {
+    "pl": "Stacja robocza",
+    "en": "Workstation",
+    "de": "Workstation",
+    "fr": "Poste de travail",
+    "es": "Estación de trabajo",
+    "it": "Workstation",
+    "pt": "Estação de trabalho",
+    "cs": "Pracovní stanice",
+    "nl": "Werkstation",
+    "uk": "Робоча станція"
+   }
+  },
+  {
+   "id": "laptop",
+   "category": "af-compute",
+   "names": {
+    "pl": "Laptop",
+    "en": "Laptop",
+    "de": "Laptop",
+    "fr": "Ordinateur portable",
+    "es": "Portátil",
+    "it": "Portatile",
+    "pt": "Notebook",
+    "cs": "Notebook",
+    "nl": "Laptop",
+    "uk": "Ноутбук"
+   }
+  },
+  {
+   "id": "mobiledevice",
+   "category": "af-compute",
+   "names": {
+    "pl": "Telefon / smartfon",
+    "en": "Mobile phone",
+    "de": "Mobiltelefon",
+    "fr": "Téléphone mobile",
+    "es": "Teléfono móvil",
+    "it": "Telefono cellulare",
+    "pt": "Celular",
+    "cs": "Mobilní telefon",
+    "nl": "Mobiele telefoon",
+    "uk": "Мобільний телефон"
+   }
+  },
+  {
+   "id": "tablet",
+   "category": "af-compute",
+   "names": {
+    "pl": "Tablet",
+    "en": "Tablet",
+    "de": "Tablet",
+    "fr": "Tablette",
+    "es": "Tableta",
+    "it": "Tablet",
+    "pt": "Tablet",
+    "cs": "Tablet",
+    "nl": "Tablet",
+    "uk": "Планшет"
+   }
+  },
+  {
+   "id": "web-app",
+   "category": "af-compute",
+   "names": {
+    "pl": "Aplikacja webowa",
+    "en": "Web application",
+    "de": "Webanwendung",
+    "fr": "Application web",
+    "es": "Aplicación web",
+    "it": "Applicazione web",
+    "pt": "Aplicação web",
+    "cs": "Webová aplikace",
+    "nl": "Webapplicatie",
+    "uk": "Вебзастосунок"
+   }
+  },
+  {
+   "id": "terminal",
+   "category": "af-compute",
+   "names": {
+    "pl": "Terminal / konsola",
+    "en": "Terminal / console",
+    "de": "Terminal / Konsole",
+    "fr": "Terminal / console",
+    "es": "Terminal / consola",
+    "it": "Terminale / console",
+    "pt": "Terminal / console",
+    "cs": "Terminál / konzole",
+    "nl": "Terminal / console",
+    "uk": "Термінал / консоль"
+   }
+  },
+  {
+   "id": "vm",
+   "category": "af-compute",
+   "names": {
+    "pl": "Maszyna wirtualna",
+    "en": "Virtual machine",
+    "de": "Virtuelle Maschine",
+    "fr": "Machine virtuelle",
+    "es": "Máquina virtual",
+    "it": "Macchina virtuale",
+    "pt": "Máquina virtual",
+    "cs": "Virtuální stroj",
+    "nl": "Virtuele machine",
+    "uk": "Віртуальна машина"
+   }
+  },
+  {
+   "id": "container",
+   "category": "af-compute",
+   "names": {
+    "pl": "Kontener",
+    "en": "Container",
+    "de": "Container",
+    "fr": "Conteneur",
+    "es": "Contenedor",
+    "it": "Container",
+    "pt": "Contêiner",
+    "cs": "Kontejner",
+    "nl": "Container",
+    "uk": "Контейнер"
+   }
+  },
+  {
+   "id": "cluster",
+   "category": "af-compute",
+   "names": {
+    "pl": "Klaster / Kubernetes",
+    "en": "Cluster / Kubernetes",
+    "de": "Cluster / Kubernetes",
+    "fr": "Cluster / Kubernetes",
+    "es": "Clúster / Kubernetes",
+    "it": "Cluster / Kubernetes",
+    "pt": "Cluster / Kubernetes",
+    "cs": "Cluster / Kubernetes",
+    "nl": "Cluster / Kubernetes",
+    "uk": "Кластер / Kubernetes"
+   }
+  },
+  {
+   "id": "microservice",
+   "category": "af-compute",
+   "names": {
+    "pl": "Mikroserwis",
+    "en": "Microservice",
+    "de": "Microservice",
+    "fr": "Microservice",
+    "es": "Microservicio",
+    "it": "Microservizio",
+    "pt": "Microsserviço",
+    "cs": "Mikroslužba",
+    "nl": "Microservice",
+    "uk": "Мікросервіс"
+   }
+  },
+  {
+   "id": "function-module",
+   "category": "af-compute",
+   "names": {
+    "pl": "Funkcja (serverless)",
+    "en": "Function (serverless)",
+    "de": "Funktion (serverless)",
+    "fr": "Fonction (serverless)",
+    "es": "Función (serverless)",
+    "it": "Funzione (serverless)",
+    "pt": "Função (serverless)",
+    "cs": "Funkce (serverless)",
+    "nl": "Functie (serverless)",
+    "uk": "Функція (serverless)"
+   }
+  },
+  {
+   "id": "cronjob",
+   "category": "af-compute",
+   "names": {
+    "pl": "Zadanie cykliczne",
+    "en": "Scheduled job",
+    "de": "Geplante Aufgabe",
+    "fr": "Tâche planifiée",
+    "es": "Tarea programada",
+    "it": "Attività pianificata",
+    "pt": "Tarefa agendada",
+    "cs": "Plánovaná úloha",
+    "nl": "Geplande taak",
+    "uk": "Заплановане завдання"
+   }
+  },
+  {
+   "id": "gpu-server",
+   "category": "af-compute",
+   "names": {
+    "pl": "Serwer GPU",
+    "en": "GPU server",
+    "de": "GPU-Server",
+    "fr": "Serveur GPU",
+    "es": "Servidor GPU",
+    "it": "Server GPU",
+    "pt": "Servidor GPU",
+    "cs": "GPU server",
+    "nl": "GPU-server",
+    "uk": "GPU-сервер"
+   }
+  },
+  {
+   "id": "cpu",
+   "category": "af-compute",
+   "names": {
+    "pl": "Procesor / układ",
+    "en": "CPU / chip",
+    "de": "CPU / Chip",
+    "fr": "Processeur / puce",
+    "es": "CPU / chip",
+    "it": "CPU / chip",
+    "pt": "CPU / chip",
+    "cs": "Procesor / čip",
+    "nl": "Processor / chip",
+    "uk": "Процесор / чип"
+   }
+  },
+  {
+   "id": "printer",
+   "category": "af-compute",
+   "names": {
+    "pl": "Drukarka",
+    "en": "Printer",
+    "de": "Drucker",
+    "fr": "Imprimante",
+    "es": "Impresora",
+    "it": "Stampante",
+    "pt": "Impressora",
+    "cs": "Tiskárna",
+    "nl": "Printer",
+    "uk": "Принтер"
+   }
+  },
+  {
+   "id": "iot-device",
+   "category": "af-compute",
+   "names": {
+    "pl": "Urządzenie IoT / czujnik",
+    "en": "IoT device / sensor",
+    "de": "IoT-Gerät / Sensor",
+    "fr": "Objet connecté / capteur",
+    "es": "Dispositivo IoT / sensor",
+    "it": "Dispositivo IoT / sensore",
+    "pt": "Dispositivo IoT / sensor",
+    "cs": "Zařízení IoT / senzor",
+    "nl": "IoT-apparaat / sensor",
+    "uk": "IoT-пристрій / датчик"
+   }
+  },
+  {
+   "id": "edge-device",
+   "category": "af-compute",
+   "names": {
+    "pl": "Urządzenie brzegowe",
+    "en": "Edge device",
+    "de": "Edge-Gerät",
+    "fr": "Équipement edge",
+    "es": "Dispositivo edge",
+    "it": "Dispositivo edge",
+    "pt": "Dispositivo de borda",
+    "cs": "Okrajové zařízení",
+    "nl": "Edge-apparaat",
+    "uk": "Периферійний пристрій"
+   }
+  },
+  {
+   "id": "kiosk",
+   "category": "af-compute",
+   "names": {
+    "pl": "Kiosk / infomat",
+    "en": "Kiosk",
+    "de": "Kiosk / Infoterminal",
+    "fr": "Borne interactive",
+    "es": "Quiosco interactivo",
+    "it": "Chiosco interattivo",
+    "pt": "Totem / quiosque",
+    "cs": "Kiosek / infokiosek",
+    "nl": "Kiosk / infozuil",
+    "uk": "Інформаційний кіоск"
+   }
+  },
+  {
+   "id": "smartwatch",
+   "category": "af-compute",
+   "names": {
+    "pl": "Smartwatch",
+    "en": "Smartwatch",
+    "de": "Smartwatch",
+    "fr": "Montre connectée",
+    "es": "Reloj inteligente",
+    "it": "Smartwatch",
+    "pt": "Relógio inteligente",
+    "cs": "Chytré hodinky",
+    "nl": "Smartwatch",
+    "uk": "Смарт-годинник"
+   }
+  },
+  {
+   "id": "camera",
+   "category": "af-compute",
+   "names": {
+    "pl": "Kamera",
+    "en": "Camera",
+    "de": "Kamera",
+    "fr": "Caméra",
+    "es": "Cámara",
+    "it": "Telecamera",
+    "pt": "Câmera",
+    "cs": "Kamera",
+    "nl": "Camera",
+    "uk": "Камера"
+   }
+  },
+  {
+   "id": "router",
+   "category": "af-network",
+   "names": {
+    "pl": "Router",
+    "en": "Router",
+    "de": "Router",
+    "fr": "Routeur",
+    "es": "Router",
+    "it": "Router",
+    "pt": "Roteador",
+    "cs": "Směrovač",
+    "nl": "Router",
+    "uk": "Маршрутизатор"
+   }
+  },
+  {
+   "id": "switch-module",
+   "category": "af-network",
+   "names": {
+    "pl": "Przełącznik (switch)",
+    "en": "Network switch",
+    "de": "Netzwerk-Switch",
+    "fr": "Commutateur réseau",
+    "es": "Switch de red",
+    "it": "Switch di rete",
+    "pt": "Switch de rede",
+    "cs": "Síťový přepínač",
+    "nl": "Netwerkswitch",
+    "uk": "Мережевий комутатор"
+   }
+  },
+  {
+   "id": "hub",
+   "category": "af-network",
+   "names": {
+    "pl": "Koncentrator (hub)",
+    "en": "Hub",
+    "de": "Hub",
+    "fr": "Concentrateur",
+    "es": "Concentrador (hub)",
+    "it": "Hub",
+    "pt": "Hub",
+    "cs": "Rozbočovač (hub)",
+    "nl": "Hub",
+    "uk": "Концентратор"
+   }
+  },
+  {
+   "id": "modem",
+   "category": "af-network",
+   "names": {
+    "pl": "Modem",
+    "en": "Modem",
+    "de": "Modem",
+    "fr": "Modem",
+    "es": "Módem",
+    "it": "Modem",
+    "pt": "Modem",
+    "cs": "Modem",
+    "nl": "Modem",
+    "uk": "Модем"
+   }
+  },
+  {
+   "id": "wifi-ap",
+   "category": "af-network",
+   "names": {
+    "pl": "Punkt dostępowy Wi-Fi",
+    "en": "Wi-Fi access point",
+    "de": "WLAN-Zugangspunkt",
+    "fr": "Point d’accès Wi-Fi",
+    "es": "Punto de acceso Wi-Fi",
+    "it": "Access point Wi-Fi",
+    "pt": "Ponto de acesso Wi-Fi",
+    "cs": "Přístupový bod Wi-Fi",
+    "nl": "Wifi-toegangspunt",
+    "uk": "Точка доступу Wi-Fi"
+   }
+  },
+  {
+   "id": "loadbalancer",
+   "category": "af-network",
+   "names": {
+    "pl": "Load balancer",
+    "en": "Load balancer",
+    "de": "Load Balancer",
+    "fr": "Répartiteur de charge",
+    "es": "Balanceador de carga",
+    "it": "Bilanciatore di carico",
+    "pt": "Balanceador de carga",
+    "cs": "Vyrovnávač zátěže",
+    "nl": "Load balancer",
+    "uk": "Балансувальник навантаження"
+   }
+  },
+  {
+   "id": "dns",
+   "category": "af-network",
+   "names": {
+    "pl": "DNS",
+    "en": "DNS",
+    "de": "DNS",
+    "fr": "DNS",
+    "es": "DNS",
+    "it": "DNS",
+    "pt": "DNS",
+    "cs": "DNS",
+    "nl": "DNS",
+    "uk": "DNS"
+   }
+  },
+  {
+   "id": "api-gateway",
+   "category": "af-network",
+   "names": {
+    "pl": "Brama API",
+    "en": "API gateway",
+    "de": "API-Gateway",
+    "fr": "Passerelle API",
+    "es": "Pasarela de API",
+    "it": "Gateway API",
+    "pt": "Gateway de API",
+    "cs": "Brána API",
+    "nl": "API-gateway",
+    "uk": "API-шлюз"
+   }
+  },
+  {
+   "id": "cloud",
+   "category": "af-network",
+   "names": {
+    "pl": "Chmura",
+    "en": "Cloud",
+    "de": "Cloud",
+    "fr": "Cloud",
+    "es": "Nube",
+    "it": "Cloud",
+    "pt": "Nuvem",
+    "cs": "Cloud",
+    "nl": "Cloud",
+    "uk": "Хмара"
+   }
+  },
+  {
+   "id": "internet",
+   "category": "af-network",
+   "names": {
+    "pl": "Internet",
+    "en": "Internet",
+    "de": "Internet",
+    "fr": "Internet",
+    "es": "Internet",
+    "it": "Internet",
+    "pt": "Internet",
+    "cs": "Internet",
+    "nl": "Internet",
+    "uk": "Інтернет"
+   }
+  },
+  {
+   "id": "tower",
+   "category": "af-network",
+   "names": {
+    "pl": "Maszt / nadajnik",
+    "en": "Radio tower",
+    "de": "Funkmast",
+    "fr": "Pylône radio",
+    "es": "Torre de radio",
+    "it": "Torre radio",
+    "pt": "Torre de rádio",
+    "cs": "Vysílač",
+    "nl": "Zendmast",
+    "uk": "Радіовежа"
+   }
+  },
+  {
+   "id": "antenna-5g",
+   "category": "af-network",
+   "names": {
+    "pl": "Antena 5G / stacja bazowa",
+    "en": "5G antenna / base station",
+    "de": "5G-Antenne / Basisstation",
+    "fr": "Antenne 5G / station de base",
+    "es": "Antena 5G / estación base",
+    "it": "Antenna 5G / stazione base",
+    "pt": "Antena 5G / estação rádio base",
+    "cs": "Anténa 5G / základnová stanice",
+    "nl": "5G-antenne / basisstation",
+    "uk": "Антена 5G / базова станція"
+   }
+  },
+  {
+   "id": "vpn",
+   "category": "af-network",
+   "names": {
+    "pl": "VPN / tunel",
+    "en": "VPN / tunnel",
+    "de": "VPN / Tunnel",
+    "fr": "VPN / tunnel",
+    "es": "VPN / túnel",
+    "it": "VPN / tunnel",
+    "pt": "VPN / túnel",
+    "cs": "VPN / tunel",
+    "nl": "VPN / tunnel",
+    "uk": "VPN / тунель"
+   }
+  },
+  {
+   "id": "satellite",
+   "category": "af-network",
+   "names": {
+    "pl": "Satelita",
+    "en": "Satellite",
+    "de": "Satellit",
+    "fr": "Satellite",
+    "es": "Satélite",
+    "it": "Satellite",
+    "pt": "Satélite",
+    "cs": "Družice",
+    "nl": "Satelliet",
+    "uk": "Супутник"
+   }
+  },
+  {
+   "id": "cdn",
+   "category": "af-network",
+   "names": {
+    "pl": "CDN / sieć dostarczania treści",
+    "en": "CDN / edge network",
+    "de": "CDN / Edge-Netzwerk",
+    "fr": "CDN / réseau edge",
+    "es": "CDN / red edge",
+    "it": "CDN / rete edge",
+    "pt": "CDN / rede de borda",
+    "cs": "CDN / okrajová síť",
+    "nl": "CDN / edge-netwerk",
+    "uk": "CDN / периферійна мережа"
+   }
+  },
+  {
+   "id": "proxy",
+   "category": "af-network",
+   "names": {
+    "pl": "Serwer proxy",
+    "en": "Proxy server",
+    "de": "Proxyserver",
+    "fr": "Serveur proxy",
+    "es": "Servidor proxy",
+    "it": "Server proxy",
+    "pt": "Servidor proxy",
+    "cs": "Proxy server",
+    "nl": "Proxyserver",
+    "uk": "Проксі-сервер"
+   }
+  },
+  {
+   "id": "nat",
+   "category": "af-network",
+   "names": {
+    "pl": "NAT / translacja adresów",
+    "en": "NAT / address translation",
+    "de": "NAT / Adressumsetzung",
+    "fr": "NAT / traduction d’adresses",
+    "es": "NAT / traducción de direcciones",
+    "it": "NAT / traduzione degli indirizzi",
+    "pt": "NAT / tradução de endereços",
+    "cs": "NAT / překlad adres",
+    "nl": "NAT / adresvertaling",
+    "uk": "NAT / трансляція адрес"
+   }
+  },
+  {
+   "id": "vlan",
+   "category": "af-network",
+   "names": {
+    "pl": "VLAN / segment sieci",
+    "en": "VLAN / network segment",
+    "de": "VLAN / Netzwerksegment",
+    "fr": "VLAN / segment réseau",
+    "es": "VLAN / segmento de red",
+    "it": "VLAN / segmento di rete",
+    "pt": "VLAN / segmento de rede",
+    "cs": "VLAN / segment sítě",
+    "nl": "VLAN / netwerksegment",
+    "uk": "VLAN / сегмент мережі"
+   }
+  },
+  {
+   "id": "fiber-link",
+   "category": "af-network",
+   "names": {
+    "pl": "Łącze światłowodowe",
+    "en": "Fiber link",
+    "de": "Glasfaserverbindung",
+    "fr": "Liaison fibre optique",
+    "es": "Enlace de fibra óptica",
+    "it": "Collegamento in fibra",
+    "pt": "Link de fibra óptica",
+    "cs": "Optické spojení",
+    "nl": "Glasvezelverbinding",
+    "uk": "Оптоволоконний канал"
+   }
+  },
+  {
+   "id": "mail",
+   "category": "af-communication",
+   "names": {
+    "pl": "E-mail",
+    "en": "E-mail",
+    "de": "E-Mail",
+    "fr": "E-mail",
+    "es": "Correo electrónico",
+    "it": "E-mail",
+    "pt": "E-mail",
+    "cs": "E-mail",
+    "nl": "E-mail",
+    "uk": "Електронна пошта"
+   }
+  },
+  {
+   "id": "mailmultiple",
+   "category": "af-communication",
+   "names": {
+    "pl": "Wiele e-maili",
+    "en": "Multiple e-mails",
+    "de": "Mehrere E-Mails",
+    "fr": "Plusieurs e-mails",
+    "es": "Varios correos",
+    "it": "Più e-mail",
+    "pt": "Vários e-mails",
+    "cs": "Více e-mailů",
+    "nl": "Meerdere e-mails",
+    "uk": "Кілька листів"
+   }
+  },
+  {
+   "id": "speech",
+   "category": "af-communication",
+   "names": {
+    "pl": "Wiadomość / czat",
+    "en": "Message / chat",
+    "de": "Nachricht / Chat",
+    "fr": "Message / chat",
+    "es": "Mensaje / chat",
+    "it": "Messaggio / chat",
+    "pt": "Mensagem / chat",
+    "cs": "Zpráva / chat",
+    "nl": "Bericht / chat",
+    "uk": "Повідомлення / чат"
+   }
+  },
+  {
+   "id": "chat-group",
+   "category": "af-communication",
+   "names": {
+    "pl": "Rozmowa grupowa",
+    "en": "Group chat",
+    "de": "Gruppenchat",
+    "fr": "Discussion de groupe",
+    "es": "Chat de grupo",
+    "it": "Chat di gruppo",
+    "pt": "Chat em grupo",
+    "cs": "Skupinový chat",
+    "nl": "Groepschat",
+    "uk": "Груповий чат"
+   }
+  },
+  {
+   "id": "sms",
+   "category": "af-communication",
+   "names": {
+    "pl": "SMS",
+    "en": "SMS / text message",
+    "de": "SMS / Textnachricht",
+    "fr": "SMS",
+    "es": "SMS / mensaje de texto",
+    "it": "SMS",
+    "pt": "SMS / mensagem de texto",
+    "cs": "SMS",
+    "nl": "Sms / tekstbericht",
+    "uk": "SMS"
+   }
+  },
+  {
+   "id": "push",
+   "category": "af-communication",
+   "names": {
+    "pl": "Powiadomienie push",
+    "en": "Push notification",
+    "de": "Push-Benachrichtigung",
+    "fr": "Notification push",
+    "es": "Notificación push",
+    "it": "Notifica push",
+    "pt": "Notificação push",
+    "cs": "Push oznámení",
+    "nl": "Pushmelding",
+    "uk": "Push-сповіщення"
+   }
+  },
+  {
+   "id": "notification",
+   "category": "af-communication",
+   "names": {
+    "pl": "Powiadomienie / alert",
+    "en": "Notification / alert",
+    "de": "Benachrichtigung / Hinweis",
+    "fr": "Notification / alerte",
+    "es": "Notificación / alerta",
+    "it": "Notifica / avviso",
+    "pt": "Notificação / alerta",
+    "cs": "Oznámení / upozornění",
+    "nl": "Melding / waarschuwing",
+    "uk": "Сповіщення / попередження"
+   }
+  },
+  {
+   "id": "megaphone",
+   "category": "af-communication",
+   "names": {
+    "pl": "Ogłoszenie / megafon",
+    "en": "Broadcast / megaphone",
+    "de": "Durchsage / Megafon",
+    "fr": "Annonce / mégaphone",
+    "es": "Anuncio / megáfono",
+    "it": "Annuncio / megafono",
+    "pt": "Comunicado / megafone",
+    "cs": "Hlášení / megafon",
+    "nl": "Omroep / megafoon",
+    "uk": "Оголошення / мегафон"
+   }
+  },
+  {
+   "id": "phone",
+   "category": "af-communication",
+   "names": {
+    "pl": "Telefon / połączenie",
+    "en": "Phone call",
+    "de": "Telefonanruf",
+    "fr": "Appel téléphonique",
+    "es": "Llamada telefónica",
+    "it": "Telefonata",
+    "pt": "Chamada telefônica",
+    "cs": "Telefonní hovor",
+    "nl": "Telefoongesprek",
+    "uk": "Телефонний дзвінок"
+   }
+  },
+  {
+   "id": "webhook",
+   "category": "af-communication",
+   "names": {
+    "pl": "Webhook",
+    "en": "Webhook",
+    "de": "Webhook",
+    "fr": "Webhook",
+    "es": "Webhook",
+    "it": "Webhook",
+    "pt": "Webhook",
+    "cs": "Webhook",
+    "nl": "Webhook",
+    "uk": "Вебхук"
+   }
+  },
+  {
+   "id": "queue",
+   "category": "af-communication",
+   "names": {
+    "pl": "Kolejka komunikatów",
+    "en": "Message queue",
+    "de": "Nachrichtenwarteschlange",
+    "fr": "File de messages",
+    "es": "Cola de mensajes",
+    "it": "Coda di messaggi",
+    "pt": "Fila de mensagens",
+    "cs": "Fronta zpráv",
+    "nl": "Berichtenwachtrij",
+    "uk": "Черга повідомлень"
+   }
+  },
+  {
+   "id": "event-bus",
+   "category": "af-communication",
+   "names": {
+    "pl": "Szyna zdarzeń / temat",
+    "en": "Event bus / topic",
+    "de": "Event-Bus / Topic",
+    "fr": "Bus d’événements / topic",
+    "es": "Bus de eventos / tema",
+    "it": "Bus di eventi / topic",
+    "pt": "Barramento de eventos / tópico",
+    "cs": "Sběrnice událostí / téma",
+    "nl": "Eventbus / topic",
+    "uk": "Шина подій / топік"
+   }
+  },
+  {
+   "id": "video-call",
+   "category": "af-communication",
+   "names": {
+    "pl": "Wideorozmowa",
+    "en": "Video call",
+    "de": "Videoanruf",
+    "fr": "Appel vidéo",
+    "es": "Videollamada",
+    "it": "Videochiamata",
+    "pt": "Videochamada",
+    "cs": "Videohovor",
+    "nl": "Videogesprek",
+    "uk": "Відеодзвінок"
+   }
+  },
+  {
+   "id": "newsletter",
+   "category": "af-communication",
+   "names": {
+    "pl": "Newsletter / biuletyn",
+    "en": "Newsletter",
+    "de": "Newsletter",
+    "fr": "Newsletter",
+    "es": "Boletín",
+    "it": "Newsletter",
+    "pt": "Newsletter",
+    "cs": "Zpravodaj",
+    "nl": "Nieuwsbrief",
+    "uk": "Розсилка"
+   }
+  },
+  {
+   "id": "rss",
+   "category": "af-communication",
+   "names": {
+    "pl": "Kanał RSS / feed",
+    "en": "RSS / feed",
+    "de": "RSS / Feed",
+    "fr": "RSS / flux",
+    "es": "RSS / feed",
+    "it": "RSS / feed",
+    "pt": "RSS / feed",
+    "cs": "RSS / kanál",
+    "nl": "RSS / feed",
+    "uk": "RSS / стрічка"
+   }
+  },
+  {
+   "id": "inbox",
+   "category": "af-communication",
+   "names": {
+    "pl": "Skrzynka odbiorcza",
+    "en": "Inbox",
+    "de": "Posteingang",
+    "fr": "Boîte de réception",
+    "es": "Bandeja de entrada",
+    "it": "Posta in arrivo",
+    "pt": "Caixa de entrada",
+    "cs": "Doručená pošta",
+    "nl": "Inbox",
+    "uk": "Вхідні"
+   }
+  },
+  {
+   "id": "chatbot",
+   "category": "af-communication",
+   "names": {
+    "pl": "Chatbot / asystent",
+    "en": "Chatbot / assistant",
+    "de": "Chatbot / Assistent",
+    "fr": "Chatbot / assistant",
+    "es": "Chatbot / asistente",
+    "it": "Chatbot / assistente",
+    "pt": "Chatbot / assistente",
+    "cs": "Chatbot / asistent",
+    "nl": "Chatbot / assistent",
+    "uk": "Чат-бот / асистент"
+   }
+  },
+  {
+   "id": "storage",
+   "category": "af-data",
+   "names": {
+    "pl": "Baza danych",
+    "en": "Database",
+    "de": "Datenbank",
+    "fr": "Base de données",
+    "es": "Base de datos",
+    "it": "Database",
+    "pt": "Banco de dados",
+    "cs": "Databáze",
+    "nl": "Database",
+    "uk": "База даних"
+   }
+  },
+  {
+   "id": "database-cluster",
+   "category": "af-data",
+   "names": {
+    "pl": "Klaster baz danych",
+    "en": "Database cluster",
+    "de": "Datenbank-Cluster",
+    "fr": "Cluster de bases de données",
+    "es": "Clúster de bases de datos",
+    "it": "Cluster di database",
+    "pt": "Cluster de bancos de dados",
+    "cs": "Databázový cluster",
+    "nl": "Databasecluster",
+    "uk": "Кластер баз даних"
+   }
+  },
+  {
+   "id": "cache",
+   "category": "af-data",
+   "names": {
+    "pl": "Cache / pamięć podręczna",
+    "en": "Cache",
+    "de": "Cache",
+    "fr": "Cache",
+    "es": "Caché",
+    "it": "Cache",
+    "pt": "Cache",
+    "cs": "Mezipaměť (cache)",
+    "nl": "Cache",
+    "uk": "Кеш"
+   }
+  },
+  {
+   "id": "disk",
+   "category": "af-data",
+   "names": {
+    "pl": "Dysk",
+    "en": "Disk drive",
+    "de": "Laufwerk",
+    "fr": "Disque",
+    "es": "Disco",
+    "it": "Disco",
+    "pt": "Disco",
+    "cs": "Disk",
+    "nl": "Schijf",
+    "uk": "Диск"
+   }
+  },
+  {
+   "id": "bucket",
+   "category": "af-data",
+   "names": {
+    "pl": "Magazyn obiektów (bucket)",
+    "en": "Object storage (bucket)",
+    "de": "Objektspeicher (Bucket)",
+    "fr": "Stockage objet (bucket)",
+    "es": "Almacenamiento de objetos (bucket)",
+    "it": "Archiviazione a oggetti (bucket)",
+    "pt": "Armazenamento de objetos (bucket)",
+    "cs": "Objektové úložiště (bucket)",
+    "nl": "Objectopslag (bucket)",
+    "uk": "Об’єктне сховище (bucket)"
+   }
+  },
+  {
+   "id": "data-warehouse",
+   "category": "af-data",
+   "names": {
+    "pl": "Hurtownia danych",
+    "en": "Data warehouse",
+    "de": "Data Warehouse",
+    "fr": "Entrepôt de données",
+    "es": "Almacén de datos",
+    "it": "Data warehouse",
+    "pt": "Data warehouse",
+    "cs": "Datový sklad",
+    "nl": "Datawarehouse",
+    "uk": "Сховище даних (DWH)"
+   }
+  },
+  {
+   "id": "backup",
+   "category": "af-data",
+   "names": {
+    "pl": "Kopia zapasowa",
+    "en": "Backup",
+    "de": "Datensicherung",
+    "fr": "Sauvegarde",
+    "es": "Copia de seguridad",
+    "it": "Backup",
+    "pt": "Backup",
+    "cs": "Záloha",
+    "nl": "Back-up",
+    "uk": "Резервна копія"
+   }
+  },
+  {
+   "id": "data-lake",
+   "category": "af-data",
+   "names": {
+    "pl": "Jezioro danych",
+    "en": "Data lake",
+    "de": "Data Lake",
+    "fr": "Lac de données",
+    "es": "Lago de datos",
+    "it": "Data lake",
+    "pt": "Data lake",
+    "cs": "Datové jezero",
+    "nl": "Data lake",
+    "uk": "Озеро даних"
+   }
+  },
+  {
+   "id": "file",
+   "category": "af-data",
+   "names": {
+    "pl": "Plik",
+    "en": "File",
+    "de": "Datei",
+    "fr": "Fichier",
+    "es": "Archivo",
+    "it": "File",
+    "pt": "Arquivo",
+    "cs": "Soubor",
+    "nl": "Bestand",
+    "uk": "Файл"
+   }
+  },
+  {
+   "id": "folder",
+   "category": "af-data",
+   "names": {
+    "pl": "Folder / katalog",
+    "en": "Folder",
+    "de": "Ordner",
+    "fr": "Dossier",
+    "es": "Carpeta",
+    "it": "Cartella",
+    "pt": "Pasta",
+    "cs": "Složka",
+    "nl": "Map",
+    "uk": "Тека"
+   }
+  },
+  {
+   "id": "table",
+   "category": "af-data",
+   "names": {
+    "pl": "Tabela / arkusz",
+    "en": "Table / spreadsheet",
+    "de": "Tabelle",
+    "fr": "Tableau / feuille de calcul",
+    "es": "Tabla / hoja de cálculo",
+    "it": "Tabella / foglio di calcolo",
+    "pt": "Tabela / planilha",
+    "cs": "Tabulka",
+    "nl": "Tabel / spreadsheet",
+    "uk": "Таблиця"
+   }
+  },
+  {
+   "id": "etl",
+   "category": "af-data",
+   "names": {
+    "pl": "Proces ETL / potok danych",
+    "en": "ETL / data pipeline",
+    "de": "ETL / Datenpipeline",
+    "fr": "ETL / pipeline de données",
+    "es": "ETL / canalización de datos",
+    "it": "ETL / pipeline di dati",
+    "pt": "ETL / pipeline de dados",
+    "cs": "ETL / datová pipeline",
+    "nl": "ETL / datapijplijn",
+    "uk": "ETL / конвеєр даних"
+   }
+  },
+  {
+   "id": "stream",
+   "category": "af-data",
+   "names": {
+    "pl": "Strumień danych",
+    "en": "Data stream",
+    "de": "Datenstrom",
+    "fr": "Flux de données",
+    "es": "Flujo de datos",
+    "it": "Flusso di dati",
+    "pt": "Fluxo de dados",
+    "cs": "Datový proud",
+    "nl": "Datastroom",
+    "uk": "Потік даних"
+   }
+  },
+  {
+   "id": "search-index",
+   "category": "af-data",
+   "names": {
+    "pl": "Indeks / wyszukiwanie",
+    "en": "Search index",
+    "de": "Suchindex",
+    "fr": "Index de recherche",
+    "es": "Índice de búsqueda",
+    "it": "Indice di ricerca",
+    "pt": "Índice de busca",
+    "cs": "Vyhledávací index",
+    "nl": "Zoekindex",
+    "uk": "Пошуковий індекс"
+   }
+  },
+  {
+   "id": "archive",
+   "category": "af-data",
+   "names": {
+    "pl": "Archiwum",
+    "en": "Archive",
+    "de": "Archiv",
+    "fr": "Archive",
+    "es": "Archivo histórico",
+    "it": "Archivio",
+    "pt": "Arquivo morto",
+    "cs": "Archiv",
+    "nl": "Archief",
+    "uk": "Архів"
+   }
+  },
+  {
+   "id": "nas",
+   "category": "af-data",
+   "names": {
+    "pl": "Macierz dyskowa NAS / SAN",
+    "en": "NAS / SAN storage",
+    "de": "NAS / SAN-Speicher",
+    "fr": "Stockage NAS / SAN",
+    "es": "Almacenamiento NAS / SAN",
+    "it": "Archiviazione NAS / SAN",
+    "pt": "Armazenamento NAS / SAN",
+    "cs": "Úložiště NAS / SAN",
+    "nl": "NAS / SAN-opslag",
+    "uk": "Сховище NAS / SAN"
+   }
+  },
+  {
+   "id": "graph-db",
+   "category": "af-data",
+   "names": {
+    "pl": "Baza grafowa",
+    "en": "Graph database",
+    "de": "Graphdatenbank",
+    "fr": "Base de données graphe",
+    "es": "Base de datos de grafos",
+    "it": "Database a grafo",
+    "pt": "Banco de dados de grafos",
+    "cs": "Grafová databáze",
+    "nl": "Grafendatabase",
+    "uk": "Графова база даних"
+   }
+  },
+  {
+   "id": "data-export",
+   "category": "af-data",
+   "names": {
+    "pl": "Eksport danych",
+    "en": "Data export",
+    "de": "Datenexport",
+    "fr": "Export de données",
+    "es": "Exportación de datos",
+    "it": "Esportazione dati",
+    "pt": "Exportação de dados",
+    "cs": "Export dat",
+    "nl": "Gegevensexport",
+    "uk": "Експорт даних"
+   }
+  },
+  {
+   "id": "data-import",
+   "category": "af-data",
+   "names": {
+    "pl": "Import danych",
+    "en": "Data import",
+    "de": "Datenimport",
+    "fr": "Import de données",
+    "es": "Importación de datos",
+    "it": "Importazione dati",
+    "pt": "Importação de dados",
+    "cs": "Import dat",
+    "nl": "Gegevensimport",
+    "uk": "Імпорт даних"
+   }
+  },
+  {
+   "id": "firewall",
+   "category": "af-security",
+   "names": {
+    "pl": "Firewall / zapora",
+    "en": "Firewall",
+    "de": "Firewall",
+    "fr": "Pare-feu",
+    "es": "Cortafuegos",
+    "it": "Firewall",
+    "pt": "Firewall",
+    "cs": "Firewall",
+    "nl": "Firewall",
+    "uk": "Брандмауер"
+   }
+  },
+  {
+   "id": "waf",
+   "category": "af-security",
+   "names": {
+    "pl": "WAF / zapora aplikacyjna",
+    "en": "WAF / web application firewall",
+    "de": "WAF / Web Application Firewall",
+    "fr": "WAF / pare-feu applicatif",
+    "es": "WAF / cortafuegos de aplicaciones web",
+    "it": "WAF / firewall per applicazioni web",
+    "pt": "WAF / firewall de aplicações web",
+    "cs": "WAF / aplikační firewall",
+    "nl": "WAF / webapplicatiefirewall",
+    "uk": "WAF / брандмауер вебзастосунків"
+   }
+  },
+  {
+   "id": "lock",
+   "category": "af-security",
+   "names": {
+    "pl": "Kłódka / zabezpieczenie",
+    "en": "Lock",
+    "de": "Schloss",
+    "fr": "Cadenas",
+    "es": "Candado",
+    "it": "Lucchetto",
+    "pt": "Cadeado",
+    "cs": "Zámek",
+    "nl": "Slot",
+    "uk": "Замок"
+   }
+  },
+  {
+   "id": "key",
+   "category": "af-security",
+   "names": {
+    "pl": "Klucz / sekret",
+    "en": "Key / secret",
+    "de": "Schlüssel / Geheimnis",
+    "fr": "Clé / secret",
+    "es": "Clave / secreto",
+    "it": "Chiave / segreto",
+    "pt": "Chave / segredo",
+    "cs": "Klíč / tajemství",
+    "nl": "Sleutel / geheim",
+    "uk": "Ключ / секрет"
+   }
+  },
+  {
+   "id": "shield",
+   "category": "af-security",
+   "names": {
+    "pl": "Ochrona / tarcza",
+    "en": "Shield / protection",
+    "de": "Schild / Schutz",
+    "fr": "Bouclier / protection",
+    "es": "Escudo / protección",
+    "it": "Scudo / protezione",
+    "pt": "Escudo / proteção",
+    "cs": "Štít / ochrana",
+    "nl": "Schild / bescherming",
+    "uk": "Щит / захист"
+   }
+  },
+  {
+   "id": "certificate",
+   "category": "af-security",
+   "names": {
+    "pl": "Certyfikat",
+    "en": "Certificate",
+    "de": "Zertifikat",
+    "fr": "Certificat",
+    "es": "Certificado",
+    "it": "Certificato",
+    "pt": "Certificado",
+    "cs": "Certifikát",
+    "nl": "Certificaat",
+    "uk": "Сертифікат"
+   }
+  },
+  {
+   "id": "identity",
+   "category": "af-security",
+   "names": {
+    "pl": "Tożsamość / logowanie",
+    "en": "Identity / login",
+    "de": "Identität / Anmeldung",
+    "fr": "Identité / connexion",
+    "es": "Identidad / inicio de sesión",
+    "it": "Identità / accesso",
+    "pt": "Identidade / login",
+    "cs": "Identita / přihlášení",
+    "nl": "Identiteit / inloggen",
+    "uk": "Ідентичність / вхід"
+   }
+  },
+  {
+   "id": "mfa",
+   "category": "af-security",
+   "names": {
+    "pl": "Uwierzytelnianie MFA / kod",
+    "en": "MFA / one-time code",
+    "de": "MFA / Einmalcode",
+    "fr": "MFA / code à usage unique",
+    "es": "MFA / código de un solo uso",
+    "it": "MFA / codice monouso",
+    "pt": "MFA / código de uso único",
+    "cs": "MFA / jednorázový kód",
+    "nl": "MFA / eenmalige code",
+    "uk": "MFA / одноразовий код"
+   }
+  },
+  {
+   "id": "audit-log",
+   "category": "af-security",
+   "names": {
+    "pl": "Dziennik audytu",
+    "en": "Audit log",
+    "de": "Audit-Protokoll",
+    "fr": "Journal d’audit",
+    "es": "Registro de auditoría",
+    "it": "Registro di audit",
+    "pt": "Log de auditoria",
+    "cs": "Auditní záznam",
+    "nl": "Auditlog",
+    "uk": "Журнал аудиту"
+   }
+  },
+  {
+   "id": "vault",
+   "category": "af-security",
+   "names": {
+    "pl": "Sejf / skarbiec",
+    "en": "Vault / safe",
+    "de": "Tresor",
+    "fr": "Coffre-fort",
+    "es": "Caja fuerte",
+    "it": "Cassaforte",
+    "pt": "Cofre",
+    "cs": "Trezor",
+    "nl": "Kluis",
+    "uk": "Сейф"
+   }
+  },
+  {
+   "id": "bug",
+   "category": "af-security",
+   "names": {
+    "pl": "Zagrożenie / wirus",
+    "en": "Threat / malware",
+    "de": "Bedrohung / Schadsoftware",
+    "fr": "Menace / logiciel malveillant",
+    "es": "Amenaza / malware",
+    "it": "Minaccia / malware",
+    "pt": "Ameaça / malware",
+    "cs": "Hrozba / malware",
+    "nl": "Dreiging / malware",
+    "uk": "Загроза / шкідливе ПЗ"
+   }
+  },
+  {
+   "id": "fingerprint",
+   "category": "af-security",
+   "names": {
+    "pl": "Biometria / odcisk palca",
+    "en": "Biometrics / fingerprint",
+    "de": "Biometrie / Fingerabdruck",
+    "fr": "Biométrie / empreinte digitale",
+    "es": "Biometría / huella dactilar",
+    "it": "Biometria / impronta digitale",
+    "pt": "Biometria / impressão digital",
+    "cs": "Biometrie / otisk prstu",
+    "nl": "Biometrie / vingerafdruk",
+    "uk": "Біометрія / відбиток пальця"
+   }
+  },
+  {
+   "id": "policy",
+   "category": "af-security",
+   "names": {
+    "pl": "Polityka / regulamin",
+    "en": "Policy / rules",
+    "de": "Richtlinie / Regeln",
+    "fr": "Politique / règles",
+    "es": "Política / normas",
+    "it": "Criteri / regole",
+    "pt": "Política / regras",
+    "cs": "Zásady / pravidla",
+    "nl": "Beleid / regels",
+    "uk": "Політика / правила"
+   }
+  },
+  {
+   "id": "encryption",
+   "category": "af-security",
+   "names": {
+    "pl": "Szyfrowanie",
+    "en": "Encryption",
+    "de": "Verschlüsselung",
+    "fr": "Chiffrement",
+    "es": "Cifrado",
+    "it": "Crittografia",
+    "pt": "Criptografia",
+    "cs": "Šifrování",
+    "nl": "Versleuteling",
+    "uk": "Шифрування"
+   }
+  },
+  {
+   "id": "alert",
+   "category": "af-security",
+   "names": {
+    "pl": "Alarm / incydent",
+    "en": "Alert / incident",
+    "de": "Alarm / Vorfall",
+    "fr": "Alerte / incident",
+    "es": "Alerta / incidente",
+    "it": "Allarme / incidente",
+    "pt": "Alerta / incidente",
+    "cs": "Poplach / incident",
+    "nl": "Alarm / incident",
+    "uk": "Тривога / інцидент"
+   }
+  },
+  {
+   "id": "user",
+   "category": "af-people",
+   "names": {
+    "pl": "Użytkownik",
+    "en": "User",
+    "de": "Benutzer",
+    "fr": "Utilisateur",
+    "es": "Usuario",
+    "it": "Utente",
+    "pt": "Usuário",
+    "cs": "Uživatel",
+    "nl": "Gebruiker",
+    "uk": "Користувач"
+   }
+  },
+  {
+   "id": "group",
+   "category": "af-people",
+   "names": {
+    "pl": "Zespół / grupa",
+    "en": "Team / group",
+    "de": "Team / Gruppe",
+    "fr": "Équipe / groupe",
+    "es": "Equipo / grupo",
+    "it": "Team / gruppo",
+    "pt": "Equipe / grupo",
+    "cs": "Tým / skupina",
+    "nl": "Team / groep",
+    "uk": "Команда / група"
+   }
+  },
+  {
+   "id": "admin",
+   "category": "af-people",
+   "names": {
+    "pl": "Administrator",
+    "en": "Administrator",
+    "de": "Administrator",
+    "fr": "Administrateur",
+    "es": "Administrador",
+    "it": "Amministratore",
+    "pt": "Administrador",
+    "cs": "Administrátor",
+    "nl": "Beheerder",
+    "uk": "Адміністратор"
+   }
+  },
+  {
+   "id": "customer",
+   "category": "af-people",
+   "names": {
+    "pl": "Klient",
+    "en": "Customer",
+    "de": "Kunde",
+    "fr": "Client",
+    "es": "Cliente",
+    "it": "Cliente",
+    "pt": "Cliente",
+    "cs": "Zákazník",
+    "nl": "Klant",
+    "uk": "Клієнт"
+   }
+  },
+  {
+   "id": "manager",
+   "category": "af-people",
+   "names": {
+    "pl": "Kierownik / menedżer",
+    "en": "Manager",
+    "de": "Manager",
+    "fr": "Responsable",
+    "es": "Responsable",
+    "it": "Responsabile",
+    "pt": "Gerente",
+    "cs": "Vedoucí",
+    "nl": "Manager",
+    "uk": "Керівник"
+   }
+  },
+  {
+   "id": "developer",
+   "category": "af-people",
+   "names": {
+    "pl": "Programista",
+    "en": "Developer",
+    "de": "Entwickler",
+    "fr": "Développeur",
+    "es": "Desarrollador",
+    "it": "Sviluppatore",
+    "pt": "Desenvolvedor",
+    "cs": "Vývojář",
+    "nl": "Ontwikkelaar",
+    "uk": "Розробник"
+   }
+  },
+  {
+   "id": "support-agent",
+   "category": "af-people",
+   "names": {
+    "pl": "Konsultant / wsparcie",
+    "en": "Support agent",
+    "de": "Support-Mitarbeiter",
+    "fr": "Agent du support",
+    "es": "Agente de soporte",
+    "it": "Operatore di supporto",
+    "pt": "Atendente de suporte",
+    "cs": "Pracovník podpory",
+    "nl": "Supportmedewerker",
+    "uk": "Співробітник підтримки"
+   }
+  },
+  {
+   "id": "partner",
+   "category": "af-people",
+   "names": {
+    "pl": "Partner / dostawca",
+    "en": "Partner / supplier",
+    "de": "Partner / Lieferant",
+    "fr": "Partenaire / fournisseur",
+    "es": "Socio / proveedor",
+    "it": "Partner / fornitore",
+    "pt": "Parceiro / fornecedor",
+    "cs": "Partner / dodavatel",
+    "nl": "Partner / leverancier",
+    "uk": "Партнер / постачальник"
+   }
+  },
+  {
+   "id": "external-actor",
+   "category": "af-people",
+   "names": {
+    "pl": "Aktor zewnętrzny",
+    "en": "External actor",
+    "de": "Externer Akteur",
+    "fr": "Acteur externe",
+    "es": "Actor externo",
+    "it": "Attore esterno",
+    "pt": "Ator externo",
+    "cs": "Externí aktér",
+    "nl": "Externe actor",
+    "uk": "Зовнішній актор"
+   }
+  },
+  {
+   "id": "meeting",
+   "category": "af-people",
+   "names": {
+    "pl": "Spotkanie / narada",
+    "en": "Meeting",
+    "de": "Besprechung",
+    "fr": "Réunion",
+    "es": "Reunión",
+    "it": "Riunione",
+    "pt": "Reunião",
+    "cs": "Schůzka",
+    "nl": "Vergadering",
+    "uk": "Нарада"
+   }
+  },
+  {
+   "id": "role",
+   "category": "af-people",
+   "names": {
+    "pl": "Rola / uprawnienia",
+    "en": "Role / permissions",
+    "de": "Rolle / Berechtigungen",
+    "fr": "Rôle / autorisations",
+    "es": "Rol / permisos",
+    "it": "Ruolo / permessi",
+    "pt": "Função / permissões",
+    "cs": "Role / oprávnění",
+    "nl": "Rol / rechten",
+    "uk": "Роль / дозволи"
+   }
+  },
+  {
+   "id": "department",
+   "category": "af-people",
+   "names": {
+    "pl": "Dział / struktura organizacyjna",
+    "en": "Department / org chart",
+    "de": "Abteilung / Organigramm",
+    "fr": "Service / organigramme",
+    "es": "Departamento / organigrama",
+    "it": "Reparto / organigramma",
+    "pt": "Departamento / organograma",
+    "cs": "Oddělení / organizační struktura",
+    "nl": "Afdeling / organogram",
+    "uk": "Відділ / оргструктура"
+   }
+  },
+  {
+   "id": "office",
+   "category": "af-people",
+   "names": {
+    "pl": "Biuro / firma",
+    "en": "Office / company",
+    "de": "Büro / Unternehmen",
+    "fr": "Bureau / entreprise",
+    "es": "Oficina / empresa",
+    "it": "Ufficio / azienda",
+    "pt": "Escritório / empresa",
+    "cs": "Kancelář / firma",
+    "nl": "Kantoor / bedrijf",
+    "uk": "Офіс / компанія"
+   }
+  },
+  {
+   "id": "home",
+   "category": "af-people",
+   "names": {
+    "pl": "Dom / praca zdalna",
+    "en": "Home / remote work",
+    "de": "Zuhause / Homeoffice",
+    "fr": "Domicile / télétravail",
+    "es": "Casa / teletrabajo",
+    "it": "Casa / lavoro da remoto",
+    "pt": "Casa / trabalho remoto",
+    "cs": "Domov / práce na dálku",
+    "nl": "Thuis / thuiswerken",
+    "uk": "Дім / віддалена робота"
+   }
+  },
+  {
+   "id": "start",
+   "category": "af-flow",
+   "names": {
+    "pl": "Start / zdarzenie początkowe",
+    "en": "Start event",
+    "de": "Startereignis",
+    "fr": "Événement de début",
+    "es": "Evento de inicio",
+    "it": "Evento di inizio",
+    "pt": "Evento de início",
+    "cs": "Počáteční událost",
+    "nl": "Startgebeurtenis",
+    "uk": "Початкова подія"
+   }
+  },
+  {
+   "id": "end",
+   "category": "af-flow",
+   "names": {
+    "pl": "Koniec / zdarzenie końcowe",
+    "en": "End event",
+    "de": "Endereignis",
+    "fr": "Événement de fin",
+    "es": "Evento de fin",
+    "it": "Evento di fine",
+    "pt": "Evento de fim",
+    "cs": "Koncová událost",
+    "nl": "Eindgebeurtenis",
+    "uk": "Кінцева подія"
+   }
+  },
+  {
+   "id": "intermediate-event",
+   "category": "af-flow",
+   "names": {
+    "pl": "Zdarzenie pośrednie",
+    "en": "Intermediate event",
+    "de": "Zwischenereignis",
+    "fr": "Événement intermédiaire",
+    "es": "Evento intermedio",
+    "it": "Evento intermedio",
+    "pt": "Evento intermediário",
+    "cs": "Mezilehlá událost",
+    "nl": "Tussengebeurtenis",
+    "uk": "Проміжна подія"
+   }
+  },
+  {
+   "id": "error",
+   "category": "af-flow",
+   "names": {
+    "pl": "Błąd / wyjątek",
+    "en": "Error / exception",
+    "de": "Fehler / Ausnahme",
+    "fr": "Erreur / exception",
+    "es": "Error / excepción",
+    "it": "Errore / eccezione",
+    "pt": "Erro / exceção",
+    "cs": "Chyba / výjimka",
+    "nl": "Fout / uitzondering",
+    "uk": "Помилка / виняток"
+   }
+  },
+  {
+   "id": "signal",
+   "category": "af-flow",
+   "names": {
+    "pl": "Sygnał",
+    "en": "Signal",
+    "de": "Signal",
+    "fr": "Signal",
+    "es": "Señal",
+    "it": "Segnale",
+    "pt": "Sinal",
+    "cs": "Signál",
+    "nl": "Signaal",
+    "uk": "Сигнал"
+   }
+  },
+  {
+   "id": "message-send",
+   "category": "af-flow",
+   "names": {
+    "pl": "Wysłanie komunikatu",
+    "en": "Send message",
+    "de": "Nachricht senden",
+    "fr": "Envoi de message",
+    "es": "Enviar mensaje",
+    "it": "Invio messaggio",
+    "pt": "Enviar mensagem",
+    "cs": "Odeslání zprávy",
+    "nl": "Bericht verzenden",
+    "uk": "Надсилання повідомлення"
+   }
+  },
+  {
+   "id": "message-receive",
+   "category": "af-flow",
+   "names": {
+    "pl": "Odebranie komunikatu",
+    "en": "Receive message",
+    "de": "Nachricht empfangen",
+    "fr": "Réception de message",
+    "es": "Recibir mensaje",
+    "it": "Ricezione messaggio",
+    "pt": "Receber mensagem",
+    "cs": "Přijetí zprávy",
+    "nl": "Bericht ontvangen",
+    "uk": "Отримання повідомлення"
+   }
+  },
+  {
+   "id": "approval",
+   "category": "af-flow",
+   "names": {
+    "pl": "Akceptacja",
+    "en": "Approval",
+    "de": "Genehmigung",
+    "fr": "Approbation",
+    "es": "Aprobación",
+    "it": "Approvazione",
+    "pt": "Aprovação",
+    "cs": "Schválení",
+    "nl": "Goedkeuring",
+    "uk": "Затвердження"
+   }
+  },
+  {
+   "id": "rejection",
+   "category": "af-flow",
+   "names": {
+    "pl": "Odrzucenie",
+    "en": "Rejection",
+    "de": "Ablehnung",
+    "fr": "Refus",
+    "es": "Rechazo",
+    "it": "Rifiuto",
+    "pt": "Rejeição",
+    "cs": "Zamítnutí",
+    "nl": "Afwijzing",
+    "uk": "Відхилення"
+   }
+  },
+  {
+   "id": "process",
+   "category": "af-flow",
+   "names": {
+    "pl": "Krok procesu",
+    "en": "Process step",
+    "de": "Prozessschritt",
+    "fr": "Étape du processus",
+    "es": "Paso del proceso",
+    "it": "Fase del processo",
+    "pt": "Etapa do processo",
+    "cs": "Krok procesu",
+    "nl": "Processtap",
+    "uk": "Крок процесу"
+   }
+  },
+  {
+   "id": "subprocess",
+   "category": "af-flow",
+   "names": {
+    "pl": "Podproces",
+    "en": "Sub-process",
+    "de": "Teilprozess",
+    "fr": "Sous-processus",
+    "es": "Subproceso",
+    "it": "Sottoprocesso",
+    "pt": "Subprocesso",
+    "cs": "Podproces",
+    "nl": "Subproces",
+    "uk": "Підпроцес"
+   }
+  },
+  {
+   "id": "diamond",
+   "category": "af-flow",
+   "names": {
+    "pl": "Decyzja",
+    "en": "Decision",
+    "de": "Entscheidung",
+    "fr": "Décision",
+    "es": "Decisión",
+    "it": "Decisione",
+    "pt": "Decisão",
+    "cs": "Rozhodnutí",
+    "nl": "Beslissing",
+    "uk": "Рішення"
+   }
+  },
+  {
+   "id": "parallel-gateway",
+   "category": "af-flow",
+   "names": {
+    "pl": "Bramka równoległa",
+    "en": "Parallel gateway",
+    "de": "Paralleles Gateway",
+    "fr": "Passerelle parallèle",
+    "es": "Compuerta paralela",
+    "it": "Gateway parallelo",
+    "pt": "Gateway paralelo",
+    "cs": "Paralelní brána",
+    "nl": "Parallelle gateway",
+    "uk": "Паралельний шлюз"
+   }
+  },
+  {
+   "id": "merge",
+   "category": "af-flow",
+   "names": {
+    "pl": "Scalenie ścieżek",
+    "en": "Merge",
+    "de": "Zusammenführung",
+    "fr": "Fusion",
+    "es": "Unión",
+    "it": "Unione",
+    "pt": "Junção",
+    "cs": "Sloučení",
+    "nl": "Samenvoeging",
+    "uk": "Злиття"
+   }
+  },
+  {
+   "id": "document",
+   "category": "af-flow",
+   "names": {
+    "pl": "Dokument",
+    "en": "Document",
+    "de": "Dokument",
+    "fr": "Document",
+    "es": "Documento",
+    "it": "Documento",
+    "pt": "Documento",
+    "cs": "Dokument",
+    "nl": "Document",
+    "uk": "Документ"
+   }
+  },
+  {
+   "id": "documents",
+   "category": "af-flow",
+   "names": {
+    "pl": "Dokumenty",
+    "en": "Documents",
+    "de": "Dokumente",
+    "fr": "Documents",
+    "es": "Documentos",
+    "it": "Documenti",
+    "pt": "Documentos",
+    "cs": "Dokumenty",
+    "nl": "Documenten",
+    "uk": "Документи"
+   }
+  },
+  {
+   "id": "report",
+   "category": "af-flow",
+   "names": {
+    "pl": "Raport / analityka",
+    "en": "Report / analytics",
+    "de": "Bericht / Analyse",
+    "fr": "Rapport / analyse",
+    "es": "Informe / analítica",
+    "it": "Report / analisi",
+    "pt": "Relatório / análise",
+    "cs": "Přehled / analytika",
+    "nl": "Rapport / analyse",
+    "uk": "Звіт / аналітика"
+   }
+  },
+  {
+   "id": "note",
+   "category": "af-flow",
+   "names": {
+    "pl": "Notatka / adnotacja",
+    "en": "Note / annotation",
+    "de": "Notiz / Anmerkung",
+    "fr": "Note / annotation",
+    "es": "Nota / anotación",
+    "it": "Nota / annotazione",
+    "pt": "Nota / anotação",
+    "cs": "Poznámka / anotace",
+    "nl": "Notitie / annotatie",
+    "uk": "Нотатка / примітка"
+   }
+  },
+  {
+   "id": "checklist",
+   "category": "af-flow",
+   "names": {
+    "pl": "Lista kontrolna",
+    "en": "Checklist",
+    "de": "Checkliste",
+    "fr": "Liste de contrôle",
+    "es": "Lista de comprobación",
+    "it": "Lista di controllo",
+    "pt": "Checklist",
+    "cs": "Kontrolní seznam",
+    "nl": "Checklist",
+    "uk": "Контрольний список"
+   }
+  },
+  {
+   "id": "calendar",
+   "category": "af-flow",
+   "names": {
+    "pl": "Kalendarz / termin",
+    "en": "Calendar / deadline",
+    "de": "Kalender / Frist",
+    "fr": "Calendrier / échéance",
+    "es": "Calendario / plazo",
+    "it": "Calendario / scadenza",
+    "pt": "Calendário / prazo",
+    "cs": "Kalendář / termín",
+    "nl": "Kalender / deadline",
+    "uk": "Календар / термін"
+   }
+  },
+  {
+   "id": "data-io",
+   "category": "af-flow",
+   "names": {
+    "pl": "Dane wejściowe / wyjściowe",
+    "en": "Data input / output",
+    "de": "Datenein-/ausgabe",
+    "fr": "Entrée / sortie de données",
+    "es": "Entrada / salida de datos",
+    "it": "Input / output di dati",
+    "pt": "Entrada / saída de dados",
+    "cs": "Vstup / výstup dat",
+    "nl": "Gegevensinvoer / -uitvoer",
+    "uk": "Введення / виведення даних"
+   }
+  },
+  {
+   "id": "data-store",
+   "category": "af-flow",
+   "names": {
+    "pl": "Magazyn danych",
+    "en": "Data store",
+    "de": "Datenspeicher",
+    "fr": "Stockage de données",
+    "es": "Repositorio de datos",
+    "it": "Archivio dati",
+    "pt": "Repositório de dados",
+    "cs": "Úložiště dat",
+    "nl": "Gegevensopslag",
+    "uk": "Сховище даних"
+   }
+  },
+  {
+   "id": "manual-input",
+   "category": "af-flow",
+   "names": {
+    "pl": "Wprowadzanie ręczne",
+    "en": "Manual input",
+    "de": "Manuelle Eingabe",
+    "fr": "Saisie manuelle",
+    "es": "Entrada manual",
+    "it": "Inserimento manuale",
+    "pt": "Entrada manual",
+    "cs": "Ruční zadání",
+    "nl": "Handmatige invoer",
+    "uk": "Ручне введення"
+   }
+  },
+  {
+   "id": "manual-task",
+   "category": "af-flow",
+   "names": {
+    "pl": "Zadanie ręczne",
+    "en": "Manual task",
+    "de": "Manuelle Aufgabe",
+    "fr": "Tâche manuelle",
+    "es": "Tarea manual",
+    "it": "Attività manuale",
+    "pt": "Tarefa manual",
+    "cs": "Ruční úloha",
+    "nl": "Handmatige taak",
+    "uk": "Ручне завдання"
+   }
+  },
+  {
+   "id": "delay",
+   "category": "af-flow",
+   "names": {
+    "pl": "Opóźnienie / oczekiwanie",
+    "en": "Delay / wait",
+    "de": "Verzögerung / Warten",
+    "fr": "Délai / attente",
+    "es": "Retraso / espera",
+    "it": "Ritardo / attesa",
+    "pt": "Atraso / espera",
+    "cs": "Zpoždění / čekání",
+    "nl": "Vertraging / wachten",
+    "uk": "Затримка / очікування"
+   }
+  },
+  {
+   "id": "timer",
+   "category": "af-flow",
+   "names": {
+    "pl": "Czas / timer",
+    "en": "Timer",
+    "de": "Timer",
+    "fr": "Minuteur",
+    "es": "Temporizador",
+    "it": "Timer",
+    "pt": "Temporizador",
+    "cs": "Časovač",
+    "nl": "Timer",
+    "uk": "Таймер"
+   }
+  },
+  {
+   "id": "loop",
+   "category": "af-flow",
+   "names": {
+    "pl": "Pętla / ponowienie",
+    "en": "Loop / retry",
+    "de": "Schleife / Wiederholung",
+    "fr": "Boucle / nouvelle tentative",
+    "es": "Bucle / reintento",
+    "it": "Ciclo / nuovo tentativo",
+    "pt": "Loop / nova tentativa",
+    "cs": "Smyčka / opakování",
+    "nl": "Lus / opnieuw proberen",
+    "uk": "Цикл / повтор"
+   }
+  },
+  {
+   "id": "milestone",
+   "category": "af-flow",
+   "names": {
+    "pl": "Kamień milowy",
+    "en": "Milestone",
+    "de": "Meilenstein",
+    "fr": "Jalon",
+    "es": "Hito",
+    "it": "Milestone",
+    "pt": "Marco",
+    "cs": "Milník",
+    "nl": "Mijlpaal",
+    "uk": "Віха"
+   }
+  },
+  {
+   "id": "swimlane",
+   "category": "af-flow",
+   "names": {
+    "pl": "Tor / uczestnik procesu",
+    "en": "Swimlane / pool",
+    "de": "Swimlane / Pool",
+    "fr": "Couloir / bassin",
+    "es": "Carril / piscina",
+    "it": "Corsia / pool",
+    "pt": "Raia / piscina",
+    "cs": "Dráha / bazén",
+    "nl": "Baan / pool",
+    "uk": "Доріжка / пул"
+   }
+  },
+  {
+   "id": "paymentcard",
+   "category": "af-business",
+   "names": {
+    "pl": "Karta płatnicza",
+    "en": "Payment card",
+    "de": "Zahlungskarte",
+    "fr": "Carte de paiement",
+    "es": "Tarjeta de pago",
+    "it": "Carta di pagamento",
+    "pt": "Cartão de pagamento",
+    "cs": "Platební karta",
+    "nl": "Betaalkaart",
+    "uk": "Платіжна картка"
+   }
+  },
+  {
+   "id": "cardterminal",
+   "category": "af-business",
+   "names": {
+    "pl": "Terminal płatniczy",
+    "en": "Card terminal",
+    "de": "Kartenterminal",
+    "fr": "Terminal de paiement",
+    "es": "Datáfono",
+    "it": "Terminale POS",
+    "pt": "Maquininha de cartão",
+    "cs": "Platební terminál",
+    "nl": "Pinautomaat",
+    "uk": "Платіжний термінал"
+   }
+  },
+  {
+   "id": "cart",
+   "category": "af-business",
+   "names": {
+    "pl": "Koszyk",
+    "en": "Shopping cart",
+    "de": "Warenkorb",
+    "fr": "Panier",
+    "es": "Carrito de compra",
+    "it": "Carrello",
+    "pt": "Carrinho de compras",
+    "cs": "Nákupní košík",
+    "nl": "Winkelwagen",
+    "uk": "Кошик"
+   }
+  },
+  {
+   "id": "order",
+   "category": "af-business",
+   "names": {
+    "pl": "Zamówienie",
+    "en": "Order",
+    "de": "Bestellung",
+    "fr": "Commande",
+    "es": "Pedido",
+    "it": "Ordine",
+    "pt": "Pedido",
+    "cs": "Objednávka",
+    "nl": "Bestelling",
+    "uk": "Замовлення"
+   }
+  },
+  {
+   "id": "invoice",
+   "category": "af-business",
+   "names": {
+    "pl": "Faktura",
+    "en": "Invoice",
+    "de": "Rechnung",
+    "fr": "Facture",
+    "es": "Factura",
+    "it": "Fattura",
+    "pt": "Fatura / nota fiscal",
+    "cs": "Faktura",
+    "nl": "Factuur",
+    "uk": "Рахунок-фактура"
+   }
+  },
+  {
+   "id": "receipt",
+   "category": "af-business",
+   "names": {
+    "pl": "Paragon",
+    "en": "Receipt",
+    "de": "Kassenbon",
+    "fr": "Ticket de caisse",
+    "es": "Recibo / tique",
+    "it": "Scontrino",
+    "pt": "Recibo / cupom",
+    "cs": "Účtenka",
+    "nl": "Kassabon",
+    "uk": "Чек"
+   }
+  },
+  {
+   "id": "contract",
+   "category": "af-business",
+   "names": {
+    "pl": "Umowa",
+    "en": "Contract",
+    "de": "Vertrag",
+    "fr": "Contrat",
+    "es": "Contrato",
+    "it": "Contratto",
+    "pt": "Contrato",
+    "cs": "Smlouva",
+    "nl": "Contract",
+    "uk": "Договір"
+   }
+  },
+  {
+   "id": "money",
+   "category": "af-business",
+   "names": {
+    "pl": "Pieniądze / płatność",
+    "en": "Money / payment",
+    "de": "Geld / Zahlung",
+    "fr": "Argent / paiement",
+    "es": "Dinero / pago",
+    "it": "Denaro / pagamento",
+    "pt": "Dinheiro / pagamento",
+    "cs": "Peníze / platba",
+    "nl": "Geld / betaling",
+    "uk": "Гроші / оплата"
+   }
+  },
+  {
+   "id": "bank",
+   "category": "af-business",
+   "names": {
+    "pl": "Bank",
+    "en": "Bank",
+    "de": "Bank",
+    "fr": "Banque",
+    "es": "Banco",
+    "it": "Banca",
+    "pt": "Banco",
+    "cs": "Banka",
+    "nl": "Bank",
+    "uk": "Банк"
+   }
+  },
+  {
+   "id": "wallet",
+   "category": "af-business",
+   "names": {
+    "pl": "Portfel",
+    "en": "Wallet",
+    "de": "Geldbörse",
+    "fr": "Portefeuille",
+    "es": "Cartera",
+    "it": "Portafoglio",
+    "pt": "Carteira",
+    "cs": "Peněženka",
+    "nl": "Portemonnee",
+    "uk": "Гаманець"
+   }
+  },
+  {
+   "id": "store",
+   "category": "af-business",
+   "names": {
+    "pl": "Sklep / punkt sprzedaży",
+    "en": "Store / point of sale",
+    "de": "Geschäft / Verkaufsstelle",
+    "fr": "Magasin / point de vente",
+    "es": "Tienda / punto de venta",
+    "it": "Negozio / punto vendita",
+    "pt": "Loja / ponto de venda",
+    "cs": "Obchod / prodejní místo",
+    "nl": "Winkel / verkooppunt",
+    "uk": "Магазин / точка продажу"
+   }
+  },
+  {
+   "id": "warehouse",
+   "category": "af-business",
+   "names": {
+    "pl": "Magazyn",
+    "en": "Warehouse",
+    "de": "Lager",
+    "fr": "Entrepôt",
+    "es": "Almacén",
+    "it": "Magazzino",
+    "pt": "Armazém",
+    "cs": "Sklad",
+    "nl": "Magazijn",
+    "uk": "Склад"
+   }
+  },
+  {
+   "id": "shelf",
+   "category": "af-business",
+   "names": {
+    "pl": "Regał / zapasy",
+    "en": "Shelf / inventory",
+    "de": "Regal / Bestand",
+    "fr": "Rayonnage / stock",
+    "es": "Estantería / inventario",
+    "it": "Scaffale / scorte",
+    "pt": "Prateleira / estoque",
+    "cs": "Regál / zásoby",
+    "nl": "Stelling / voorraad",
+    "uk": "Стелаж / запаси"
+   }
+  },
+  {
+   "id": "forklift",
+   "category": "af-business",
+   "names": {
+    "pl": "Wózek widłowy",
+    "en": "Forklift",
+    "de": "Gabelstapler",
+    "fr": "Chariot élévateur",
+    "es": "Carretilla elevadora",
+    "it": "Carrello elevatore",
+    "pt": "Empilhadeira",
+    "cs": "Vysokozdvižný vozík",
+    "nl": "Heftruck",
+    "uk": "Навантажувач"
+   }
+  },
+  {
+   "id": "pallet",
+   "category": "af-business",
+   "names": {
+    "pl": "Paleta",
+    "en": "Pallet",
+    "de": "Palette",
+    "fr": "Palette",
+    "es": "Palé",
+    "it": "Pallet",
+    "pt": "Palete",
+    "cs": "Paleta",
+    "nl": "Pallet",
+    "uk": "Палета"
+   }
+  },
+  {
+   "id": "package-module",
+   "category": "af-business",
+   "names": {
+    "pl": "Paczka / przesyłka",
+    "en": "Package / parcel",
+    "de": "Paket / Sendung",
+    "fr": "Colis",
+    "es": "Paquete / envío",
+    "it": "Pacco / spedizione",
+    "pt": "Pacote / encomenda",
+    "cs": "Balík / zásilka",
+    "nl": "Pakket / zending",
+    "uk": "Посилка / відправлення"
+   }
+  },
+  {
+   "id": "truck",
+   "category": "af-business",
+   "names": {
+    "pl": "Ciężarówka / transport",
+    "en": "Truck / transport",
+    "de": "Lkw / Transport",
+    "fr": "Camion / transport",
+    "es": "Camión / transporte",
+    "it": "Camion / trasporto",
+    "pt": "Caminhão / transporte",
+    "cs": "Nákladní auto / doprava",
+    "nl": "Vrachtwagen / transport",
+    "uk": "Вантажівка / перевезення"
+   }
+  },
+  {
+   "id": "truck-2",
+   "category": "af-business",
+   "names": {
+    "pl": "Samochód dostawczy",
+    "en": "Delivery van",
+    "de": "Lieferwagen",
+    "fr": "Camionnette de livraison",
+    "es": "Furgoneta de reparto",
+    "it": "Furgone per consegne",
+    "pt": "Van de entregas",
+    "cs": "Dodávka",
+    "nl": "Bestelbus",
+    "uk": "Фургон доставки"
+   }
+  },
+  {
+   "id": "plane",
+   "category": "af-business",
+   "names": {
+    "pl": "Samolot / transport lotniczy",
+    "en": "Plane / air freight",
+    "de": "Flugzeug / Luftfracht",
+    "fr": "Avion / fret aérien",
+    "es": "Avión / carga aérea",
+    "it": "Aereo / trasporto aereo",
+    "pt": "Avião / frete aéreo",
+    "cs": "Letadlo / letecká přeprava",
+    "nl": "Vliegtuig / luchtvracht",
+    "uk": "Літак / авіаперевезення"
+   }
+  },
+  {
+   "id": "ship",
+   "category": "af-business",
+   "names": {
+    "pl": "Statek / transport morski",
+    "en": "Ship / sea freight",
+    "de": "Schiff / Seefracht",
+    "fr": "Navire / fret maritime",
+    "es": "Barco / carga marítima",
+    "it": "Nave / trasporto marittimo",
+    "pt": "Navio / frete marítimo",
+    "cs": "Loď / námořní přeprava",
+    "nl": "Schip / zeevracht",
+    "uk": "Судно / морські перевезення"
+   }
+  },
+  {
+   "id": "train",
+   "category": "af-business",
+   "names": {
+    "pl": "Pociąg / transport kolejowy",
+    "en": "Train / rail freight",
+    "de": "Zug / Bahnfracht",
+    "fr": "Train / fret ferroviaire",
+    "es": "Tren / carga ferroviaria",
+    "it": "Treno / trasporto ferroviario",
+    "pt": "Trem / frete ferroviário",
+    "cs": "Vlak / železniční přeprava",
+    "nl": "Trein / spoorvracht",
+    "uk": "Потяг / залізничні перевезення"
+   }
+  },
+  {
+   "id": "drone",
+   "category": "af-business",
+   "names": {
+    "pl": "Dron dostawczy",
+    "en": "Delivery drone",
+    "de": "Lieferdrohne",
+    "fr": "Drone de livraison",
+    "es": "Dron de reparto",
+    "it": "Drone per consegne",
+    "pt": "Drone de entregas",
+    "cs": "Doručovací dron",
+    "nl": "Bezorgdrone",
+    "uk": "Дрон доставки"
+   }
+  },
+  {
+   "id": "factory",
+   "category": "af-business",
+   "names": {
+    "pl": "Fabryka / zakład",
+    "en": "Factory / plant",
+    "de": "Fabrik / Werk",
+    "fr": "Usine / site",
+    "es": "Fábrica / planta",
+    "it": "Fabbrica / stabilimento",
+    "pt": "Fábrica / planta",
+    "cs": "Továrna / závod",
+    "nl": "Fabriek / vestiging",
+    "uk": "Фабрика / завод"
+   }
+  },
+  {
+   "id": "factory-line",
+   "category": "af-business",
+   "names": {
+    "pl": "Linia produkcyjna",
+    "en": "Production line",
+    "de": "Produktionslinie",
+    "fr": "Ligne de production",
+    "es": "Línea de producción",
+    "it": "Linea di produzione",
+    "pt": "Linha de produção",
+    "cs": "Výrobní linka",
+    "nl": "Productielijn",
+    "uk": "Виробнича лінія"
+   }
+  },
+  {
+   "id": "kpi-chart",
+   "category": "af-business",
+   "names": {
+    "pl": "Wskaźniki KPI / wykres",
+    "en": "KPI / chart",
+    "de": "KPI / Diagramm",
+    "fr": "KPI / graphique",
+    "es": "KPI / gráfico",
+    "it": "KPI / grafico",
+    "pt": "KPI / gráfico",
+    "cs": "KPI / graf",
+    "nl": "KPI / grafiek",
+    "uk": "KPI / графік"
+   }
+  },
+  {
+   "id": "price-tag",
+   "category": "af-business",
+   "names": {
+    "pl": "Cena / promocja",
+    "en": "Price tag / promotion",
+    "de": "Preisschild / Aktion",
+    "fr": "Étiquette de prix / promotion",
+    "es": "Etiqueta de precio / promoción",
+    "it": "Cartellino del prezzo / promozione",
+    "pt": "Etiqueta de preço / promoção",
+    "cs": "Cenovka / akce",
+    "nl": "Prijskaartje / actie",
+    "uk": "Цінник / акція"
+   }
+  },
+  {
+   "id": "block",
+   "category": "af-shapes",
+   "names": {
+    "pl": "Blok",
+    "en": "Block",
+    "de": "Block",
+    "fr": "Bloc",
+    "es": "Bloque",
+    "it": "Blocco",
+    "pt": "Bloco",
+    "cs": "Blok",
+    "nl": "Blok",
+    "uk": "Блок"
+   }
+  },
+  {
+   "id": "cube",
+   "category": "af-shapes",
+   "names": {
+    "pl": "Sześcian",
+    "en": "Cube",
+    "de": "Würfel",
+    "fr": "Cube",
+    "es": "Cubo",
+    "it": "Cubo",
+    "pt": "Cubo",
+    "cs": "Krychle",
+    "nl": "Kubus",
+    "uk": "Куб"
+   }
+  },
+  {
+   "id": "plate",
+   "category": "af-shapes",
+   "names": {
+    "pl": "Płyta / podest",
+    "en": "Plate / platform",
+    "de": "Platte / Plattform",
+    "fr": "Plaque / plateforme",
+    "es": "Placa / plataforma",
+    "it": "Piastra / piattaforma",
+    "pt": "Placa / plataforma",
+    "cs": "Deska / podstavec",
+    "nl": "Plaat / platform",
+    "uk": "Плита / платформа"
+   }
+  },
+  {
+   "id": "sphere",
+   "category": "af-shapes",
+   "names": {
+    "pl": "Kula",
+    "en": "Sphere",
+    "de": "Kugel",
+    "fr": "Sphère",
+    "es": "Esfera",
+    "it": "Sfera",
+    "pt": "Esfera",
+    "cs": "Koule",
+    "nl": "Bol",
+    "uk": "Куля"
+   }
+  },
+  {
+   "id": "cylinder",
+   "category": "af-shapes",
+   "names": {
+    "pl": "Walec",
+    "en": "Cylinder",
+    "de": "Zylinder",
+    "fr": "Cylindre",
+    "es": "Cilindro",
+    "it": "Cilindro",
+    "pt": "Cilindro",
+    "cs": "Válec",
+    "nl": "Cilinder",
+    "uk": "Циліндр"
+   }
+  },
+  {
+   "id": "cone",
+   "category": "af-shapes",
+   "names": {
+    "pl": "Stożek",
+    "en": "Cone",
+    "de": "Kegel",
+    "fr": "Cône",
+    "es": "Cono",
+    "it": "Cono",
+    "pt": "Cone",
+    "cs": "Kužel",
+    "nl": "Kegel",
+    "uk": "Конус"
+   }
+  },
+  {
+   "id": "pyramid",
+   "category": "af-shapes",
+   "names": {
+    "pl": "Piramida",
+    "en": "Pyramid",
+    "de": "Pyramide",
+    "fr": "Pyramide",
+    "es": "Pirámide",
+    "it": "Piramide",
+    "pt": "Pirâmide",
+    "cs": "Jehlan",
+    "nl": "Piramide",
+    "uk": "Піраміда"
+   }
+  },
+  {
+   "id": "hexagon",
+   "category": "af-shapes",
+   "names": {
+    "pl": "Graniastosłup sześciokątny",
+    "en": "Hexagonal prism",
+    "de": "Sechseckiges Prisma",
+    "fr": "Prisme hexagonal",
+    "es": "Prisma hexagonal",
+    "it": "Prisma esagonale",
+    "pt": "Prisma hexagonal",
+    "cs": "Šestiboký hranol",
+    "nl": "Zeshoekig prisma",
+    "uk": "Шестикутна призма"
+   }
+  },
+  {
+   "id": "triangle-prism",
+   "category": "af-shapes",
+   "names": {
+    "pl": "Graniastosłup trójkątny",
+    "en": "Triangular prism",
+    "de": "Dreiecksprisma",
+    "fr": "Prisme triangulaire",
+    "es": "Prisma triangular",
+    "it": "Prisma triangolare",
+    "pt": "Prisma triangular",
+    "cs": "Trojboký hranol",
+    "nl": "Driehoekig prisma",
+    "uk": "Трикутна призма"
+   }
+  },
+  {
+   "id": "torus",
+   "category": "af-shapes",
+   "names": {
+    "pl": "Pierścień / torus",
+    "en": "Ring / torus",
+    "de": "Ring / Torus",
+    "fr": "Anneau / tore",
+    "es": "Anillo / toro",
+    "it": "Anello / toro",
+    "pt": "Anel / toro",
+    "cs": "Prstenec / torus",
+    "nl": "Ring / torus",
+    "uk": "Кільце / тор"
+   }
+  },
+  {
+   "id": "arrow",
+   "category": "af-shapes",
+   "names": {
+    "pl": "Strzałka",
+    "en": "Arrow",
+    "de": "Pfeil",
+    "fr": "Flèche",
+    "es": "Flecha",
+    "it": "Freccia",
+    "pt": "Seta",
+    "cs": "Šipka",
+    "nl": "Pijl",
+    "uk": "Стрілка"
+   }
+  },
+  {
+   "id": "star",
+   "category": "af-shapes",
+   "names": {
+    "pl": "Gwiazda",
+    "en": "Star",
+    "de": "Stern",
+    "fr": "Étoile",
+    "es": "Estrella",
+    "it": "Stella",
+    "pt": "Estrela",
+    "cs": "Hvězda",
+    "nl": "Ster",
+    "uk": "Зірка"
+   }
+  },
+  {
+   "id": "text-label",
+   "category": "af-shapes",
+   "names": {
+    "pl": "Etykieta / tekst",
+    "en": "Label / text",
+    "de": "Beschriftung / Text",
+    "fr": "Étiquette / texte",
+    "es": "Etiqueta / texto",
+    "it": "Etichetta / testo",
+    "pt": "Rótulo / texto",
+    "cs": "Popisek / text",
+    "nl": "Label / tekst",
+    "uk": "Підпис / текст"
+   }
+  },
+  {
+   "id": "image",
+   "category": "af-shapes",
+   "names": {
+    "pl": "Obraz / grafika",
+    "en": "Image",
+    "de": "Bild",
+    "fr": "Image",
+    "es": "Imagen",
+    "it": "Immagine",
+    "pt": "Imagem",
+    "cs": "Obrázek",
+    "nl": "Afbeelding",
+    "uk": "Зображення"
+   }
+  }
+ ]
+}
