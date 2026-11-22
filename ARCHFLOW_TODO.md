@@ -128,12 +128,4 @@ Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` 
 **Fix Strategy**: show the Share button only when `storageKind === 'server'` (`packages/fossflow-app/src/components/DiagramManager.tsx`). Revisit together with stage 7 (token-based share links).
 
 ### Slimmer README
-**Problem**: README.md (and docs/README.pl.md) grew to ~400 lines - user docs, the whole Docker guide, desktop builds, developer setup and saving details are all in one file, so the basics are hard to find.
-**Wanted**: keep only the essentials in the README (what ArchFlow is, a screenshot, key features, download / try / run with Docker in a few lines, links) and move the rest to separate pages, linked from the README, in EN and PL:
-- `docs/docker.md` - full Docker guide (compose, docker run, ports, how the container works, configuration, backups);
-- `docs/saving.md` - saving and opening diagrams, My diagrams, export, browser-only mode;
-- `docs/usage.md` (or the future full user manual) - the screen, tools, right-click menus, selection, shortcuts, settings;
-- `docs/development.md` (or CONTRIBUTING.md) - local development, monorepo structure, commands, building the desktop app, screenshots script, release notes;
-- quick start stays in `docs/quick-start.md`.
-Update the links on the website (e.g. "Full Docker guide") when the sections move.
-
+**Done**: README.md and docs/README.pl.md are down from ~400 to ~85 lines (what it is, features, download, Docker in four lines, a documentation table). The rest moved to `docs/docker`, `docs/usage`, `docs/saving` and `docs/development` (`.md` English, `.pl.md` Polish); the website's Docker link points to `docs/docker*.md`.

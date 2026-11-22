@@ -6,7 +6,7 @@
 
 Dziesięć kroków od pustego płótna do zapisanego diagramu: dwa połączone węzły w strefie i podpis. Zajmie Ci to około pięciu minut.
 
-Możesz robić to równolegle w [demo online](https://cyryllo.github.io/ArchFlow/app/), w [aplikacji na komputer](https://github.com/cyryllo/ArchFlow/releases/latest) albo we własnej [instalacji w Dockerze](README.pl.md#-szybkie-wdrożenie-z-dockerem).
+Możesz robić to równolegle w [demo online](https://cyryllo.github.io/ArchFlow/app/), w [aplikacji na komputer](https://github.com/cyryllo/ArchFlow/releases/latest) albo we własnej [instalacji w Dockerze](docker.pl.md).
 
 ## 1. Poznaj ekran
 
@@ -89,7 +89,7 @@ Górny pasek pokazuje teraz nazwę i **Zapisano**. Każda kolejna zmiana przeł�
 
 <img alt="Górny pasek po zapisie" src="screenshots/pl-qs-saved.png" width="560">
 
-Zapisane diagramy znajdziesz w **Moich diagramach** (**Ctrl+O**). Gdzie są przechowywane, zależy od tego, jak uruchamiasz ArchFlow: na Twoim serwerze (Docker), w `Dokumenty/ArchFlow` (aplikacja na komputer) albo tylko w przeglądarce (demo). Więcej w sekcji [Zapisywanie i otwieranie diagramów](README.pl.md#zapisywanie-i-otwieranie-diagramów).
+Zapisane diagramy znajdziesz w **Moich diagramach** (**Ctrl+O**). Gdzie są przechowywane, zależy od tego, jak uruchamiasz ArchFlow: na Twoim serwerze (Docker), w `Dokumenty/ArchFlow` (aplikacja na komputer) albo tylko w przeglądarce (demo). Więcej w sekcji [Zapisywanie i otwieranie diagramów](saving.pl.md).
 
 ## Co dalej
 

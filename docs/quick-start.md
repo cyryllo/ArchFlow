@@ -6,7 +6,7 @@
 
 Ten steps from an empty canvas to a saved diagram: two connected nodes in a zone, with a label. It takes about five minutes.
 
-You can follow along in the [live demo](https://cyryllo.github.io/ArchFlow/app/), in the [desktop app](https://github.com/cyryllo/ArchFlow/releases/latest) or in your own [Docker installation](../README.md#-quick-deploy-with-docker).
+You can follow along in the [live demo](https://cyryllo.github.io/ArchFlow/app/), in the [desktop app](https://github.com/cyryllo/ArchFlow/releases/latest) or in your own [Docker installation](docker.md).
 
 ## 1. Get to know the screen
 
@@ -89,7 +89,7 @@ The top bar now shows the name and **Saved**. Every later change switches it to 
 
 <img alt="The top bar after saving" src="screenshots/en-qs-saved.png" width="560">
 
-Saved diagrams are listed in **My diagrams** (**Ctrl+O**). Where they are stored depends on how you run ArchFlow: on your server (Docker), in `Documents/ArchFlow` (desktop app) or only in your browser (demo). See [Saving and Opening Diagrams](../README.md#saving-and-opening-diagrams).
+Saved diagrams are listed in **My diagrams** (**Ctrl+O**). Where they are stored depends on how you run ArchFlow: on your server (Docker), in `Documents/ArchFlow` (desktop app) or only in your browser (demo). See [Saving and Opening Diagrams](saving.md).
 
 ## What next
 
