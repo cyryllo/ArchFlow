@@ -16,33 +16,45 @@
   <a href="https://cyryllo.github.io/ArchFlow/pl/">🌐 Strona projektu</a>
 </p>
 
-<p align="center">
-  <img alt="ArchFlow" src="brand/og-cover.png" width="100%">
-</p>
-
 **ArchFlow** jest forkiem <a href="https://github.com/stan-smith/FossFLOW">FossFLOW</a> autorstwa Stana Smitha, które samo jest forkiem/przepisaniem <a href="https://github.com/markmanx/isoflow">Isoflow</a> autorstwa @markmanx — ten projekt stoi na barkach obu tych projektów. Jeśli któryś z nich Ci pomógł, koniecznie je odwiedź i rozważ wsparcie ich twórców.
 
 ------------------------------------------------------------------------------------------------------------------------------
-ArchFlow to potężna, open-source'owa aplikacja webowa do tworzenia pięknych diagramów izometrycznych. Zbudowana w React i na bibliotece <a href="https://github.com/markmanx/isoflow">Isoflow</a> (sforkowanej i opublikowanej na NPM jako `fossflow`), działa całkowicie w przeglądarce. Dostępna jest też natywna wersja okienkowa (Electron) w `packages/fossflow-desktop`.
+ArchFlow to darmowy edytor open source do czytelnych, ładnych **diagramów izometrycznych**: architektury systemów, sieci, infrastruktury chmurowej i procesów biznesowych. Używaj go w przeglądarce, zainstaluj aplikację na Linuksie lub Windows albo uruchom u siebie jednym poleceniem Dockera.
 
 ![Edytor ArchFlow](screenshots/pl-editor.png)
 
-![Screenshot_20250630_160954](https://github.com/user-attachments/assets/e7f254ad-625f-4b8a-8efc-5293b5be9d55)
+## ✨ Funkcje
 
-- **📝 [ARCHFLOW_TODO.md](https://github.com/cyryllo/ArchFlow/blob/master/ARCHFLOW_TODO.md)** - Bieżące problemy i plan rozwoju wraz z mapowaniem kodu, większość uwag dotyczy samej biblioteki isoflow.
+- **177 ikon izometrycznych w 9 kategoriach, każda w swoim kolorze**: serwery i komputery, sieć, komunikacja, dane, bezpieczeństwo, ludzie i organizacja, przepływ i procesy, biznes i logistyka, kształty. Możesz też importować własne obrazy jako ikony.
+- **Nie tylko infrastruktura:** zdarzenia początkowe i końcowe, decyzje, bramki, dokumenty, akceptacje, czasomierze i kamienie milowe do diagramów procesów.
+- **Strefy, połączenia i teksty:** grupuj elementy w kolorowe strefy, łącz je (z punktami pośrednimi, etykietami, stylami linii i strzałkami), dodawaj teksty i opisy.
+- **Menu prawego przycisku** na płótnie i na każdym elemencie oraz **menu ☰** z plikami, eksportem i ustawieniami.
+- **Zaznaczanie i przesuwanie razem:** ramka zaznaczenia, Shift+klik, potem przeciągnięcie albo strzałki. Połączenia zachowują kształt.
+- **Skróty klawiszowe** do kopiowania, wycinania, wklejania, duplikowania, zaznaczania wszystkiego, usuwania, zoomu, dopasowania, zmiany nazwy i wszystkich narzędzi (lista pod F1).
+- **Eksport** do przenośnego pliku JSON (ze wszystkimi ikonami) albo obrazu PNG z wyborem rozdzielczości, tła i przycięcia.
+- **Zapis tam, gdzie wolisz:** pliki na komputerze, wspólna lista na serwerze w Dockerze albo folder `Dokumenty/ArchFlow` aplikacji desktopowej.
+- **Interfejs po polsku i angielsku**, łącznie z nazwami ikon.
+
+## ⬇️ Pobierz
+
+Gotowe wersje desktopowe są dołączone do każdego [wydania](https://github.com/cyryllo/ArchFlow/releases/latest):
+
+| Plik | Dla |
+|---|---|
+| `ArchFlow-X.Y.Z-x86_64.AppImage` | Linux, dowolna dystrybucja |
+| `ArchFlow-X.Y.Z-amd64.deb` | Debian / Ubuntu |
+| `ArchFlow-Setup-X.Y.Z.exe` | Windows (instalator) |
+
+```bash
+# Linux AppImage
+chmod +x ArchFlow-*-x86_64.AppImage
+./ArchFlow-*-x86_64.AppImage
+```
+
+Instalator Windows nie jest jeszcze podpisany certyfikatem, więc SmartScreen może pokazać ostrzeżenie przy pierwszym uruchomieniu: kliknij **Więcej informacji → Uruchom mimo to**. Wolisz przeglądarkę? [Wypróbuj demo online](https://cyryllo.github.io/ArchFlow/app/) albo [uruchom w Dockerze](#-szybkie-wdrożenie-z-dockerem).
+
+- **📝 [ARCHFLOW_TODO.md](https://github.com/cyryllo/ArchFlow/blob/master/ARCHFLOW_TODO.md)** - Bieżące problemy i plan rozwoju.
 - **🤝 [CONTRIBUTING.md](https://github.com/cyryllo/ArchFlow/blob/master/CONTRIBUTING.md)** - Jak włączyć się w rozwój projektu.
-
-### Wielojęzyczność
-- **2 obsługiwane języki** - Pełne tłumaczenie interfejsu na angielski i polski
-- **Selektor języka** - Łatwy w użyciu przełącznik języka w nagłówku aplikacji
-- **Pełne tłumaczenie** - Wszystkie menu, okna dialogowe, ustawienia, podpowiedzi i pomoc przetłumaczone
-- **Zapamiętywanie wyboru** - Aplikacja automatycznie wykrywa i zapamiętuje preferowany język
-
-### Ulepszone narzędzie do łączenia
-- **Tworzenie kliknięciem** - Nowy domyślny tryb: kliknij pierwszy węzeł, potem drugi, aby je połączyć
-- **Tryb przeciągania** - Oryginalny tryb "przeciągnij i upuść" nadal dostępny w ustawieniach
-- **Wybór trybu** - Przełączaj między trybem kliknięcia a przeciągania w Ustawienia → zakładka Połączenia
-- **Większa niezawodność** - Tryb kliknięcia daje bardziej przewidywalne tworzenie połączeń
 
 ## 🐳 Szybkie wdrożenie z Dockerem
 
@@ -55,7 +67,7 @@ ghcr.io/cyryllo/archflow
 | Tag | Znaczenie |
 |---|---|
 | `latest` | Najnowszy build gałęzi `master` |
-| `0.4.7` (dowolna wersja) | Konkretna wersja ArchFlow, z `package.json` |
+| `0.6.1` (dowolna wersja) | Konkretna wersja ArchFlow, z `package.json` |
 | `sha-abc1234` | Konkretny commit |
 
 Na razie obraz jest budowany tylko dla `linux/amd64`.
@@ -92,7 +104,7 @@ docker compose pull && docker compose up -d   # aktualizacja do najnowszego obra
 Aby przypiąć konkretną wersję zamiast `latest`, ustaw `ARCHFLOW_VERSION`, w linii komendy albo w pliku `.env` obok `compose.yml`:
 
 ```bash
-ARCHFLOW_VERSION=0.4.7 docker compose up -d
+ARCHFLOW_VERSION=0.6.1 docker compose up -d
 ```
 
 ### Opcja 2: `docker run`
@@ -163,7 +175,7 @@ Warto wiedzieć, zanim uruchomisz go na serwerze:
 | Zmienna | Domyślnie | Opis |
 |---|---|---|
 | `ARCHFLOW_VERSION` | `latest` | Tag obrazu używany przez `compose.yml`. |
-| `ENABLE_SERVER_STORAGE` | `true` | Zapis diagramów jako plików na serwerze (Dysk aplikacji). `false` przełącza na zapis tylko w przeglądarce (sesja). |
+| `ENABLE_SERVER_STORAGE` | `true` | Zapis diagramów jako plików na serwerze (Moje diagramy). `false` przełącza na zapis tylko w przeglądarce (sesja). |
 | `STORAGE_PATH` | `/data/diagrams` | Gdzie w kontenerze zapisywane są diagramy. Tu montuj katalog z hosta albo wolumen. |
 
 Aby wyłączyć zapis serwerowy i wrócić do zapisu tylko w przeglądarce (sesja), ustaw `ENABLE_SERVER_STORAGE=false`:
@@ -175,21 +187,20 @@ docker run -d -p 9500:80 -e ENABLE_SERVER_STORAGE=false ghcr.io/cyryllo/archflow
 
 Co wtedy zmienia się w aplikacji, opisuje sekcja [Zapisywanie i otwieranie diagramów](#zapisywanie-i-otwieranie-diagramów).
 
-## 🖥️ Aplikacja okienkowa (Electron)
+## 🖥️ Aplikacja desktopowa
 
-Dostępna jest też natywna wersja okienkowa dla Windows, macOS i Linuksa — opakowuje tę samą aplikację webową w natywne okno, z natywnymi oknami dialogowymi "Zapisz jako"/"Otwórz" zamiast pobierania plików przez przeglądarkę.
+Aplikacja desktopowa (Electron) to ten sam edytor we własnym oknie. **Pobierz ją z [ostatniego wydania](https://github.com/cyryllo/ArchFlow/releases/latest)**: AppImage albo `.deb` dla Linuksa, instalator dla Windows (zobacz [Pobierz](#️-pobierz)).
+
+Diagramy zapisują się jako zwykłe pliki na dysku, automatycznie — bez pytania o lokalizację i bez pamięci przeglądarki. Przy pierwszym uruchomieniu aplikacja tworzy folder `ArchFlow` w katalogu Dokumenty (`~/Dokumenty/ArchFlow` na polskim systemie, `~/Documents/ArchFlow` na angielskim), a każdy diagram zapisany przez **Zapisz** / **Moje diagramy** staje się tam plikiem `.json`. Eksport korzysta z systemowych okien „Zapisz jako”.
+
+Budowanie samodzielne:
 
 ```bash
-# Uruchom w trybie dev (otwiera natywne okno)
-npm run dev:desktop
-
-# Zbuduj instalatory (Windows .exe, macOS .dmg, Linux AppImage/.deb)
-npm run build:desktop
+npm run dev:desktop     # uruchomienie w trybie deweloperskim (otwiera okno)
+npm run build:desktop   # paczki dla Twojego systemu w packages/fossflow-desktop/dist/
 ```
 
-Instalatory trafiają do `packages/fossflow-desktop/dist/`. Oba polecenia same budują najpierw bibliotekę i aplikację webową, więc nie trzeba robić tego osobno.
-
-Diagramy są zapisywane jako prawdziwe pliki na dysku, automatycznie — bez pytania o lokalizację, bez pamięci przeglądarki. Aplikacja desktopowa przy pierwszym uruchomieniu tworzy katalog `ArchFlow` w katalogu Dokumentów systemu (`~/Documents/ArchFlow`, a na spolszczonym systemie `~/Dokumenty/ArchFlow`), i każdy diagram zapisany przez listę "📁 Dysk aplikacji" trafia tam jako plik `.json`. Tak samo jak w Dockerze, przyciski Zapisz/Wczytaj/Szybki zapis (sesja) są ukryte w aplikacji desktopowej, bo zawsze dostępny jest trwały zapis.
+Na Linuksie powstaje AppImage i `.deb`. Instalator Windows buduje się na Windows (na Linuksie wymagałby wine); workflow `Desktop builds` na GitHubie buduje wszystkie paczki przy każdym tagu wersji i dołącza je do wydania.
 
 ## Szybki start (lokalny development)
 
@@ -247,87 +258,123 @@ npm run publish:lib  # Opublikuj bibliotekę na npm
 
 ## Jak korzystać
 
-### Tworzenie diagramów
+### Ekran
 
-1. **Dodawanie elementów**:
-   - Naciśnij przycisk "+" w górnym prawym menu, po lewej pojawi się biblioteka komponentów
-   - Przeciągnij i upuść komponenty z biblioteki na płótno
-   - Albo kliknij prawym przyciskiem na siatce i wybierz "Dodaj węzeł"
+![Pasek narzędzi](screenshots/pl-toolbar.png)
 
-2. **Łączenie elementów**:
-   - Wybierz narzędzie Łącznik (naciśnij 'C' lub kliknij ikonę łącznika)
-   - **Tryb kliknięcia** (domyślny): kliknij pierwszy węzeł, potem drugi
-   - **Tryb przeciągania** (opcjonalny): kliknij i przeciągnij od pierwszego do drugiego węzła
-   - Przełączaj tryby w Ustawienia → zakładka Połączenia
+- **Górny pasek:** nazwa diagramu i stan zapisu (**Zmodyfikowany** / **Zapisano**), **Zapisz** i **Moje diagramy**.
+- **Menu ☰** (po lewej): Nowy diagram, Moje diagramy, Zapisz, Otwórz z pliku, Wyczyść obszar roboczy, Eksportuj do JSON / obrazu, Ustawienia, Język, Pomoc.
+- **Narzędzia** (na środku): Cofnij, Ponów · **Zaznacz / przesuń** (S), **Zaznaczanie ramką** albo **Lasso odręczne** (L / F, przełączane strzałką obok), **Przesuń widok** (M) · **Dodaj węzeł** (N), **Prostokąt / strefa** (R), **Połączenie** (C), **Tekst** (T). Litera w rogu przycisku to jego skrót.
+- **Zoom** (po prawej): pomniejsz / powiększ i **Dopasuj do ekranu**.
 
-3. **Zapisywanie pracy**: patrz [Zapisywanie i otwieranie diagramów](#zapisywanie-i-otwieranie-diagramów) poniżej.
+<img alt="Menu główne" src="screenshots/pl-main-menu.png" width="300">
+
+### Budowanie diagramu
+
+1. **Dodaj węzeł:** naciśnij **N** (albo przycisk węzła, albo prawy przycisk na płótnie → *Dodaj węzeł*), wybierz ikonę z kategorii lub wyszukaj, potem kliknij miejsce na płótnie.
+2. **Narysuj strefę:** naciśnij **R** i przeciągnij prostokąt.
+3. **Połącz:** naciśnij **C**, kliknij pierwszy węzeł, potem drugi. Kliknięcia w puste miejsca po drodze dodają punkty załamania. Albo prawy przycisk na węźle → *Połącz z…*.
+4. **Dodaj tekst:** naciśnij **T** i kliknij, gdzie ma się pojawić.
+5. **Zmień właściwości:** kliknij element, żeby otworzyć jego panel (nazwa, opis, ikona, kolory, styl linii…), albo prawy przycisk → *Właściwości*.
+
+<img alt="Wybór ikon" src="screenshots/pl-icon-picker.png" width="280"> <img alt="Właściwości węzła" src="screenshots/pl-node-panel.png" width="280"> <img alt="Właściwości połączenia" src="screenshots/pl-connector-panel.png" width="280">
+
+Prostokąt, węzeł i tekst wracają do **Zaznaczania** po jednym użyciu; Połączenie i lassa zostają aktywne, dopóki nie naciśniesz **Esc**, który zawsze wraca do Zaznaczania.
+
+### Menu prawego przycisku
+
+<img alt="Menu prawego przycisku na płótnie" src="screenshots/pl-context-canvas.png" width="250"> <img alt="Menu prawego przycisku na węźle" src="screenshots/pl-context-node.png" width="330">
+
+- **Na płótnie:** dodaj węzeł, narysuj prostokąt, dodaj tekst, wklej, zaznacz wszystko, dopasuj do ekranu.
+- **Na elemencie:** połącz z…, właściwości, zmień ikonę, kopiuj, wytnij, duplikuj, na wierzch / pod spód, usuń. Jeśli element jest częścią zaznaczenia, akcja dotyczy całego zaznaczenia.
+
+### Zaznaczanie i przesuwanie
+
+![Ramka zaznaczenia](screenshots/pl-selection.png)
+
+- **Przeciągnij po pustym polu**, żeby narysować ramkę zaznaczenia; **Shift+klik** dodaje albo zabiera elementy.
+- **Przeciągnij zaznaczenie** (albo użyj **strzałek**), żeby przesunąć razem węzły, strefy, teksty i punkty połączeń.
+- **Środkowy przycisk myszy** albo **Spacja + przeciągnij** przesuwa widok w każdym narzędziu; kółko myszy przybliża.
+
+### Skróty klawiszowe
+
+| Skrót | Działanie |
+|---|---|
+| Ctrl+Z / Ctrl+Y (Ctrl+Shift+Z) | Cofnij / ponów |
+| Ctrl+C / Ctrl+X / Ctrl+V | Kopiuj / wytnij / wklej (w miejscu kursora) |
+| Ctrl+D | Duplikuj |
+| Ctrl+A | Zaznacz wszystko |
+| Delete / Backspace | Usuń zaznaczenie |
+| ← ↑ → ↓ | Przesuń zaznaczenie o jedno pole (bez zaznaczenia: przesuń widok) |
+| Ctrl+] / Ctrl+[ | Na wierzch / pod spód |
+| Ctrl + / Ctrl − | Powiększ / pomniejsz |
+| Shift+1 | Dopasuj do ekranu |
+| F2 | Zmień nazwę zaznaczonego węzła |
+| Esc | Anuluj i wróć do Zaznaczania |
+| S M N R C T L F | Narzędzia (litery zmienisz w Ustawieniach) |
+| F1 | Pomoc ze wszystkimi skrótami |
+
+### Ustawienia
+
+<img alt="Ustawienia" src="screenshots/pl-settings.png" width="520">
+
+**☰ → Ustawienia** mają trzy sekcje: **Mysz** (którymi gestami przesuwać widok, przybliżanie do kursora), **Klawiatura** (litery narzędzi, przesuwanie widoku klawiaturą) i **Połączenia** (tworzenie przez klikanie albo przeciąganie).
 
 ## Zapisywanie i otwieranie diagramów
 
-ArchFlow ma **dwa niezależne sposoby** przechowywania pracy. Można używać obu jednocześnie.
+ArchFlow ma **dwa niezależne sposoby** na zachowanie pracy. Możesz używać obu jednocześnie.
 
-| | 💾 Pliki na Twoim komputerze | 🌐 / 📁 Dysk aplikacji |
+| | 💾 Pliki na Twoim komputerze | 🗄️ Moje diagramy |
 |---|---|---|
-| Co to jest | Pobierasz plik `.json` i później otwierasz go ponownie | Diagramy przechowuje sam ArchFlow, na liście |
-| Gdzie są dane | Tam, gdzie zapiszesz pobrany plik | Docker: `./diagrams` na serwerze. Aplikacja desktopowa: `~/Dokumenty/ArchFlow` |
-| Dostępność | Zawsze i wszędzie | Docker z włączonym zapisem serwerowym (domyślnie) i aplikacja desktopowa |
-| Do czego | Kopie zapasowe, wysłanie diagramu komuś, przenoszenie między instalacjami ArchFlow | Codzienna praca, wspólna lista dla całego zespołu |
+| Co to jest | Eksportujesz plik `.json` i otwierasz go później | Diagramy przechowuje sam ArchFlow, na liście |
+| Gdzie są dane | Tam, gdzie zapiszesz wyeksportowany plik | Docker: `./diagrams` na serwerze. Aplikacja desktopowa: `~/Dokumenty/ArchFlow` |
+| Dostępne | Zawsze, wszędzie | Docker z zapisem na serwerze (domyślnie) i aplikacja desktopowa |
+| Do czego | Kopie zapasowe, wysyłanie diagramu, przenoszenie między instalacjami | Codzienna praca, wspólna lista dla zespołu |
 
-### 💾 Pliki na Twoim komputerze: eksport i otwieranie
+### 💾 Pliki na Twoim komputerze
 
-<img alt="Okno Eksportuj Diagram" src="screenshots/pl-export-file.png" width="480">
+- **☰ → Eksportuj do JSON** pobiera bieżący diagram jako `<nazwa>-<data>.json`. Plik zawiera wszystkie użyte ikony, także zaimportowane, więc otworzy się poprawnie w każdym innym ArchFlow.
+- **☰ → Otwórz z pliku** wczytuje diagram z pliku `.json` i zastępuje to, co jest na płótnie. Starsze pliki nadal działają, a wbudowane ikony dostają aktualne rysunki.
+- **☰ → Eksportuj do obrazu** zapisuje obraz PNG. Pokazuje podgląd i pozwala wybrać siatkę, rozwinięte opisy, przycięcie do zawartości, kolor tła (albo przezroczyste) i rozdzielczość (DPI). Używaj Chrome lub Edge; w Firefoksie eksport obrazu ma znane problemy.
 
-- **Eksportuj Plik** (przycisk na pasku) pobiera bieżący diagram jako `<nazwa>-<data>.json`. Plik zawiera wszystkie ikony użyte w diagramie, także własne zaimportowane, więc otworzy się poprawnie w każdym innym ArchFlow.
-- **Menu główne** (☰, w lewym górnym rogu obszaru roboczego) ma więcej opcji:
-  - **Otwórz**: wczytaj diagram z pliku `.json`. Zastępuje to, co jest na obszarze roboczym.
-  - **Eksportuj do JSON** / **Eksportuj jako kompaktowy JSON**: pobierz diagram jako JSON (wariant kompaktowy to mniejszy plik).
-  - **Eksportuj do obrazu**: zapisz obraz PNG diagramu.
-  - **Wyczyść obszar roboczy**: usuń wszystko z bieżącego diagramu.
+<img alt="Eksport do JSON" src="screenshots/pl-export-file.png" width="420"> <img alt="Eksport do obrazu" src="screenshots/pl-export-image.png" width="460">
 
-<img alt="Menu główne" src="screenshots/pl-main-menu.png" width="560">
+### 🗄️ Moje diagramy
 
-**Eksportuj do obrazu** pokazuje podgląd i pozwala wybrać, czy pokazać siatkę, rozwinąć opisy elementów, przyciąć do zawartości, kolor tła (albo przezroczyste) i rozdzielczość (DPI). Używaj do tego Chrome albo Edge, w Firefoksie eksport obrazu ma znane problemy. To okno nie jest jeszcze przetłumaczone na polski.
+<img alt="Moje diagramy" src="screenshots/pl-app-storage.png" width="640">
 
-<img alt="Okno eksportu do obrazu" src="screenshots/pl-export-image.png" width="640">
+**Moje diagramy** (górny pasek, menu ☰ albo **Ctrl+O**) otwierają listę zapisanych diagramów:
 
-### 🌐 / 📁 Dysk aplikacji
-
-<img alt="Menedżer diagramów" src="screenshots/pl-app-storage.png" width="640">
-
-Przycisk **Dysk aplikacji** otwiera Menedżer diagramów z listą zapisanych diagramów:
-
-- **Zapisz bieżący diagram**: zapisuje diagram pod nazwą. Jeśli diagram o tej nazwie już istnieje, ArchFlow zapyta przed nadpisaniem. Każdy diagram to plik nazwany tak jak diagram, np. `./diagrams/Airport system.json`.
-- **Wczytaj**: otwiera zapisany diagram.
-- **Udostępnij**: kopiuje link w rodzaju `http://twoj-serwer:9500/display/<nazwa>`, który otwiera diagram w trybie **tylko do odczytu**. Otworzy go każdy, kto ma dostęp do serwera (tylko Docker).
-- **Usuń**: po potwierdzeniu trwale usuwa diagram (i jego plik).
+- **Zapisz bieżący diagram** zapisuje diagram pod nazwą. Jeśli diagram o tej nazwie już istnieje, ArchFlow zapyta przed nadpisaniem. Każdy diagram staje się plikiem nazwanym tak jak on, np. `./diagrams/Sklep internetowy.json`.
+- **Wczytaj** otwiera zapisany diagram, **Udostępnij** kopiuje link tylko do odczytu (`http://twoj-serwer:9500/display/<nazwa>`, tylko Docker), **Usuń** usuwa diagram i jego plik po potwierdzeniu.
+- **Zapisz** na górnym pasku (albo **Ctrl+S**) zapisuje otwarty diagram ponownie pod tą samą nazwą.
 
 Ważne:
 
-- **Zapis jest ręczny.** Zmiany trafiają do Dysku aplikacji dopiero po kliknięciu *Zapisz bieżący diagram*. Na pasku widać **• Zmodyfikowany**, gdy są niezapisane zmiany, a przeglądarka ostrzeże przy próbie zamknięcia karty.
-- **W Dockerze Dysk aplikacji jest wspólny.** Wszyscy, którzy otwierają ten sam adres ArchFlow, widzą i edytują tę samą listę. Nie ma kont użytkowników.
-- Ikona mówi, gdzie trafiają diagramy: 🌐 to serwer w Dockerze, 📁 to pliki na Twoim komputerze (aplikacja desktopowa).
+- **Zapis jest ręczny.** Górny pasek pokazuje **Zmodyfikowany**, dopóki nie zapiszesz, a przeglądarka ostrzeże Cię przy zamykaniu karty z niezapisanymi zmianami.
+- **W Dockerze lista jest wspólna.** Każdy, kto otworzy ten sam adres ArchFlow, widzi i edytuje te same diagramy. Nie ma kont użytkowników.
 
-### Zapis w sesji (tylko przeglądarka)
+### Tylko przeglądarka (bez zapisu na serwerze)
 
-Gdy Dysk aplikacji nie jest dostępny (ArchFlow hostowany jako zwykła strona statyczna albo Docker z `ENABLE_SERVER_STORAGE=false`), pasek pokazuje zamiast niego **Zapisz (tylko bieżąca sesja)**, **Wczytaj (tylko bieżąca sesja)** i **Szybki zapis (Sesji)**. Diagramy są wtedy trzymane w pamięci przeglądarki:
+Gdy ArchFlow działa jako zwykła strona WWW (jak demo) albo Docker ma `ENABLE_SERVER_STORAGE=false`, **Zapisz** i **Moje diagramy** trzymają diagramy w pamięci przeglądarki:
 
 - są tylko w tej przeglądarce, na tym komputerze,
 - znikają po wyczyszczeniu danych przeglądarki,
 - pamięć przeglądarki jest mała (kilka MB), więc duże diagramy mogą się nie zmieścić.
 
-W tym trybie regularnie używaj **Eksportuj Plik**, to jedyny sposób, żeby praca była bezpieczna.
+W tym trybie regularnie eksportuj do pliku, to jedyny pewny sposób na zachowanie pracy.
 
 ### Automatyczne przywracanie
 
-Niezależnie od powyższego przeglądarka pamięta diagram, nad którym pracujesz, i otwiera go ponownie po odświeżeniu strony. To wygoda, **nie kopia zapasowa**: jest tylko w Twojej przeglądarce i zostaje zastąpiona, gdy otworzysz inny diagram.
+Niezależnie od powyższego przeglądarka pamięta diagram, nad którym pracowałeś, i otwiera go ponownie po odświeżeniu strony. To wygoda, **nie kopia zapasowa**: istnieje tylko w Twojej przeglądarce i zostaje zastąpiona, gdy tylko otworzysz inny diagram.
 
 ### Jakie opcje mam?
 
 | Gdzie działa ArchFlow | Co dostajesz |
 |---|---|
-| Aplikacja desktopowa | **📁 Dysk aplikacji** (pliki w `~/Dokumenty/ArchFlow`) + eksport/otwieranie. Bez przycisków sesji. |
-| Docker, zapis serwerowy włączony (domyślnie) | **🌐 Dysk aplikacji** (pliki w `./diagrams` na hoście) + eksport/otwieranie. Bez przycisków sesji. |
-| Zwykły hosting webowy / Docker z wyłączonym zapisem serwerowym | Zapisz/Wczytaj/Szybki zapis w sesji (tylko przeglądarka) + eksport/otwieranie |
+| Aplikacja desktopowa | **Moje diagramy** (pliki w `~/Dokumenty/ArchFlow`) + eksport / otwieranie plików |
+| Docker z zapisem na serwerze (domyślnie) | **Moje diagramy** (pliki w `./diagrams` na serwerze, wspólne) + eksport / otwieranie plików |
+| Zwykły hosting WWW / Docker bez zapisu na serwerze | Moje diagramy tylko w przeglądarce + eksport / otwieranie plików |
 
 ## Współtworzenie
 

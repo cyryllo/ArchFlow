@@ -88,10 +88,27 @@ The property panels (node, connector, rectangle, text, icon picker), the export-
 **Status**: Linux AppImage + .deb build locally (`npm run build:desktop`) and the AppImage was checked on a virtual display (new UI, disk storage). The Windows installer can't be built here (electron-builder needs wine to stamp the .exe), so `.github/workflows/desktop.yml` builds Linux (ubuntu runner) and Windows NSIS (windows runner) on every `v*.*.*` tag and attaches them to the GitHub release; it can also be run manually. Still to do: first CI run (needs a new tag - the workflow isn't in v0.6.0), try the .exe on Windows, describe downloads in README/site (stage 4).
 Note: when testing from a terminal inside VS Code, unset `ELECTRON_RUN_AS_NODE` before starting the AppImage, otherwise it starts as plain Node ("bad option").
 
-### Stage 4: docs, website and user manual (after the icon stage)
-**Wanted**: update the README(s) and the project website (`site/`, PL + EN) to the new interface, and add a step-by-step **user manual in Polish and English with screenshots** (drawing, selecting and moving, connectors, right-click menu, ☰ menu, saving / My diagrams, export, settings, shortcuts).
+### Stage 4: docs and website
+**Done**: README (EN) and docs/README.pl.md rewritten for the new interface (features, downloads, how to use with screenshots, shortcuts, saving); project website (site/, EN + PL) updated with a download section and new gallery; all screenshots retaken in Full HD from a demo diagram (online shop) by `scripts/docs/screenshots.mjs` + `scripts/docs/demo-diagram.mjs` (run against a throwaway instance, see the script header). Re-run the script whenever the UI changes.
+
+### Stage 4b: user manual (next)
+**Wanted**: a step-by-step user manual in Polish and English with screenshots (getting started, drawing, connecting, selecting and moving, menus, saving / My diagrams, export, settings, shortcuts), using the same screenshot script.
+
+### App fixes waiting for the next release
+Found while taking the screenshots, fixed in the code but not released yet (they ship with the next version bump):
+- Node labels sat at a fixed height, so the taller new icons poked up behind them; labels are now lifted above the measured icon height (`SceneLayers/Nodes/Node/Node.tsx`).
+- The dotted line from a label to its node swallowed clicks in the middle of the icon (`components/Label/Label.tsx`, `pointer-events: none`).
+- The right-click menu only appeared on the next re-render (e.g. after moving the mouse), because its anchor was a ref; it's state now (`components/UiOverlay/UiOverlay.tsx`).
 
 ### Stage 5: more interface languages
 **Wanted**: besides Polish and English, translate the UI into the popular languages: Portuguese (Brazil, pt-BR), German (de-DE), Spanish (es-ES), Italian (it-IT), French (fr-FR), plus other widely used ones - e.g. Chinese (zh-CN), Japanese (ja-JP), Ukrainian (uk-UA), Russian (ru-RU), Dutch (nl-NL), Turkish (tr-TR), Korean (ko-KR), Czech (cs-CZ).
 **What it covers**: the library locale (`packages/fossflow-lib/src/i18n/*.ts`, typed by `LocaleProps`), the app strings (`packages/fossflow-app/src/i18n/*.json`), the language list (`supportedLanguages` in the app's `i18n.ts`; the ☰ menu "Language" entry should become a picker once there are more than two), icon names and categories in the generated icon set (`names` per language in `scripts/icons`), and the desktop app's native dialogs. The upstream project had some of these locales once (e.g. es-ES) - check git history for anything reusable, but all new UI strings need translating.
+
+### Stage 6: MCP server so AI assistants can create diagrams
+**Wanted**: an MCP (Model Context Protocol) server for ArchFlow, so AI assistants (Claude and other MCP clients) can use the tool directly: build and change diagrams, then the user opens them in ArchFlow.
+**Idea for the tools it exposes**:
+- read: list the icon set (ids, names, categories - from `scripts/icons` / `archflowIcons.ts`), list diagrams, read a diagram;
+- build: create a diagram, add/update/remove nodes (icon, name, description, tile), zones (rectangles with colour), text, connectors (between nodes, with waypoints, labels, style), auto-layout helpers (grid/row/column placement so the model doesn't have to compute tiles);
+- save/export: save into ArchFlow's server storage through the backend API (`GET/POST/PUT/DELETE /api/diagrams` in `packages/fossflow-backend/server.js`) or the desktop app's folder (`~/Documents/ArchFlow`), export JSON (and later PNG/SVG).
+**Notes**: validate everything against the model schema (`packages/fossflow-lib/src/schemas`) before saving; reuse/extend `LLM-GENERATION-GUIDE.md` as the format reference; ship as an npm package (stdio transport for desktop clients) and optionally as an HTTP endpoint in the Docker image; document setup for Claude Desktop / Claude Code.
 
