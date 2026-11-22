@@ -1,0 +1,38 @@
+name: Release notes
+
+# Copies docs/releases/vX.Y.Z.md into the description of the matching
+# GitHub release, so release notes live in the repository and are added by
+# CI (no local token needed). Releases that don't exist yet are skipped -
+# the "Desktop builds" workflow picks the file up when it creates them.
+
+on:
+  push:
+    branches: ["master"]
+    paths:
+      - 'docs/releases/v*.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  notes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Update release descriptions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          shopt -s nullglob
+          for file in docs/releases/v*.md; do
+            tag="$(basename "$file" .md)"
+            if gh release view "$tag" >/dev/null 2>&1; then
+              gh release edit "$tag" --notes-file "$file"
+              echo "Updated the description of $tag"
+            else
+              echo "No release $tag yet - skipped"
+            fi
+          done

@@ -112,3 +112,18 @@ Found while taking the screenshots, fixed in the code but not released yet (they
 - save/export: save into ArchFlow's server storage through the backend API (`GET/POST/PUT/DELETE /api/diagrams` in `packages/fossflow-backend/server.js`) or the desktop app's folder (`~/Documents/ArchFlow`), export JSON (and later PNG/SVG).
 **Notes**: validate everything against the model schema (`packages/fossflow-lib/src/schemas`) before saving; reuse/extend `LLM-GENERATION-GUIDE.md` as the format reference; ship as an npm package (stdio transport for desktop clients) and optionally as an HTTP endpoint in the Docker image; document setup for Claude Desktop / Claude Code.
 
+### Stage 7: logins and user management (Docker version)
+**Why**: the Docker version has no accounts - anyone who can open the address can view, change and delete every diagram in "My diagrams", and the read-only share link isn't access control.
+**Wanted**:
+- log in to ArchFlow (username + password, hashed with bcrypt/argon2; session cookie or token) - optionally single sign-on later (OIDC: Google / Microsoft / Keycloak, maybe LDAP);
+- user management for an administrator: add / disable / delete users, reset passwords, roles (e.g. admin, editor, viewer);
+- permissions on diagrams: owner, shared with users or groups (view / edit), a private/shared flag;
+- share links with a random token (optionally expiring), read-only by default, instead of guessable `/display/<name>` URLs;
+- first-run setup of the admin account (or an env variable), and a switch to keep the current no-login mode for trusted networks;
+- an audit trail of who changed what is a nice-to-have.
+**Notes**: everything lives in `packages/fossflow-backend` (Express) - it needs a small user store (SQLite file next to the diagrams is enough), auth middleware on `/api/*`, and login / user-management screens in the app. The desktop app and the plain-website mode stay without logins.
+
+### Share button shows where it can't work
+**Problem**: "Share" in My diagrams copies `<origin>/display/<id>`, which only works with server storage (Docker). In the desktop app it produces an `app://bundle/...` link nobody else can open, and in browser-only mode the link has nothing to load.
+**Fix Strategy**: show the Share button only when `storageKind === 'server'` (`packages/fossflow-app/src/components/DiagramManager.tsx`). Revisit together with stage 7 (token-based share links).
+
